@@ -143,3 +143,11 @@ test_that("Basic syntax of a DataFrame", {
   )
 
 })
+
+test_that("Type conversion", {
+
+  dat <- data.frame(x = 1)
+  expect_is(as.DataFrame(dat), "DataFrame")
+  expect_is(as.DataFrame(dat), "tbl_df")
+
+})

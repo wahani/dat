@@ -100,7 +100,7 @@ myIdentical(
 
 ### Select cols
 
-You can use characters and logicals to select cols of a *DataFrame*. Using numeric values is not supported; it is error prone and I have spent too many hours of my live debugging code where I relied on positions in a data frame.
+You can use characters and logicals to select cols of a *DataFrame*. Using numeric values is not supported; it is error prone and I have spent too many hours of my life debugging code where I relied on positions in a data frame.
 
 ```{r}
 myIdentical(
@@ -114,7 +114,7 @@ myIdentical(
 )
 ```
 
-You can also pass in a function wich checks if you want to select a column, e.g.
+You can also pass in a function which checks if you want to select a column, e.g.
 select all numeric cols:
 
 ```{r}

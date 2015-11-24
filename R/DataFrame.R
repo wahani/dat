@@ -22,7 +22,9 @@ as.DataFrame <- function(x) UseMethod("as.DataFrame")
 
 #' @rdname DataFrame
 #' @export
-as.DataFrame.default <- function(x) addClass(as.data.frame(x), "DataFrame")
+as.DataFrame.default <- function(x) {
+  do.call(DataFrame, as.list(x))
+}
 
 #' @param x (DataFrame | ANY)
 #' @param i (logical | numeric | integer | OneSidedFormula | TwoSidedFormula)
