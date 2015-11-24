@@ -15,7 +15,38 @@ vignette: >
 
 Provides a class and methods for working with data frames extending what can be found in the dplyr.
 
+## Installation
+
+
+```r
+devtools::install_github("wahani/dat")
+```
+
+## Why should you care?
+
+This package links to dplyr functions and does not cover everything in it, so
+why should you care:
+
+- You probably have to rewrite all your dplyr / data.table code once you put it 
+inside a package. I.e. working around non standard evaluation or find another
+way to apiece R CMD check. And you don't like that.
+- We work together and you have to understand code I wrote.
+
+I cannot think of other reasons why you should care, of course if you just like
+the syntax that's fine too.
+
+
 ## Examples:
+
+I took the examples from the introductory vignette of dplyr. Things that are not supported:
+
+- no rename
+- no distinct
+- no transmute
+
+But you still work with data frames. So you can go back or mix in dplyr features
+when you need them.
+
 
 ```r
 library(nycflights13)
@@ -46,12 +77,21 @@ str(dat)
 ##  $ minute   : num  17 33 42 44 54 54 55 57 57 58 ...
 ```
 
+This function I use to compare if my code produces roughly (not the same class)
+the same as dplyr code.
+
+
 ```r
 myIdentical <- function(a, b) {
   l <- lapply(list(a, b), as.data.frame)
   do.call(identical, l)
 }
+```
 
+### Filter rows
+
+
+```r
 myIdentical(
   filter(flights, month == 1, day == 1),
   dat[~ month == 1 & day == 1]
@@ -75,6 +115,8 @@ myIdentical(
 
 ```r
 myIdentical(
+  # It is truly amazing how many times I tried to subset a data frame with
+  # dat[1:10] and meant rows. Thats why this is working:
   dat[~1:10],
   dat[1:10, ]
 )
@@ -83,6 +125,9 @@ myIdentical(
 ```
 ## [1] TRUE
 ```
+
+### Sorting
+
 
 ```r
 myIdentical(
@@ -94,6 +139,12 @@ myIdentical(
 ```
 ## [1] TRUE
 ```
+
+
+### Select cols
+
+You can use characters and logicals to select cols of a *DataFrame*. Using numeric values is not supported; it is error prone and I have spent too many hours of my live debugging code where I relied on positions in a data frame.
+
 
 ```r
 myIdentical(
@@ -109,13 +160,17 @@ myIdentical(
 ```r
 myIdentical(
   select(flights, year:day),
-  dat["year:day"]
+  dat["year:day"] # characters are passed into dplyr::select_
 )
 ```
 
 ```
 ## [1] TRUE
 ```
+
+You can also pass in a function wich checks if you want to select a column, e.g.
+select all numeric cols:
+
 
 ```r
 dat[is.numeric]
@@ -140,6 +195,9 @@ dat[is.numeric]
 ## Variables not shown: distance (dbl), hour (dbl), minute (dbl)
 ```
 
+Or select all cols with missing values in them:
+
+
 ```r
 dat[function(x) any(is.na(x))]
 ```
@@ -162,10 +220,10 @@ dat[function(x) any(is.na(x))]
 ## ..      ...       ...      ...       ...      ...   ...    ...
 ```
 
-```r
-# there is no rename
-# no distinct
+### Mutate
 
+
+```r
 myIdentical(
   mutate(flights,
          gain = arr_delay - dep_delay,
@@ -179,11 +237,13 @@ myIdentical(
 ## [1] TRUE
 ```
 
-```r
-# no transmute
+### Summarise
 
+
+```r
 myIdentical(
-  summarise(group_by(flights, month), delay = mean(dep_delay, na.rm = TRUE)),
+  group_by(flights, month) %>% 
+    summarise(delay = mean(dep_delay, na.rm = TRUE)),
   dat[delay ~ mean(dep_delay, na.rm = TRUE), by = "month"]
 )
 ```

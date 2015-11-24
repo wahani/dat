@@ -16,23 +16,27 @@ as.DataFrame(x)
 \method{[}{DataFrame}(x, i, j, ..., by, drop)
 }
 \arguments{
-\item{...}{dots}
+\item{...}{arbitrary number of args
+\cr in \code{[} (TwoSidedFormulas)
+\cr in constructor see \link[dplyr]{data_frame}}
 
-\item{x}{an object}
+\item{x}{(DataFrame | ANY)}
 
-\item{i}{(logical | numeric | integer | OneSidedFormula)}
+\item{i}{(logical | numeric | integer | OneSidedFormula | TwoSidedFormula)}
 
 \item{j}{(logical | character | TwoSidedFormula)}
 
 \item{by}{(character) variable name}
 
 \item{drop}{ignored}
-
-\item{x}{(DataFrame)}
-
-\item{...}{(TwoSidedFormulas)}
 }
 \description{
 DataFrame and methods
+}
+\examples{
+\dontrun{
+vignette("Introduction", "dat")
+}
+
 }
 

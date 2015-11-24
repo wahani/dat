@@ -1,8 +1,11 @@
 #' DataFrame and methods
 #'
-#' @param ... dots
-#'
 #' @include helper.R
+#'
+#' @examples
+#' \dontrun{
+#' vignette("Introduction", "dat")
+#' }
 #'
 #' @rdname DataFrame
 #' @export
@@ -13,7 +16,6 @@ DataFrame <- function(...) {
 
 setOldClass("DataFrame")
 
-#' @param x an object
 #' @rdname DataFrame
 #' @export
 as.DataFrame <- function(x) UseMethod("as.DataFrame")
@@ -22,10 +24,12 @@ as.DataFrame <- function(x) UseMethod("as.DataFrame")
 #' @export
 as.DataFrame.default <- function(x) addClass(as.data.frame(x), "DataFrame")
 
-#' @param x (DataFrame)
-#' @param i (logical | numeric | integer | OneSidedFormula)
+#' @param x (DataFrame | ANY)
+#' @param i (logical | numeric | integer | OneSidedFormula | TwoSidedFormula)
 #' @param j (logical | character | TwoSidedFormula)
-#' @param ... (TwoSidedFormulas)
+#' @param ... arbitrary number of args
+#'    \cr in \code{[} (TwoSidedFormulas)
+#'    \cr in constructor see \link[dplyr]{data_frame}
 #' @param by (character) variable name
 #' @param drop ignored
 #'
