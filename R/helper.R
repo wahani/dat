@@ -5,6 +5,15 @@ addClass <- function(x, class) {
   x
 }
 
+constructArgs <- function(i, j, ...) {
+  # constructs arguments (name-value expressions) for the use in mutate and
+  # summarise.
+  # '...' can be anything so the type is checked on the fly:
+  args <- c(list(i, j), lapply(list(...), TwoSidedFormula))
+  args <- args[sapply(args, Negate(is.null))]
+  lapply(args, function(x) sub("~", "=", deparse(x)))
+}
+
 # dispatcher is used in "[.DataFrame" to link attributes to internal classes:
 dispatcher(x) %g% x
 

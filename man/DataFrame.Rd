@@ -24,14 +24,16 @@ as.DataFrame(x)
 
 \item{i}{(logical | numeric | integer | OneSidedFormula | TwoSidedFormula)}
 
-\item{j}{(logical | character | TwoSidedFormula)}
+\item{j}{(logical | character | TwoSidedFormula | function) character which
+begin with '__' or '^' are interpreted as regular expression}
 
 \item{by}{(character) variable name}
 
 \item{drop}{ignored}
 }
 \description{
-DataFrame and methods
+There are many ways to use a DataFrame. Please see the vignette to see some
+examples.
 }
 \examples{
 \dontrun{

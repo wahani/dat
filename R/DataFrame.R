@@ -1,5 +1,8 @@
 #' DataFrame and methods
 #'
+#' There are many ways to use a DataFrame. Please see the vignette to see some
+#' examples.
+#'
 #' @include helper.R
 #'
 #' @examples
@@ -28,7 +31,8 @@ as.DataFrame.default <- function(x) {
 
 #' @param x (DataFrame | ANY)
 #' @param i (logical | numeric | integer | OneSidedFormula | TwoSidedFormula)
-#' @param j (logical | character | TwoSidedFormula)
+#' @param j (logical | character | TwoSidedFormula | function) character which
+#'   begin with '__' or '^' are interpreted as regular expression
 #' @param ... arbitrary number of args
 #'    \cr in \code{[} (TwoSidedFormulas)
 #'    \cr in constructor see \link[dplyr]{data_frame}
@@ -110,23 +114,20 @@ handleCols(x ~ DataFrame,
            j ~ TwoSidedFormula | NULL,
            ...,
            by ~ NULL) %m% {
-             args <- list(i, j, ...)
-             args <- args[sapply(args, Negate(is.null))]
-             args <- lapply(args, function(x) text = sub("~", "=", deparse(x)))
-             addClass(class = "DataFrame",
-                      eval(
-                        parse(text = paste0(
-                          "dplyr::mutate(x,", paste0(args, collapse = ","), ")"))
-                      )
+             args <- constructArgs(i, j, ...)
+             addClass(
+               class = "DataFrame",
+               eval(
+                 parse(text = paste0(
+                   "dplyr::mutate(x,", paste0(args, collapse = ","), ")"))
+               )
              )
            }
 
 handleCols(x ~ DataFrame,
            i ~ TwoSidedFormula | NULL, j ~ TwoSidedFormula | NULL,
            ..., by ~ character) %m% {
-             args <- list(i, j, ...)
-             args <- args[sapply(args, Negate(is.null))]
-             args <- lapply(args, function(x) text = sub("~", "=", deparse(x)))
+             args <- constructArgs(i, j, ...)
              x <- dplyr::group_by_(x, .dots = by)
              addClass(class = "DataFrame", eval(parse(text = paste0(
                "dplyr::summarise(x,", paste0(args, collapse = ","), ")")))
