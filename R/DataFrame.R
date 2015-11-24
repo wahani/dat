@@ -7,7 +7,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' vignette("Introduction", "dat")
+#'   vignette("Introduction", "dat")
 #' }
 #'
 #' @rdname DataFrame
@@ -43,7 +43,7 @@ as.DataFrame.default <- function(x) {
 #' @export
 "[.DataFrame" <- function(x, i, j, ..., by, drop) {
   # this is basically the dispatch function. I do NOT use default values because
-  # missing values have a meaning in the special syntax expected from [
+  # missing arguments have a meaning in the special syntax expected from [
 
   j <- if (missing(j)) NULL else j
   j <- if (!missing(i) && nargs() == 2) i else j
