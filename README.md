@@ -1,6 +1,6 @@
 ---
 title: "Introduction to DataFrame"
-date: "2015-11-24"
+date: "2015-11-25"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Introduction to DataFrame}
@@ -92,6 +92,30 @@ myIdentical <- function(a, b) {
 
 
 ```r
+dat %>%
+  mutar(~1:10)
+```
+
+```
+## Source: local data frame [10 x 16]
+## 
+##     year month   day dep_time dep_delay arr_time arr_delay carrier tailnum
+##    (int) (int) (int)    (int)     (dbl)    (int)     (dbl)   (chr)   (chr)
+## 1   2013     1     1      517         2      830        11      UA  N14228
+## 2   2013     1     1      533         4      850        20      UA  N24211
+## 3   2013     1     1      542         2      923        33      AA  N619AA
+## 4   2013     1     1      544        -1     1004       -18      B6  N804JB
+## 5   2013     1     1      554        -6      812       -25      DL  N668DN
+## 6   2013     1     1      554        -4      740        12      UA  N39463
+## 7   2013     1     1      555        -5      913        19      B6  N516JB
+## 8   2013     1     1      557        -3      709       -14      EV  N829AS
+## 9   2013     1     1      557        -3      838        -8      B6  N593JB
+## 10  2013     1     1      558        -2      753         8      AA  N3ALAA
+## Variables not shown: flight (int), origin (chr), dest (chr), air_time
+##   (dbl), distance (dbl), hour (dbl), minute (dbl)
+```
+
+```r
 myIdentical(
   filter(flights, month == 1, day == 1),
   dat[~ month == 1 & day == 1]
@@ -130,6 +154,31 @@ myIdentical(
 
 
 ```r
+dat %>%
+  mutar(~order(year, month, day))
+```
+
+```
+## Source: local data frame [336,776 x 16]
+## 
+##     year month   day dep_time dep_delay arr_time arr_delay carrier tailnum
+##    (int) (int) (int)    (int)     (dbl)    (int)     (dbl)   (chr)   (chr)
+## 1   2013     1     1      517         2      830        11      UA  N14228
+## 2   2013     1     1      533         4      850        20      UA  N24211
+## 3   2013     1     1      542         2      923        33      AA  N619AA
+## 4   2013     1     1      544        -1     1004       -18      B6  N804JB
+## 5   2013     1     1      554        -6      812       -25      DL  N668DN
+## 6   2013     1     1      554        -4      740        12      UA  N39463
+## 7   2013     1     1      555        -5      913        19      B6  N516JB
+## 8   2013     1     1      557        -3      709       -14      EV  N829AS
+## 9   2013     1     1      557        -3      838        -8      B6  N593JB
+## 10  2013     1     1      558        -2      753         8      AA  N3ALAA
+## ..   ...   ...   ...      ...       ...      ...       ...     ...     ...
+## Variables not shown: flight (int), origin (chr), dest (chr), air_time
+##   (dbl), distance (dbl), hour (dbl), minute (dbl)
+```
+
+```r
 myIdentical(
   arrange(flights, year, month, day),
   dat[~order(year, month, day)]
@@ -143,8 +192,32 @@ myIdentical(
 
 ### Select cols
 
-You can use characters and logicals to select cols of a *DataFrame*. Using numeric values is not supported; it is error prone and I have spent too many hours of my live debugging code where I relied on positions in a data frame.
+You can use characters and logicals to select cols of a *DataFrame*. Using numeric values is not supported; it is error prone and I have spent too many hours of my life debugging code where I relied on positions in a data frame.
 
+
+```r
+dat %>%
+  mutar(c("year", "month", "day")) %>%
+  mutar("year:day")
+```
+
+```
+## Source: local data frame [336,776 x 3]
+## 
+##     year month   day
+##    (int) (int) (int)
+## 1   2013     1     1
+## 2   2013     1     1
+## 3   2013     1     1
+## 4   2013     1     1
+## 5   2013     1     1
+## 6   2013     1     1
+## 7   2013     1     1
+## 8   2013     1     1
+## 9   2013     1     1
+## 10  2013     1     1
+## ..   ...   ...   ...
+```
 
 ```r
 myIdentical(
@@ -168,12 +241,12 @@ myIdentical(
 ## [1] TRUE
 ```
 
-You can also pass in a function wich checks if you want to select a column, e.g.
+You can also pass in a function which checks if you want to select a column, e.g.
 select all numeric cols:
 
 
 ```r
-dat[is.numeric]
+dat[is.numeric] # or mutar(dat, is.numeric)
 ```
 
 ```
@@ -224,6 +297,31 @@ dat[function(x) any(is.na(x))]
 
 
 ```r
+dat %>%
+  mutar(gain ~ arr_delay - dep_delay,
+        speed ~ distance / air_time * 60) %>%
+  mutar("^gain|speed$")
+```
+
+```
+## Source: local data frame [336,776 x 2]
+## 
+##     gain    speed
+##    (dbl)    (dbl)
+## 1      9 370.0441
+## 2     16 374.2731
+## 3     31 408.3750
+## 4    -17 516.7213
+## 5    -19 394.1379
+## 6     16 287.6000
+## 7     24 404.4304
+## 8    -11 259.2453
+## 9     -5 404.5714
+## 10    10 318.6957
+## ..   ...      ...
+```
+
+```r
 myIdentical(
   mutate(flights,
          gain = arr_delay - dep_delay,
@@ -239,6 +337,30 @@ myIdentical(
 
 ### Summarise
 
+
+```r
+dat %>%
+  mutar(delay ~ mean(dep_delay, na.rm = TRUE), by = "month")
+```
+
+```
+## Source: local data frame [12 x 2]
+## 
+##    month     delay
+##    (int)     (dbl)
+## 1      1 10.036665
+## 2      2 10.816843
+## 3      3 13.227076
+## 4      4 13.938038
+## 5      5 12.986859
+## 6      6 20.846332
+## 7      7 21.727787
+## 8      8 12.611040
+## 9      9  6.722476
+## 10    10  6.243988
+## 11    11  5.435362
+## 12    12 16.576688
+```
 
 ```r
 myIdentical(
@@ -263,7 +385,35 @@ delay1 <- flights %>%
   ) %>%
   filter(count > 20, dist < 2000)
 
-# dat:
+# dat #1:
+dat %>%
+  mutar(count ~ n(),
+        dist ~ mean(distance, na.rm = TRUE),
+        delay ~ mean(arr_delay, na.rm = TRUE),
+        by = "tailnum") %>%
+  mutar(~count > 20 & dist < 2000)
+```
+
+```
+## Source: local data frame [2,962 x 4]
+## 
+##    tailnum count     dist      delay
+##      (chr) (int)    (dbl)      (dbl)
+## 1           2512 710.2576        NaN
+## 2   N0EGMQ   371 676.1887  9.9829545
+## 3   N10156   153 757.9477 12.7172414
+## 4   N102UW    48 535.8750  2.9375000
+## 5   N103US    46 535.1957 -6.9347826
+## 6   N104UW    47 535.2553  1.8043478
+## 7   N10575   289 519.7024 20.6914498
+## 8   N105UW    45 524.8444 -0.2666667
+## 9   N107US    41 528.7073 -5.7317073
+## 10  N108UW    60 534.5000 -1.2500000
+## ..     ...   ...      ...        ...
+```
+
+```r
+# dat #2:
 delay2 <- dat[
   count ~ n(),
   dist ~ mean(distance, na.rm = TRUE),

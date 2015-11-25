@@ -2,6 +2,7 @@
 
 S3method("[",DataFrame)
 S3method(as.DataFrame,default)
+export("%>%")
 export(DataFrame)
 export(as.DataFrame)
 export(mutar)
