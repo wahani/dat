@@ -5,6 +5,7 @@
 \alias{[.DataFrame}
 \alias{as.DataFrame}
 \alias{as.DataFrame.default}
+\alias{mutar}
 \title{DataFrame and methods}
 \usage{
 DataFrame(...)
@@ -14,6 +15,8 @@ as.DataFrame(x)
 \method{as.DataFrame}{default}(x)
 
 \method{[}{DataFrame}(x, i, j, ..., by, drop)
+
+mutar(x, i, j, ..., by, drop)
 }
 \arguments{
 \item{...}{arbitrary number of args
@@ -37,7 +40,7 @@ examples.
 }
 \examples{
 \dontrun{
-vignette("Introduction", "dat")
+  vignette("Introduction", "dat")
 }
 
 }

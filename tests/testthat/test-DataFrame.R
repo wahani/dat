@@ -1,17 +1,18 @@
+# helpers for testing:
+isIdentical <- function(a, b) {
+  unify <- function(x) {
+    x <- as.data.frame(x)
+    rownames(x) <- NULL
+    x
+  }
+  identical(unify(a), unify(b))
+}
+
+expectIdentical <- function(a, b) {
+  testthat::expect_true(isIdentical(a, b))
+}
+
 test_that("Basic syntax of a DataFrame", {
-
-  isIdentical <- function(a, b) {
-    unify <- function(x) {
-      x <- as.data.frame(x)
-      rownames(x) <- NULL
-      x
-    }
-    identical(unify(a), unify(b))
-  }
-
-  expectIdentical <- function(a, b) {
-    testthat::expect_true(isIdentical(a, b))
-  }
 
   dat <- DataFrame(x = 1:10, y = 11:20, yx = 1)
   datRef <- as.data.frame(dat)
@@ -142,7 +143,16 @@ test_that("Basic syntax of a DataFrame", {
     datRef[]
   )
 
+  expectIdentical(
+    dat[id ~ x > 4][count ~ n(), by = "id"],
+    dat %>%
+      mutar(id ~ x > 4) %>%
+      mutar(count ~ n(), by = "id")
+  )
+
 })
+
+
 
 test_that("Type conversion", {
 

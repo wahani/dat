@@ -17,7 +17,11 @@ DataFrame <- function(...) {
   addClass(dat, "DataFrame")
 }
 
-setOldClass("DataFrame")
+# To make the inheritance of DataFrame clear for S4:
+setOldClass(c("DataFrame", "data.frame"))
+# dplyr functions destroy the class you give them, so we need to explain that
+# they are data.frames:
+setOldClass(c("tbl_df", "data.frame"))
 
 #' @rdname DataFrame
 #' @export
@@ -45,91 +49,101 @@ as.DataFrame.default <- function(x) {
   # this is basically the dispatch function. I do NOT use default values because
   # missing arguments have a meaning in the special syntax expected from [
 
+  # Assertions:
+  stopifnot(inherits(x, "data.frame"))
+
+  # This is hands on dispatch for missing arguments:
   j <- if (missing(j)) NULL else j
   j <- if (!missing(i) && nargs() == 2) i else j
   i <- if (missing(i) || nargs() == 2) NULL else i
   by <- if (missing(by)) NULL else by
+  classOfX <- class(x)
 
-  x %>%
+  x %<>%
     handleRows(dispatcher(i)) %>%
     handleCols(dispatcher(i), dispatcher(j), ..., by = dispatcher(by))
 
+  class(x) <- classOfX
+  x
+
 }
 
-DataFrame : handleRows(x, i) %g% standardGeneric("handleRows")
+#' @rdname DataFrame
+#' @export
+mutar <- `[.DataFrame`
 
-handleRows(x ~ DataFrame, i ~ NULL) %m% x
+data.frame : handleRows(x, i) %g% standardGeneric("handleRows")
 
-handleRows(x ~ DataFrame, i ~ logical) %m% {
+handleRows(x ~ data.frame, i ~ NULL) %m% x
+
+handleRows(x ~ data.frame, i ~ logical) %m% {
   .__i__ <- i
-  addClass(dplyr::filter(x, .__i__), "DataFrame")
+  dplyr::filter(x, .__i__)
 }
 
-handleRows(x ~ DataFrame, i ~ numeric | integer) %m% {
+handleRows(x ~ data.frame, i ~ numeric | integer) %m% {
   ".__i__" <- i
-  addClass(dplyr::slice(x, .__i__), "DataFrame")
+  dplyr::slice(x, .__i__)
 }
 
-handleRows(x ~ DataFrame, i ~ OneSidedFormula) %m% {
+handleRows(x ~ data.frame, i ~ OneSidedFormula) %m% {
   envir <- environment(i)
   expr <- parse(text = sub("~", "", deparse(i)))
-  addClass(x[do.call(with, list(x, expr)), ], "DataFrame")
+  mutar(x, do.call(with, list(x, expr)), )
 }
 
-handleRows(x ~ DataFrame, i ~ TwoSidedFormula) %m% x
+handleRows(x ~ data.frame, i ~ TwoSidedFormula) %m% x
 
 
-DataFrame : handleCols(x, i, j, ..., by) %g% standardGeneric("handleCols")
+data.frame : handleCols(x, i, j, ..., by) %g% standardGeneric("handleCols")
 
-handleCols(x ~ DataFrame, i ~ NULL, j ~ NULL, ..., by ~ NULL) %m% x
+handleCols(x ~ data.frame, i ~ NULL, j ~ NULL, ..., by ~ NULL) %m% x
 
-handleCols(x ~ DataFrame, i ~ NULL, j ~ character, ..., by ~ NULL) %m% {
+handleCols(x ~ data.frame, i ~ NULL, j ~ character, ..., by ~ NULL) %m% {
   dplyr::select_(x, .dots = j)
 }
 
-handleCols(x ~ DataFrame, i ~ NULL, j ~ RegEx, ..., by ~ NULL) %m% {
+handleCols(x ~ data.frame, i ~ NULL, j ~ RegEx, ..., by ~ NULL) %m% {
   dplyr::select(x, matches(j))
 }
 
-handleCols(x ~ DataFrame, i ~ NULL, j ~ logical, ..., by ~ NULL) %m% {
+handleCols(x ~ data.frame, i ~ NULL, j ~ logical, ..., by ~ NULL) %m% {
   `[.data.frame`(x, j)
 }
 
-handleCols(x ~ DataFrame, i ~ NULL, j ~ "function", ..., by ~ NULL) %m% {
-  x[vapply(x, j, logical(1))]
+handleCols(x ~ data.frame, i ~ NULL, j ~ "function", ..., by ~ NULL) %m% {
+  mutar(x, vapply(x, j, logical(1)))
 }
 
-handleCols(x ~ DataFrame, i ~ NULL, j ~ OneSidedFormula, ..., by ~ NULL) %m% {
+handleCols(x ~ data.frame, i ~ NULL, j ~ OneSidedFormula, ..., by ~ NULL) %m% {
   handleRows(x, j)
 }
 
-handleCols(x ~ DataFrame,
+handleCols(x ~ data.frame,
            i ~ logical | numeric | integer | OneSidedFormula,
            j ~ ANY, ..., by ~ ANY) %m% {
              handleCols(x, NULL, j, ..., by = by)
            }
 
-handleCols(x ~ DataFrame,
+handleCols(x ~ data.frame,
            i ~ TwoSidedFormula | NULL,
            j ~ TwoSidedFormula | NULL,
            ...,
            by ~ NULL) %m% {
              args <- constructArgs(i, j, ...)
-             addClass(
-               class = "DataFrame",
-               eval(
-                 parse(text = paste0(
-                   "dplyr::mutate(x,", paste0(args, collapse = ","), ")"))
-               )
+             eval(
+               parse(text = paste0(
+                 "dplyr::mutate(x,", paste0(args, collapse = ","), ")"))
              )
            }
 
-handleCols(x ~ DataFrame,
+handleCols(x ~ data.frame,
            i ~ TwoSidedFormula | NULL, j ~ TwoSidedFormula | NULL,
            ..., by ~ character) %m% {
              args <- constructArgs(i, j, ...)
              x <- dplyr::group_by_(x, .dots = by)
-             addClass(class = "DataFrame", eval(parse(text = paste0(
-               "dplyr::summarise(x,", paste0(args, collapse = ","), ")")))
+             eval(parse(text = paste0(
+               "dplyr::summarise(x,", paste0(args, collapse = ","), ")"))
              )
+
            }

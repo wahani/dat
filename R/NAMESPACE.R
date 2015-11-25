@@ -1,4 +1,4 @@
-#' @importFrom magrittr %>%
+#' @importFrom magrittr %>% %<>%
 #' @import methods
 #' @import aoos
 NULL
