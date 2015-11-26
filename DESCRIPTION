@@ -26,4 +26,6 @@ Collate:
     'helper.R'
     'DataFrame.R'
     'NAMESPACE.R'
+    'as.function.R'
+    'map.R'
     'pipeExport.R'
