@@ -1,6 +1,12 @@
-setGeneric("as.function")
-
-as.function(x ~ formula, ...) %m% {
+#' Convert into function
+#'
+#' Convert a formula into a function. See \link{map} for examples.
+#'
+#' @param x (formula)
+#' @param ... not used
+#'
+#' @export
+as.function.formula <- function(x, ...) {
   # 1: ~ . -> function(.) .
   # 2: x ~ x -> function(x) x
   # 3: f(x, y) ~ x + y -> function(x, y) x + y

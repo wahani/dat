@@ -12,6 +12,8 @@ map(1:3, . ~ .^2) # lapply
 map(1:3, numeric(1) : x ~ x^2) # vapply
 map(L(1:4, 4:1), f(x, y) ~ rep(x, y)) # mapply
 map(L(1:10, 11:20), c) # zip
+map(L(1:10, 11:20), c) %>% 
+  { map(do.call(L, .), c) } # unzip
 
 ## ------------------------------------------------------------------------
 library(nycflights13)

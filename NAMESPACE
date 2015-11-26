@@ -2,6 +2,7 @@
 
 S3method("[",DataFrame)
 S3method(as.DataFrame,default)
+S3method(as.function,formula)
 export("%>%")
 export(DataFrame)
 export(L)

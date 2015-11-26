@@ -13,7 +13,7 @@ vignette: >
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/dat)](http://cran.r-project.org/package=dat)
 [![Downloads](http://cranlogs.r-pkg.org/badges/dat?color=brightgreen)](http://www.r-pkg.org/pkg/dat)
 
-Provides a class and methods for working with data frames extending what can be found in the dplyr.
+Some tools (linking to dplyr where possible) to work with data.frames and an implementation of map. The package follows a 'one-function-to-rule-them-all' mentallity apposed to packages like purrr and dplyr which have many simple functions.
 
 ## Installation
 
@@ -26,11 +26,11 @@ devtools::install_github("wahani/dat")
 
 - You probably have to rewrite all your dplyr / data.table code once you put it 
 inside a package. I.e. working around non standard evaluation or find another
-way to apiece R CMD check. And you don't like that.
-- We work together and you have to understand code I wrote.
-- You like currying as in rlist and purrr
+way to satisfy R CMD check. And you don't like that.
+- You like currying as in rlist and purrr.
 - You find it annoying that you constantly have to switch between lapply, vapply
-and mapply (and other map functions)
+and mapply (and other map functions).
+- We work together and you have to understand code I wrote.
 
 ## map
 
@@ -127,6 +127,19 @@ map(L(1:10, 11:20), c) # zip
 ## 
 ## [[10]]
 ## [1] 10 20
+```
+
+```r
+map(L(1:10, 11:20), c) %>% 
+  { map(do.call(L, .), c) } # unzip
+```
+
+```
+## [[1]]
+##  [1]  1  2  3  4  5  6  7  8  9 10
+## 
+## [[2]]
+##  [1] 11 12 13 14 15 16 17 18 19 20
 ```
 
 
@@ -286,7 +299,9 @@ myIdentical(
 
 ### Select cols
 
-You can use characters and logicals to select cols of a *DataFrame*. Using numeric values is not supported; it is error prone and I have spent too many hours of my life debugging code where I relied on positions in a data frame.
+You can use characters and logicals to select cols of a *DataFrame*. Using
+numeric values is not supported; it is error prone and I have spent too many
+hours of my life debugging code where I relied on positions in a data frame.
 
 
 ```r
