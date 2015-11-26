@@ -1,9 +1,9 @@
 ---
-title: "Introduction to DataFrame"
-date: "2015-11-25"
+title: "Tools for Data Manipulation"
+date: "2015-11-26"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Introduction to DataFrame}
+  %\VignetteIndexEntry{Tools for Data Manipulation}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -24,21 +24,116 @@ devtools::install_github("wahani/dat")
 
 ## Why should you care?
 
-This package links to dplyr functions and does not cover everything in it, so
-why should you care:
-
 - You probably have to rewrite all your dplyr / data.table code once you put it 
 inside a package. I.e. working around non standard evaluation or find another
 way to apiece R CMD check. And you don't like that.
 - We work together and you have to understand code I wrote.
+- You like currying as in rlist and purrr
+- You find it annoying that you constantly have to switch between lapply, vapply
+and mapply (and other map functions)
 
-I cannot think of other reasons why you should care, of course if you just like
-the syntax that's fine too.
+## map
+
+What we can do with map:
 
 
-## Examples:
+```r
+library(dat)
+dat <- DataFrame(x = 1, y = c(2, NA))
+map(dat, x ~ x + 1, ~ !any(is.na(.)))
+```
 
-I took the examples from the introductory vignette of dplyr. Things that are not supported:
+```
+## Source: local data frame [2 x 2]
+## 
+##       x     y
+##   (dbl) (dbl)
+## 1     2     2
+## 2     2    NA
+```
+
+```r
+map(1:3, . ~ .^2) # lapply
+```
+
+```
+## [[1]]
+## [1] 1
+## 
+## [[2]]
+## [1] 4
+## 
+## [[3]]
+## [1] 9
+```
+
+```r
+map(1:3, numeric(1) : x ~ x^2) # vapply
+```
+
+```
+## [1] 1 4 9
+```
+
+```r
+map(L(1:4, 4:1), f(x, y) ~ rep(x, y)) # mapply
+```
+
+```
+## [[1]]
+## [1] 1 1 1 1
+## 
+## [[2]]
+## [1] 2 2 2
+## 
+## [[3]]
+## [1] 3 3
+## 
+## [[4]]
+## [1] 4
+```
+
+```r
+map(L(1:10, 11:20), c) # zip
+```
+
+```
+## [[1]]
+## [1]  1 11
+## 
+## [[2]]
+## [1]  2 12
+## 
+## [[3]]
+## [1]  3 13
+## 
+## [[4]]
+## [1]  4 14
+## 
+## [[5]]
+## [1]  5 15
+## 
+## [[6]]
+## [1]  6 16
+## 
+## [[7]]
+## [1]  7 17
+## 
+## [[8]]
+## [1]  8 18
+## 
+## [[9]]
+## [1]  9 19
+## 
+## [[10]]
+## [1] 10 20
+```
+
+
+## Data Frame
+
+I took the examples from the introductory vignette of dplyr. Things that are not
+supported:
 
 - no rename
 - no distinct
@@ -51,7 +146,6 @@ when you need them.
 ```r
 library(nycflights13)
 library(dplyr)
-library(dat)
 
 dat <- do.call(DataFrame, flights)
 str(dat)
@@ -427,5 +521,37 @@ myIdentical(delay1, delay2)
 
 ```
 ## [1] TRUE
+```
+
+### Mixing dplyr and mutar
+
+
+```r
+dat %>%
+  group_by(tailnum) %>%
+  summarise(
+    count = n(),
+    dist = mean(distance, na.rm = TRUE),
+    delay = mean(arr_delay, na.rm = TRUE)
+  ) %>%
+  mutar(~count > 20 & dist < 2000)
+```
+
+```
+## Source: local data frame [2,962 x 4]
+## 
+##    tailnum count     dist      delay
+##      (chr) (int)    (dbl)      (dbl)
+## 1           2512 710.2576        NaN
+## 2   N0EGMQ   371 676.1887  9.9829545
+## 3   N10156   153 757.9477 12.7172414
+## 4   N102UW    48 535.8750  2.9375000
+## 5   N103US    46 535.1957 -6.9347826
+## 6   N104UW    47 535.2553  1.8043478
+## 7   N10575   289 519.7024 20.6914498
+## 8   N105UW    45 524.8444 -0.2666667
+## 9   N107US    41 528.7073 -5.7317073
+## 10  N108UW    60 534.5000 -1.2500000
+## ..     ...   ...      ...        ...
 ```
 

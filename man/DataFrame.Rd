@@ -27,8 +27,8 @@ mutar(x, i, j, ..., by, drop)
 
 \item{i}{(logical | numeric | integer | OneSidedFormula | TwoSidedFormula)}
 
-\item{j}{(logical | character | TwoSidedFormula | function) character which
-begin with '__' or '^' are interpreted as regular expression}
+\item{j}{(logical | character | TwoSidedFormula | function) character
+beginning with '^' are interpreted as regular expression}
 
 \item{by}{(character) variable name}
 
@@ -36,7 +36,8 @@ begin with '__' or '^' are interpreted as regular expression}
 }
 \description{
 There are many ways to use a DataFrame. Please see the vignette to see some
-examples.
+examples. \code{mutar} is literally the same function as \code{[.DataFrame}
+and can be used to mix up with dplyr.
 }
 \examples{
 \dontrun{

@@ -9,9 +9,9 @@
 <meta name="generator" content="pandoc" />
 
 
-<meta name="date" content="2015-11-24" />
+<meta name="date" content="2015-11-26" />
 
-<title>Introduction to DataFrame</title>
+<title>Tools for Data Manipulation</title>
 
 
 
@@ -51,15 +51,101 @@ code > span.er { color: #ff0000; font-weight: bold; }
 
 
 <div id="header">
-<h1 class="title">Introduction to DataFrame</h1>
-<h4 class="date"><em>2015-11-24</em></h4>
+<h1 class="title">Tools for Data Manipulation</h1>
+<h4 class="date"><em>2015-11-26</em></h4>
 </div>
 
 
-<p><a href="https://travis-ci.org/wahani/dat"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5OCIgaGVpZ2h0PSIyMCI+PGxpbmVhckdyYWRpZW50IGlkPSJhIiB4Mj0iMCIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI2JiYiIgc3RvcC1vcGFjaXR5PSIuMSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1vcGFjaXR5PSIuMSIvPjwvbGluZWFyR3JhZGllbnQ+PHJlY3Qgcng9IjMiIHdpZHRoPSI5OCIgaGVpZ2h0PSIyMCIgZmlsbD0iIzU1NSIvPjxyZWN0IHJ4PSIzIiB4PSIzNyIgd2lkdGg9IjYxIiBoZWlnaHQ9IjIwIiBmaWxsPSIjOWY5ZjlmIi8+PHBhdGggZmlsbD0iIzlmOWY5ZiIgZD0iTTM3IDBoNHYyMGgtNHoiLz48cmVjdCByeD0iMyIgd2lkdGg9Ijk4IiBoZWlnaHQ9IjIwIiBmaWxsPSJ1cmwoI2EpIi8+PGcgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLFZlcmRhbmEsR2VuZXZhLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPjx0ZXh0IHg9IjE5LjUiIHk9IjE1IiBmaWxsPSIjMDEwMTAxIiBmaWxsLW9wYWNpdHk9Ii4zIj5idWlsZDwvdGV4dD48dGV4dCB4PSIxOS41IiB5PSIxNCI+YnVpbGQ8L3RleHQ+PHRleHQgeD0iNjYuNSIgeT0iMTUiIGZpbGw9IiMwMTAxMDEiIGZpbGwtb3BhY2l0eT0iLjMiPnVua25vd248L3RleHQ+PHRleHQgeD0iNjYuNSIgeT0iMTQiPnVua25vd248L3RleHQ+PC9nPjwvc3ZnPg==" alt="Travis-CI Build Status" /></a> <a href="https://codecov.io/github/wahani/dat?branch=master"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjEiIGhlaWdodD0iMjAiPjxsaW5lYXJHcmFkaWVudCBpZD0iYiIgeDI9IjAiIHkyPSIxMDAlIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNiYmIiIHN0b3Atb3BhY2l0eT0iLjEiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3Atb3BhY2l0eT0iLjEiLz48L2xpbmVhckdyYWRpZW50PjxtYXNrIGlkPSJhIj48cmVjdCB3aWR0aD0iMTIxIiBoZWlnaHQ9IjIwIiByeD0iMyIgZmlsbD0iI2ZmZiIvPjwvbWFzaz48ZyBtYXNrPSJ1cmwoI2EpIj48cGF0aCBmaWxsPSIjNTU1IiBkPSJNMCAwaDYwdjIwSDB6Ii8+PHBhdGggZmlsbD0iIzlmOWY5ZiIgZD0iTTYwIDBoNjF2MjBINjB6Ii8+PHBhdGggZmlsbD0idXJsKCNiKSIgZD0iTTAgMGgxMjF2MjBIMHoiLz48L2c+PGcgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLFZlcmRhbmEsR2VuZXZhLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPjx0ZXh0IHg9IjMwIiB5PSIxNSIgZmlsbD0iIzAxMDEwMSIgZmlsbC1vcGFjaXR5PSIuMyI+Q29kZWNvdjwvdGV4dD48dGV4dCB4PSIzMCIgeT0iMTQiPkNvZGVjb3Y8L3RleHQ+PHRleHQgeD0iODkuNSIgeT0iMTUiIGZpbGw9IiMwMTAxMDEiIGZpbGwtb3BhY2l0eT0iLjMiPnVua25vd248L3RleHQ+PHRleHQgeD0iODkuNSIgeT0iMTQiPnVua25vd248L3RleHQ+PC9nPjwvc3ZnPg==" alt="codecov.io" /></a> <a href="http://cran.r-project.org/package=dat"><img src="data:image/svg+xml; charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNDQiIGhlaWdodD0iMjAiPgogIDxsaW5lYXJHcmFkaWVudCBpZD0iYiIgeDI9IjAiIHkyPSIxMDAlIj4KICAgIDxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI2JiYiIgc3RvcC1vcGFjaXR5PSIuMSIvPgogICAgPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLW9wYWNpdHk9Ii4xIi8+CiAgPC9saW5lYXJHcmFkaWVudD4KICA8bWFzayBpZD0iYSI+CiAgICA8cmVjdCB3aWR0aD0iMTQ0IiBoZWlnaHQ9IjIwIiByeD0iMyIgZmlsbD0iI2ZmZiIvPgogIDwvbWFzaz4KICA8ZyBtYXNrPSJ1cmwoI2EpIj4KICAgIDxwYXRoIGZpbGw9IiM1NTUiIGQ9Ik0wIDBoNDN2MjBIMHoiLz4KICAgIDxwYXRoIGZpbGw9IiNlMDVkNDQiIGQ9Ik00MyAwaDEyN3YyMEg0M3oiLz4KICAgIDxwYXRoIGZpbGw9InVybCgjYikiIGQ9Ik0wIDBoMTQ0djIwSDB6Ii8+CiAgPC9nPgogIDxnIGZpbGw9IiNmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiCiAgICAgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLFZlcmRhbmEsR2VuZXZhLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPgogICAgPHRleHQgeD0iMjEuNSIgeT0iMTUiIGZpbGw9IiMwMTAxMDEiIGZpbGwtb3BhY2l0eT0iLjMiPgogICAgICBDUkFOCiAgICA8L3RleHQ+CiAgICA8dGV4dCB4PSIyMS41IiB5PSIxNCI+CiAgICAgIENSQU4KICAgIDwvdGV4dD4KICAgIDx0ZXh0IHg9IjkyLjUiIHk9IjE1IiBmaWxsPSIjMDEwMTAxIiBmaWxsLW9wYWNpdHk9Ii4zIj4KICAgICAgbm90IHB1Ymxpc2hlZAogICAgPC90ZXh0PgogICAgPHRleHQgeD0iOTIuNSIgeT0iMTQiPgogICAgICBub3QgcHVibGlzaGVkCiAgICA8L3RleHQ+CiAgPC9nPgo8L3N2Zz4=" alt="CRAN_Status_Badge" /></a> <a href="http://www.r-pkg.org/pkg/dat"><img src="data:image/svg+xml; charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNDkiIGhlaWdodD0iMjAiPgogIDxsaW5lYXJHcmFkaWVudCBpZD0iYiIgeDI9IjAiIHkyPSIxMDAlIj4KICAgIDxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI2JiYiIgc3RvcC1vcGFjaXR5PSIuMSIvPgogICAgPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLW9wYWNpdHk9Ii4xIi8+CiAgPC9saW5lYXJHcmFkaWVudD4KICA8bWFzayBpZD0iYSI+CiAgICA8cmVjdCB3aWR0aD0iMTQ5IiBoZWlnaHQ9IjIwIiByeD0iMyIgZmlsbD0iI2ZmZiIvPgogIDwvbWFzaz4KICA8ZyBtYXNrPSJ1cmwoI2EpIj48cGF0aCBmaWxsPSIjNTU1IiBkPSJNMCAwaDcwdjIwSDB6Ii8+CiAgICA8cGF0aCBmaWxsPSIjNGMxIiBkPSJNNzAgMGg3OXYyMEg3MHoiLz4KICAgIDxwYXRoIGZpbGw9InVybCgjYikiIGQ9Ik0wIDBoMTQ5djIwSDB6Ii8+CiAgPC9nPgogIDxnIGZpbGw9IiNmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiCiAgICAgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLFZlcmRhbmEsR2VuZXZhLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPgogICAgPHRleHQgeD0iMzYiIHk9IjE1IiBmaWxsPSIjMDEwMTAxIiBmaWxsLW9wYWNpdHk9Ii4zIj4KICAgICAgZG93bmxvYWRzCiAgICA8L3RleHQ+CiAgICA8dGV4dCB4PSIzNiIgeT0iMTQiPgogICAgICBkb3dubG9hZHMKICAgIDwvdGV4dD4KICAgIDx0ZXh0IHg9IjEwOC41IiB5PSIxNSIgZmlsbD0iIzAxMDEwMSIgZmlsbC1vcGFjaXR5PSIuMyI+CiAgICAgIDAvbW9udGgKICAgIDwvdGV4dD4KICAgIDx0ZXh0IHg9IjEwOC41IiB5PSIxNCI+CiAgICAgIDAvbW9udGgKICAgIDwvdGV4dD4KICA8L2c+Cjwvc3ZnPg==" alt="Downloads" /></a></p>
+<p><a href="https://travis-ci.org/wahani/dat"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5MCIgaGVpZ2h0PSIyMCI+PGxpbmVhckdyYWRpZW50IGlkPSJhIiB4Mj0iMCIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI2JiYiIgc3RvcC1vcGFjaXR5PSIuMSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1vcGFjaXR5PSIuMSIvPjwvbGluZWFyR3JhZGllbnQ+PHJlY3Qgcng9IjMiIHdpZHRoPSI5MCIgaGVpZ2h0PSIyMCIgZmlsbD0iIzU1NSIvPjxyZWN0IHJ4PSIzIiB4PSIzNyIgd2lkdGg9IjUzIiBoZWlnaHQ9IjIwIiBmaWxsPSIjNGMxIi8+PHBhdGggZmlsbD0iIzRjMSIgZD0iTTM3IDBoNHYyMGgtNHoiLz48cmVjdCByeD0iMyIgd2lkdGg9IjkwIiBoZWlnaHQ9IjIwIiBmaWxsPSJ1cmwoI2EpIi8+PGcgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLFZlcmRhbmEsR2VuZXZhLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPjx0ZXh0IHg9IjE5LjUiIHk9IjE1IiBmaWxsPSIjMDEwMTAxIiBmaWxsLW9wYWNpdHk9Ii4zIj5idWlsZDwvdGV4dD48dGV4dCB4PSIxOS41IiB5PSIxNCI+YnVpbGQ8L3RleHQ+PHRleHQgeD0iNjIuNSIgeT0iMTUiIGZpbGw9IiMwMTAxMDEiIGZpbGwtb3BhY2l0eT0iLjMiPnBhc3Npbmc8L3RleHQ+PHRleHQgeD0iNjIuNSIgeT0iMTQiPnBhc3Npbmc8L3RleHQ+PC9nPjwvc3ZnPg==" alt="Travis-CI Build Status" /></a> <a href="https://codecov.io/github/wahani/dat?branch=master"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5NiIgaGVpZ2h0PSIyMCI+PGxpbmVhckdyYWRpZW50IGlkPSJiIiB4Mj0iMCIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI2JiYiIgc3RvcC1vcGFjaXR5PSIuMSIgLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3Atb3BhY2l0eT0iLjEiIC8+PC9saW5lYXJHcmFkaWVudD48bWFzayBpZD0iYSI+PHJlY3Qgd2lkdGg9Ijk2IiBoZWlnaHQ9IjIwIiByeD0iMyIgZmlsbD0iI2ZmZiIgLz48L21hc2s+PGcgbWFzaz0idXJsKCNhKSI+PHBhdGggZmlsbD0iIzU1NSIgZD0iTTAgMGg2MHYyMEgweiIgLz48cGF0aCBmaWxsPSIjNGMxIiBkPSJNNjAgMGgzNnYyMEg2MHoiIC8+PHBhdGggZmlsbD0idXJsKCNiKSIgZD0iTTAgMGg5NnYyMEgweiIgLz48L2c+PGcgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLFZlcmRhbmEsR2VuZXZhLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPjx0ZXh0IHg9IjMwIiB5PSIxNSIgZmlsbD0iIzAxMDEwMSIgZmlsbC1vcGFjaXR5PSIuMyI+Q29kZWNvdjwvdGV4dD48dGV4dCB4PSIzMCIgeT0iMTQiPkNvZGVjb3Y8L3RleHQ+PHRleHQgeD0iNzciIHk9IjE1IiBmaWxsPSIjMDEwMTAxIiBmaWxsLW9wYWNpdHk9Ii4zIj45NSU8L3RleHQ+PHRleHQgeD0iNzciIHk9IjE0Ij45NSU8L3RleHQ+PC9nPjwvc3ZnPg==" alt="codecov.io" /></a> <a href="http://cran.r-project.org/package=dat"><img src="data:image/svg+xml; charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNDQiIGhlaWdodD0iMjAiPgogIDxsaW5lYXJHcmFkaWVudCBpZD0iYiIgeDI9IjAiIHkyPSIxMDAlIj4KICAgIDxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI2JiYiIgc3RvcC1vcGFjaXR5PSIuMSIvPgogICAgPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLW9wYWNpdHk9Ii4xIi8+CiAgPC9saW5lYXJHcmFkaWVudD4KICA8bWFzayBpZD0iYSI+CiAgICA8cmVjdCB3aWR0aD0iMTQ0IiBoZWlnaHQ9IjIwIiByeD0iMyIgZmlsbD0iI2ZmZiIvPgogIDwvbWFzaz4KICA8ZyBtYXNrPSJ1cmwoI2EpIj4KICAgIDxwYXRoIGZpbGw9IiM1NTUiIGQ9Ik0wIDBoNDN2MjBIMHoiLz4KICAgIDxwYXRoIGZpbGw9IiNlMDVkNDQiIGQ9Ik00MyAwaDEyN3YyMEg0M3oiLz4KICAgIDxwYXRoIGZpbGw9InVybCgjYikiIGQ9Ik0wIDBoMTQ0djIwSDB6Ii8+CiAgPC9nPgogIDxnIGZpbGw9IiNmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiCiAgICAgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLFZlcmRhbmEsR2VuZXZhLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPgogICAgPHRleHQgeD0iMjEuNSIgeT0iMTUiIGZpbGw9IiMwMTAxMDEiIGZpbGwtb3BhY2l0eT0iLjMiPgogICAgICBDUkFOCiAgICA8L3RleHQ+CiAgICA8dGV4dCB4PSIyMS41IiB5PSIxNCI+CiAgICAgIENSQU4KICAgIDwvdGV4dD4KICAgIDx0ZXh0IHg9IjkyLjUiIHk9IjE1IiBmaWxsPSIjMDEwMTAxIiBmaWxsLW9wYWNpdHk9Ii4zIj4KICAgICAgbm90IHB1Ymxpc2hlZAogICAgPC90ZXh0PgogICAgPHRleHQgeD0iOTIuNSIgeT0iMTQiPgogICAgICBub3QgcHVibGlzaGVkCiAgICA8L3RleHQ+CiAgPC9nPgo8L3N2Zz4=" alt="CRAN_Status_Badge" /></a> <a href="http://www.r-pkg.org/pkg/dat"><img src="data:image/svg+xml; charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNDkiIGhlaWdodD0iMjAiPgogIDxsaW5lYXJHcmFkaWVudCBpZD0iYiIgeDI9IjAiIHkyPSIxMDAlIj4KICAgIDxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI2JiYiIgc3RvcC1vcGFjaXR5PSIuMSIvPgogICAgPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLW9wYWNpdHk9Ii4xIi8+CiAgPC9saW5lYXJHcmFkaWVudD4KICA8bWFzayBpZD0iYSI+CiAgICA8cmVjdCB3aWR0aD0iMTQ5IiBoZWlnaHQ9IjIwIiByeD0iMyIgZmlsbD0iI2ZmZiIvPgogIDwvbWFzaz4KICA8ZyBtYXNrPSJ1cmwoI2EpIj48cGF0aCBmaWxsPSIjNTU1IiBkPSJNMCAwaDcwdjIwSDB6Ii8+CiAgICA8cGF0aCBmaWxsPSIjNGMxIiBkPSJNNzAgMGg3OXYyMEg3MHoiLz4KICAgIDxwYXRoIGZpbGw9InVybCgjYikiIGQ9Ik0wIDBoMTQ5djIwSDB6Ii8+CiAgPC9nPgogIDxnIGZpbGw9IiNmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiCiAgICAgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLFZlcmRhbmEsR2VuZXZhLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPgogICAgPHRleHQgeD0iMzYiIHk9IjE1IiBmaWxsPSIjMDEwMTAxIiBmaWxsLW9wYWNpdHk9Ii4zIj4KICAgICAgZG93bmxvYWRzCiAgICA8L3RleHQ+CiAgICA8dGV4dCB4PSIzNiIgeT0iMTQiPgogICAgICBkb3dubG9hZHMKICAgIDwvdGV4dD4KICAgIDx0ZXh0IHg9IjEwOC41IiB5PSIxNSIgZmlsbD0iIzAxMDEwMSIgZmlsbC1vcGFjaXR5PSIuMyI+CiAgICAgIDAvbW9udGgKICAgIDwvdGV4dD4KICAgIDx0ZXh0IHg9IjEwOC41IiB5PSIxNCI+CiAgICAgIDAvbW9udGgKICAgIDwvdGV4dD4KICA8L2c+Cjwvc3ZnPg==" alt="Downloads" /></a></p>
 <p>Provides a class and methods for working with data frames extending what can be found in the dplyr.</p>
-<div id="examples" class="section level2">
-<h2>Examples:</h2>
+<div id="installation" class="section level2">
+<h2>Installation</h2>
+<pre class="sourceCode r"><code class="sourceCode r">devtools::<span class="kw">install_github</span>(<span class="st">&quot;wahani/dat&quot;</span>)</code></pre>
+</div>
+<div id="why-should-you-care" class="section level2">
+<h2>Why should you care?</h2>
+<ul>
+<li>You probably have to rewrite all your dplyr / data.table code once you put it inside a package. I.e. working around non standard evaluation or find another way to apiece R CMD check. And you don’t like that.</li>
+<li>We work together and you have to understand code I wrote.</li>
+<li>You like currying as in rlist and purrr</li>
+<li>You find it annoying that you constantly have to switch between lapply, vapply and mapply (and other map functions)</li>
+</ul>
+</div>
+<div id="map" class="section level2">
+<h2>map</h2>
+<p>What we can do with map:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(dat)
+dat &lt;-<span class="st"> </span><span class="kw">DataFrame</span>(<span class="dt">x =</span> <span class="dv">1</span>, <span class="dt">y =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="ot">NA</span>))
+<span class="kw">map</span>(dat, x ~<span class="st"> </span>x +<span class="st"> </span><span class="dv">1</span>, ~<span class="st"> </span>!<span class="kw">any</span>(<span class="kw">is.na</span>(.)))</code></pre>
+<pre><code>## Source: local data frame [2 x 2]
+## 
+##       x     y
+##   (dbl) (dbl)
+## 1     2     2
+## 2     2    NA</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">map</span>(<span class="dv">1</span>:<span class="dv">3</span>, . ~<span class="st"> </span>.^<span class="dv">2</span>) <span class="co"># lapply</span></code></pre>
+<pre><code>## [[1]]
+## [1] 1
+## 
+## [[2]]
+## [1] 4
+## 
+## [[3]]
+## [1] 9</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">map</span>(<span class="dv">1</span>:<span class="dv">3</span>, <span class="kw">numeric</span>(<span class="dv">1</span>) :<span class="st"> </span>x ~<span class="st"> </span>x^<span class="dv">2</span>) <span class="co"># vapply</span></code></pre>
+<pre><code>## [1] 1 4 9</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">map</span>(<span class="kw">L</span>(<span class="dv">1</span>:<span class="dv">4</span>, <span class="dv">4</span>:<span class="dv">1</span>), <span class="kw">f</span>(x, y) ~<span class="st"> </span><span class="kw">rep</span>(x, y)) <span class="co"># mapply</span></code></pre>
+<pre><code>## [[1]]
+## [1] 1 1 1 1
+## 
+## [[2]]
+## [1] 2 2 2
+## 
+## [[3]]
+## [1] 3 3
+## 
+## [[4]]
+## [1] 4</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">map</span>(<span class="kw">L</span>(<span class="dv">1</span>:<span class="dv">10</span>, <span class="dv">11</span>:<span class="dv">20</span>), c) <span class="co"># zip</span></code></pre>
+<pre><code>## [[1]]
+## [1]  1 11
+## 
+## [[2]]
+## [1]  2 12
+## 
+## [[3]]
+## [1]  3 13
+## 
+## [[4]]
+## [1]  4 14
+## 
+## [[5]]
+## [1]  5 15
+## 
+## [[6]]
+## [1]  6 16
+## 
+## [[7]]
+## [1]  7 17
+## 
+## [[8]]
+## [1]  8 18
+## 
+## [[9]]
+## [1]  9 19
+## 
+## [[10]]
+## [1] 10 20</code></pre>
+</div>
+<div id="data-frame" class="section level2">
+<h2>Data Frame</h2>
+<p>I took the examples from the introductory vignette of dplyr. Things that are not supported:</p>
+<ul>
+<li>no rename</li>
+<li>no distinct</li>
+<li>no transmute</li>
+</ul>
+<p>But you still work with data frames. So you can go back or mix in dplyr features when you need them.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(nycflights13)
 <span class="kw">library</span>(dplyr)</code></pre>
 <pre><code>## 
@@ -72,9 +158,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 ## The following objects are masked from 'package:base':
 ## 
 ##     intersect, setdiff, setequal, union</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(dat)
-
-dat &lt;-<span class="st"> </span><span class="kw">do.call</span>(DataFrame, flights)
+<pre class="sourceCode r"><code class="sourceCode r">dat &lt;-<span class="st"> </span><span class="kw">do.call</span>(DataFrame, flights)
 <span class="kw">str</span>(dat)</code></pre>
 <pre><code>## Classes 'DataFrame', 'tbl_df', 'tbl' and 'data.frame':   336776 obs. of  16 variables:
 ##  $ year     : int  2013 2013 2013 2013 2013 2013 2013 2013 2013 2013 ...
@@ -93,12 +177,32 @@ dat &lt;-<span class="st"> </span><span class="kw">do.call</span>(DataFrame, fli
 ##  $ distance : num  1400 1416 1089 1576 762 ...
 ##  $ hour     : num  5 5 5 5 5 5 5 5 5 5 ...
 ##  $ minute   : num  17 33 42 44 54 54 55 57 57 58 ...</code></pre>
+<p>This function I use to compare if my code produces roughly (not the same class) the same as dplyr code.</p>
 <pre class="sourceCode r"><code class="sourceCode r">myIdentical &lt;-<span class="st"> </span>function(a, b) {
   l &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="kw">list</span>(a, b), as.data.frame)
   <span class="kw">do.call</span>(identical, l)
-}
-
-<span class="kw">myIdentical</span>(
+}</code></pre>
+<div id="filter-rows" class="section level3">
+<h3>Filter rows</h3>
+<pre class="sourceCode r"><code class="sourceCode r">dat %&gt;%
+<span class="st">  </span><span class="kw">mutar</span>(~<span class="dv">1</span>:<span class="dv">10</span>)</code></pre>
+<pre><code>## Source: local data frame [10 x 16]
+## 
+##     year month   day dep_time dep_delay arr_time arr_delay carrier tailnum
+##    (int) (int) (int)    (int)     (dbl)    (int)     (dbl)   (chr)   (chr)
+## 1   2013     1     1      517         2      830        11      UA  N14228
+## 2   2013     1     1      533         4      850        20      UA  N24211
+## 3   2013     1     1      542         2      923        33      AA  N619AA
+## 4   2013     1     1      544        -1     1004       -18      B6  N804JB
+## 5   2013     1     1      554        -6      812       -25      DL  N668DN
+## 6   2013     1     1      554        -4      740        12      UA  N39463
+## 7   2013     1     1      555        -5      913        19      B6  N516JB
+## 8   2013     1     1      557        -3      709       -14      EV  N829AS
+## 9   2013     1     1      557        -3      838        -8      B6  N593JB
+## 10  2013     1     1      558        -2      753         8      AA  N3ALAA
+## Variables not shown: flight (int), origin (chr), dest (chr), air_time
+##   (dbl), distance (dbl), hour (dbl), minute (dbl)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">myIdentical</span>(
   <span class="kw">filter</span>(flights, month ==<span class="st"> </span><span class="dv">1</span>, day ==<span class="st"> </span><span class="dv">1</span>),
   dat[~<span class="st"> </span>month ==<span class="st"> </span><span class="dv">1</span> &amp;<span class="st"> </span>day ==<span class="st"> </span><span class="dv">1</span>]
 )</code></pre>
@@ -109,15 +213,61 @@ dat &lt;-<span class="st"> </span><span class="kw">do.call</span>(DataFrame, fli
 )</code></pre>
 <pre><code>## [1] TRUE</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">myIdentical</span>(
+  <span class="co"># It is truly amazing how many times I tried to subset a data frame with</span>
+  <span class="co"># dat[1:10] and meant rows. Thats why this is working:</span>
   dat[~<span class="dv">1</span>:<span class="dv">10</span>],
   dat[<span class="dv">1</span>:<span class="dv">10</span>, ]
 )</code></pre>
 <pre><code>## [1] TRUE</code></pre>
+</div>
+<div id="sorting" class="section level3">
+<h3>Sorting</h3>
+<pre class="sourceCode r"><code class="sourceCode r">dat %&gt;%
+<span class="st">  </span><span class="kw">mutar</span>(~<span class="kw">order</span>(year, month, day))</code></pre>
+<pre><code>## Source: local data frame [336,776 x 16]
+## 
+##     year month   day dep_time dep_delay arr_time arr_delay carrier tailnum
+##    (int) (int) (int)    (int)     (dbl)    (int)     (dbl)   (chr)   (chr)
+## 1   2013     1     1      517         2      830        11      UA  N14228
+## 2   2013     1     1      533         4      850        20      UA  N24211
+## 3   2013     1     1      542         2      923        33      AA  N619AA
+## 4   2013     1     1      544        -1     1004       -18      B6  N804JB
+## 5   2013     1     1      554        -6      812       -25      DL  N668DN
+## 6   2013     1     1      554        -4      740        12      UA  N39463
+## 7   2013     1     1      555        -5      913        19      B6  N516JB
+## 8   2013     1     1      557        -3      709       -14      EV  N829AS
+## 9   2013     1     1      557        -3      838        -8      B6  N593JB
+## 10  2013     1     1      558        -2      753         8      AA  N3ALAA
+## ..   ...   ...   ...      ...       ...      ...       ...     ...     ...
+## Variables not shown: flight (int), origin (chr), dest (chr), air_time
+##   (dbl), distance (dbl), hour (dbl), minute (dbl)</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">myIdentical</span>(
   <span class="kw">arrange</span>(flights, year, month, day),
   dat[~<span class="kw">order</span>(year, month, day)]
 )</code></pre>
 <pre><code>## [1] TRUE</code></pre>
+</div>
+<div id="select-cols" class="section level3">
+<h3>Select cols</h3>
+<p>You can use characters and logicals to select cols of a <em>DataFrame</em>. Using numeric values is not supported; it is error prone and I have spent too many hours of my life debugging code where I relied on positions in a data frame.</p>
+<pre class="sourceCode r"><code class="sourceCode r">dat %&gt;%
+<span class="st">  </span><span class="kw">mutar</span>(<span class="kw">c</span>(<span class="st">&quot;year&quot;</span>, <span class="st">&quot;month&quot;</span>, <span class="st">&quot;day&quot;</span>)) %&gt;%
+<span class="st">  </span><span class="kw">mutar</span>(<span class="st">&quot;year:day&quot;</span>)</code></pre>
+<pre><code>## Source: local data frame [336,776 x 3]
+## 
+##     year month   day
+##    (int) (int) (int)
+## 1   2013     1     1
+## 2   2013     1     1
+## 3   2013     1     1
+## 4   2013     1     1
+## 5   2013     1     1
+## 6   2013     1     1
+## 7   2013     1     1
+## 8   2013     1     1
+## 9   2013     1     1
+## 10  2013     1     1
+## ..   ...   ...   ...</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">myIdentical</span>(
   <span class="kw">select</span>(flights, year, month, day),
   dat[<span class="kw">c</span>(<span class="st">&quot;year&quot;</span>, <span class="st">&quot;month&quot;</span>, <span class="st">&quot;day&quot;</span>)]
@@ -125,10 +275,11 @@ dat &lt;-<span class="st"> </span><span class="kw">do.call</span>(DataFrame, fli
 <pre><code>## [1] TRUE</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">myIdentical</span>(
   <span class="kw">select</span>(flights, year:day),
-  dat[<span class="st">&quot;year:day&quot;</span>]
+  dat[<span class="st">&quot;year:day&quot;</span>] <span class="co"># characters are passed into dplyr::select_</span>
 )</code></pre>
 <pre><code>## [1] TRUE</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r">dat[is.numeric]</code></pre>
+<p>You can also pass in a function which checks if you want to select a column, e.g. select all numeric cols:</p>
+<pre class="sourceCode r"><code class="sourceCode r">dat[is.numeric] <span class="co"># or mutar(dat, is.numeric)</span></code></pre>
 <pre><code>## Source: local data frame [336,776 x 12]
 ## 
 ##     year month   day dep_time dep_delay arr_time arr_delay flight air_time
@@ -145,6 +296,7 @@ dat &lt;-<span class="st"> </span><span class="kw">do.call</span>(DataFrame, fli
 ## 10  2013     1     1      558        -2      753         8    301      138
 ## ..   ...   ...   ...      ...       ...      ...       ...    ...      ...
 ## Variables not shown: distance (dbl), hour (dbl), minute (dbl)</code></pre>
+<p>Or select all cols with missing values in them:</p>
 <pre class="sourceCode r"><code class="sourceCode r">dat[function(x) <span class="kw">any</span>(<span class="kw">is.na</span>(x))]</code></pre>
 <pre><code>## Source: local data frame [336,776 x 7]
 ## 
@@ -161,10 +313,29 @@ dat &lt;-<span class="st"> </span><span class="kw">do.call</span>(DataFrame, fli
 ## 9       557        -3      838        -8      140     5     57
 ## 10      558        -2      753         8      138     5     58
 ## ..      ...       ...      ...       ...      ...   ...    ...</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># there is no rename</span>
-<span class="co"># no distinct</span>
-
-<span class="kw">myIdentical</span>(
+</div>
+<div id="mutate" class="section level3">
+<h3>Mutate</h3>
+<pre class="sourceCode r"><code class="sourceCode r">dat %&gt;%
+<span class="st">  </span><span class="kw">mutar</span>(gain ~<span class="st"> </span>arr_delay -<span class="st"> </span>dep_delay,
+        speed ~<span class="st"> </span>distance /<span class="st"> </span>air_time *<span class="st"> </span><span class="dv">60</span>) %&gt;%
+<span class="st">  </span><span class="kw">mutar</span>(<span class="st">&quot;^gain|speed$&quot;</span>)</code></pre>
+<pre><code>## Source: local data frame [336,776 x 2]
+## 
+##     gain    speed
+##    (dbl)    (dbl)
+## 1      9 370.0441
+## 2     16 374.2731
+## 3     31 408.3750
+## 4    -17 516.7213
+## 5    -19 394.1379
+## 6     16 287.6000
+## 7     24 404.4304
+## 8    -11 259.2453
+## 9     -5 404.5714
+## 10    10 318.6957
+## ..   ...      ...</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">myIdentical</span>(
   <span class="kw">mutate</span>(flights,
          <span class="dt">gain =</span> arr_delay -<span class="st"> </span>dep_delay,
          <span class="dt">speed =</span> distance /<span class="st"> </span>air_time *<span class="st"> </span><span class="dv">60</span>),
@@ -172,10 +343,30 @@ dat &lt;-<span class="st"> </span><span class="kw">do.call</span>(DataFrame, fli
       speed ~<span class="st"> </span>distance /<span class="st"> </span>air_time *<span class="st"> </span><span class="dv">60</span>]
 )</code></pre>
 <pre><code>## [1] TRUE</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># no transmute</span>
-
-<span class="kw">myIdentical</span>(
-  <span class="kw">summarise</span>(<span class="kw">group_by</span>(flights, month), <span class="dt">delay =</span> <span class="kw">mean</span>(dep_delay, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)),
+</div>
+<div id="summarise" class="section level3">
+<h3>Summarise</h3>
+<pre class="sourceCode r"><code class="sourceCode r">dat %&gt;%
+<span class="st">  </span><span class="kw">mutar</span>(delay ~<span class="st"> </span><span class="kw">mean</span>(dep_delay, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dt">by =</span> <span class="st">&quot;month&quot;</span>)</code></pre>
+<pre><code>## Source: local data frame [12 x 2]
+## 
+##    month     delay
+##    (int)     (dbl)
+## 1      1 10.036665
+## 2      2 10.816843
+## 3      3 13.227076
+## 4      4 13.938038
+## 5      5 12.986859
+## 6      6 20.846332
+## 7      7 21.727787
+## 8      8 12.611040
+## 9      9  6.722476
+## 10    10  6.243988
+## 11    11  5.435362
+## 12    12 16.576688</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">myIdentical</span>(
+  <span class="kw">group_by</span>(flights, month) %&gt;%<span class="st"> </span>
+<span class="st">    </span><span class="kw">summarise</span>(<span class="dt">delay =</span> <span class="kw">mean</span>(dep_delay, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)),
   dat[delay ~<span class="st"> </span><span class="kw">mean</span>(dep_delay, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dt">by =</span> <span class="st">&quot;month&quot;</span>]
 )</code></pre>
 <pre><code>## [1] TRUE</code></pre>
@@ -189,7 +380,29 @@ delay1 &lt;-<span class="st"> </span>flights %&gt;%
   ) %&gt;%
 <span class="st">  </span><span class="kw">filter</span>(count &gt;<span class="st"> </span><span class="dv">20</span>, dist &lt;<span class="st"> </span><span class="dv">2000</span>)
 
-<span class="co"># dat:</span>
+<span class="co"># dat #1:</span>
+dat %&gt;%
+<span class="st">  </span><span class="kw">mutar</span>(count ~<span class="st"> </span><span class="kw">n</span>(),
+        dist ~<span class="st"> </span><span class="kw">mean</span>(distance, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),
+        delay ~<span class="st"> </span><span class="kw">mean</span>(arr_delay, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),
+        <span class="dt">by =</span> <span class="st">&quot;tailnum&quot;</span>) %&gt;%
+<span class="st">  </span><span class="kw">mutar</span>(~count &gt;<span class="st"> </span><span class="dv">20</span> &amp;<span class="st"> </span>dist &lt;<span class="st"> </span><span class="dv">2000</span>)</code></pre>
+<pre><code>## Source: local data frame [2,962 x 4]
+## 
+##    tailnum count     dist      delay
+##      (chr) (int)    (dbl)      (dbl)
+## 1           2512 710.2576        NaN
+## 2   N0EGMQ   371 676.1887  9.9829545
+## 3   N10156   153 757.9477 12.7172414
+## 4   N102UW    48 535.8750  2.9375000
+## 5   N103US    46 535.1957 -6.9347826
+## 6   N104UW    47 535.2553  1.8043478
+## 7   N10575   289 519.7024 20.6914498
+## 8   N105UW    45 524.8444 -0.2666667
+## 9   N107US    41 528.7073 -5.7317073
+## 10  N108UW    60 534.5000 -1.2500000
+## ..     ...   ...      ...        ...</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># dat #2:</span>
 delay2 &lt;-<span class="st"> </span>dat[
   count ~<span class="st"> </span><span class="kw">n</span>(),
   dist ~<span class="st"> </span><span class="kw">mean</span>(distance, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),
@@ -200,6 +413,33 @@ delay2 &lt;-<span class="st"> </span>dat[
 
 <span class="kw">myIdentical</span>(delay1, delay2)</code></pre>
 <pre><code>## [1] TRUE</code></pre>
+</div>
+<div id="mixing-dplyr-and-mutar" class="section level3">
+<h3>Mixing dplyr and mutar</h3>
+<pre class="sourceCode r"><code class="sourceCode r">dat %&gt;%
+<span class="st">  </span><span class="kw">group_by</span>(tailnum) %&gt;%
+<span class="st">  </span><span class="kw">summarise</span>(
+    <span class="dt">count =</span> <span class="kw">n</span>(),
+    <span class="dt">dist =</span> <span class="kw">mean</span>(distance, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),
+    <span class="dt">delay =</span> <span class="kw">mean</span>(arr_delay, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)
+  ) %&gt;%
+<span class="st">  </span><span class="kw">mutar</span>(~count &gt;<span class="st"> </span><span class="dv">20</span> &amp;<span class="st"> </span>dist &lt;<span class="st"> </span><span class="dv">2000</span>)</code></pre>
+<pre><code>## Source: local data frame [2,962 x 4]
+## 
+##    tailnum count     dist      delay
+##      (chr) (int)    (dbl)      (dbl)
+## 1           2512 710.2576        NaN
+## 2   N0EGMQ   371 676.1887  9.9829545
+## 3   N10156   153 757.9477 12.7172414
+## 4   N102UW    48 535.8750  2.9375000
+## 5   N103US    46 535.1957 -6.9347826
+## 6   N104UW    47 535.2553  1.8043478
+## 7   N10575   289 519.7024 20.6914498
+## 8   N105UW    45 524.8444 -0.2666667
+## 9   N107US    41 528.7073 -5.7317073
+## 10  N108UW    60 534.5000 -1.2500000
+## ..     ...   ...      ...        ...</code></pre>
+</div>
 </div>
 
 

@@ -25,6 +25,7 @@ RoxygenNote: 5.0.1
 Collate:
     'helper.R'
     'DataFrame.R'
+    'List.R'
     'NAMESPACE.R'
     'as.function.R'
     'map.R'

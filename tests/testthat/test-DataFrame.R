@@ -38,12 +38,12 @@ test_that("Basic syntax of a DataFrame", {
   )
 
   expectIdentical(
-    dat["__^x$"],
+    dat["^x$"],
     datRef[grep("^x$", names(datRef))]
   )
 
   expectIdentical(
-    dat[, "__^x$"],
+    dat[, "^x$"],
     datRef[, grep("^x$", names(datRef))]
   )
 
@@ -53,7 +53,7 @@ test_that("Basic syntax of a DataFrame", {
   )
 
   expectIdentical(
-    dat["__^y"],
+    dat["^y"],
     datRef[grep("^y", names(datRef))]
   )
 

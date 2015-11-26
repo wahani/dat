@@ -1,7 +1,8 @@
 #' DataFrame and methods
 #'
 #' There are many ways to use a DataFrame. Please see the vignette to see some
-#' examples.
+#' examples. \code{mutar} is literally the same function as \code{[.DataFrame}
+#' and can be used to mix up with dplyr.
 #'
 #' @include helper.R
 #'
@@ -35,8 +36,8 @@ as.DataFrame.default <- function(x) {
 
 #' @param x (DataFrame | ANY)
 #' @param i (logical | numeric | integer | OneSidedFormula | TwoSidedFormula)
-#' @param j (logical | character | TwoSidedFormula | function) character which
-#'   begin with '__' or '^' are interpreted as regular expression
+#' @param j (logical | character | TwoSidedFormula | function) character
+#'   beginning with '^' are interpreted as regular expression
 #' @param ... arbitrary number of args
 #'    \cr in \code{[} (TwoSidedFormulas)
 #'    \cr in constructor see \link[dplyr]{data_frame}

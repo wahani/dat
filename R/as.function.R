@@ -17,13 +17,13 @@ as.function(x ~ formula, ...) %m% {
 
   getArgs <- function(x) {
     lhs <- deparseLhs(x)
+    lhs <- rev(aoos:::splitTrim(lhs, ":"))[1]
     if (grepl("\\(", lhs)) {
-      lhs <- rev(aoos:::splitTrim(lhs, ":"))[1]
       lhs <- aoos:::deleteBeforeParan(lhs)
       lhs <- aoos:::deleteEnclosingParan(lhs)
       aoos:::splitTrim(lhs, ",")
     } else {
-      rev(aoos:::splitTrim(lhs, ":"))[1]
+      lhs
     }
   }
 
@@ -50,50 +50,9 @@ as.function(x ~ formula, ...) %m% {
   }
   else stop ("Don't know what to do with this formula.")
 
-  checkReturnType(
+
+  addReturnType(
     aoos:::makeFunDef(args, deparseRhs(x), environment(x)),
     dispatcher(type)
   )
 }
-
-character : ReturnPrototype() %type% {
-  stopifnot(length(.Object) == 1)
-  stopifnot(grepl("\\(", .Object))
-  .Object
-}
-
-character : ReturnType() %type% {
-  stopifnot(length(.Object) == 1)
-  .Object
-}
-
-"function" : FunctionWithPrototype(prototype ~ ANY) %type% .Object
-
-"function" : FunctionWithType(type ~ ReturnType) %type% .Object
-
-checkReturnType(f, type) %g% f
-
-checkReturnType(f, type ~ ReturnPrototype) %m% {
-  FunctionWithPrototype(f, prototype = eval(parse(text = type)))
-}
-
-checkReturnType(f, type ~ ReturnType) %m% {
-  force(f); force(type)
-  function(...) {
-    out <- f(...)
-    if (!inherits(out, type))
-      stop("Function does not return correct type
-           expected: ", type, "
-           observed: ", class(out))
-    else out
-  }
-}
-
-as.function(~.[[1]])(list(1))
-as.function(x ~ x[[1]])(list(1))
-# as.function(numeric : x ~ x[[1]])(list(""))
-as.function(f(x) ~ x[1])(list(1))
-as.function(f(x, y) ~ x + y)(1, 2)
-as.function(f(x, y) ~ x + y)(1, 2)
-as.function(numeric : f(x, y) ~ x + y)(1, 2)
-as.function(numeric(0) : f(x) ~ x)(2)
