@@ -13,16 +13,16 @@ character : ReturnType() %type% {
   .Object
 }
 
-"function" : FunctionWithPrototype(prototype ~ ANY) %type% .Object
+FunctionWithPrototype(fun ~ "function", prototype ~ ANY) %type% .Object
 
-"function" : FunctionWithType(type ~ ReturnType) %type% .Object
+FunctionWithType(fun ~ "function", type ~ ReturnType) %type% .Object
 
 "function" : addTypeCheck(f, type) %g% standardGeneric("addTypeCheck")
 
 addTypeCheck(f ~ FunctionWithType, type ~ missing) %m% {
   force(f)
   function(...) {
-    out <- f(...)
+    out <- f@fun(...)
     if (!inherits(out, f@type))
       stop("Function does not return correct type
            expected: ", f@type, "
@@ -34,11 +34,11 @@ addTypeCheck(f ~ FunctionWithType, type ~ missing) %m% {
 addReturnType(f, type) %g% f
 
 addReturnType(f, type ~ ReturnPrototype) %m% {
-  FunctionWithPrototype(f, prototype = eval(parse(text = type)))
+  FunctionWithPrototype(fun = f, prototype = eval(parse(text = type)))
 }
 
 addReturnType(f, type ~ ReturnType) %m% {
-  FunctionWithType(f, type = type)
+  FunctionWithType(fun = f, type = type)
 }
 
 addClass <- function(x, class) {

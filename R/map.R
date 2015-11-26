@@ -68,7 +68,7 @@ map(x ~ ANY, f ~ formula, ...) %m% {
 #' @export
 #' @rdname map
 map(x ~ ANY, f ~ FunctionWithPrototype, ..., useNames = TRUE) %m% {
-  vapply(X = x, FUN = f, FUN.VALUE = f@prototype, ..., USE.NAMES = useNames)
+  vapply(X = x, FUN = f@fun, FUN.VALUE = f@prototype, ..., USE.NAMES = useNames)
 }
 
 #' @export

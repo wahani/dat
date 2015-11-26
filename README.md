@@ -39,21 +39,7 @@ What we can do with map:
 
 ```r
 library(dat)
-dat <- DataFrame(x = 1, y = c(2, NA))
-map(dat, x ~ x + 1, ~ !any(is.na(.)))
-```
-
-```
-## Source: local data frame [2 x 2]
-## 
-##       x     y
-##   (dbl) (dbl)
-## 1     2     2
-## 2     2    NA
-```
-
-```r
-map(1:3, . ~ .^2) # lapply
+map(1:3, ~ .^2) # lapply
 ```
 
 ```
@@ -76,7 +62,7 @@ map(1:3, numeric(1) : x ~ x^2) # vapply
 ```
 
 ```r
-map(L(1:4, 4:1), f(x, y) ~ rep(x, y)) # mapply
+map(L(1:4, 4:1), integer : f(x, y) ~ rep(x, y)) # mapply + check return type
 ```
 
 ```
@@ -94,7 +80,7 @@ map(L(1:4, 4:1), f(x, y) ~ rep(x, y)) # mapply
 ```
 
 ```r
-map(L(1:10, 11:20), c) # zip
+map(L(1:3, 11:13), c) # zip
 ```
 
 ```
@@ -106,40 +92,32 @@ map(L(1:10, 11:20), c) # zip
 ## 
 ## [[3]]
 ## [1]  3 13
-## 
-## [[4]]
-## [1]  4 14
-## 
-## [[5]]
-## [1]  5 15
-## 
-## [[6]]
-## [1]  6 16
-## 
-## [[7]]
-## [1]  7 17
-## 
-## [[8]]
-## [1]  8 18
-## 
-## [[9]]
-## [1]  9 19
-## 
-## [[10]]
-## [1] 10 20
 ```
 
 ```r
-map(L(1:10, 11:20), c) %>% 
+map(L(1:3, 11:13), c) %>% 
   { map(do.call(L, .), c) } # unzip
 ```
 
 ```
 ## [[1]]
-##  [1]  1  2  3  4  5  6  7  8  9 10
+## [1] 1 2 3
 ## 
 ## [[2]]
-##  [1] 11 12 13 14 15 16 17 18 19 20
+## [1] 11 12 13
+```
+
+```r
+dat <- DataFrame(x = 1, y = "")
+map(dat, x ~ x + 1, is.numeric) # only operates on numeric cols
+```
+
+```
+## Source: local data frame [1 x 2]
+## 
+##       x     y
+##   (dbl) (chr)
+## 1     2
 ```
 
 
@@ -184,23 +162,26 @@ str(dat)
 ##  $ minute   : num  17 33 42 44 54 54 55 57 57 58 ...
 ```
 
-This function I use to compare if my code produces roughly (not the same class)
-the same as dplyr code.
-
-
-```r
-myIdentical <- function(a, b) {
-  l <- lapply(list(a, b), as.data.frame)
-  do.call(identical, l)
-}
-```
-
 ### Filter rows
 
 
 ```r
-dat %>%
-  mutar(~1:10)
+filter(flights, month == 1, day == 1)
+dat[~ month == 1 & day == 1]
+mutar(dat, ~ month == 1 & day == 1)
+
+slice(flights, 1:10)
+dat[~1:10]
+dat %>% mutar(~1:10)
+
+# It is truly amazing how many times I tried to subset a data frame with
+# dat[1:10] and meant rows. Thats why this is working:
+dat[~1:10]
+```
+
+
+```r
+dat[1:10, ]
 ```
 
 ```
@@ -222,47 +203,17 @@ dat %>%
 ##   (dbl), distance (dbl), hour (dbl), minute (dbl)
 ```
 
-```r
-myIdentical(
-  filter(flights, month == 1, day == 1),
-  dat[~ month == 1 & day == 1]
-)
-```
-
-```
-## [1] TRUE
-```
-
-```r
-myIdentical(
-  slice(flights, 1:10),
-  dat[~1:10]
-)
-```
-
-```
-## [1] TRUE
-```
-
-```r
-myIdentical(
-  # It is truly amazing how many times I tried to subset a data frame with
-  # dat[1:10] and meant rows. Thats why this is working:
-  dat[~1:10],
-  dat[1:10, ]
-)
-```
-
-```
-## [1] TRUE
-```
-
 ### Sorting
 
 
 ```r
-dat %>%
-  mutar(~order(year, month, day))
+arrange(flights, year, month, day)
+dat[~order(year, month, day)]
+```
+
+
+```r
+dat %>% mutar(~order(year, month, day))
 ```
 
 ```
@@ -285,18 +236,6 @@ dat %>%
 ##   (dbl), distance (dbl), hour (dbl), minute (dbl)
 ```
 
-```r
-myIdentical(
-  arrange(flights, year, month, day),
-  dat[~order(year, month, day)]
-)
-```
-
-```
-## [1] TRUE
-```
-
-
 ### Select cols
 
 You can use characters and logicals to select cols of a *DataFrame*. Using
@@ -305,49 +244,15 @@ hours of my life debugging code where I relied on positions in a data frame.
 
 
 ```r
+select(flights, year, month, day)
+select(flights, year:day)
+
+# characters are passed into dplyr::select_:
 dat %>%
   mutar(c("year", "month", "day")) %>%
   mutar("year:day")
-```
 
-```
-## Source: local data frame [336,776 x 3]
-## 
-##     year month   day
-##    (int) (int) (int)
-## 1   2013     1     1
-## 2   2013     1     1
-## 3   2013     1     1
-## 4   2013     1     1
-## 5   2013     1     1
-## 6   2013     1     1
-## 7   2013     1     1
-## 8   2013     1     1
-## 9   2013     1     1
-## 10  2013     1     1
-## ..   ...   ...   ...
-```
-
-```r
-myIdentical(
-  select(flights, year, month, day),
-  dat[c("year", "month", "day")]
-)
-```
-
-```
-## [1] TRUE
-```
-
-```r
-myIdentical(
-  select(flights, year:day),
-  dat["year:day"] # characters are passed into dplyr::select_
-)
-```
-
-```
-## [1] TRUE
+dat[c("year", "month", "day")]["year:day"]
 ```
 
 You can also pass in a function which checks if you want to select a column, e.g.
@@ -384,32 +289,24 @@ Or select all cols with missing values in them:
 dat[function(x) any(is.na(x))]
 ```
 
-```
-## Source: local data frame [336,776 x 7]
-## 
-##    dep_time dep_delay arr_time arr_delay air_time  hour minute
-##       (int)     (dbl)    (int)     (dbl)    (dbl) (dbl)  (dbl)
-## 1       517         2      830        11      227     5     17
-## 2       533         4      850        20      227     5     33
-## 3       542         2      923        33      160     5     42
-## 4       544        -1     1004       -18      183     5     44
-## 5       554        -6      812       -25      116     5     54
-## 6       554        -4      740        12      150     5     54
-## 7       555        -5      913        19      158     5     55
-## 8       557        -3      709       -14       53     5     57
-## 9       557        -3      838        -8      140     5     57
-## 10      558        -2      753         8      138     5     58
-## ..      ...       ...      ...       ...      ...   ...    ...
-```
-
 ### Mutate
+
+
+```r
+flights %>% 
+  mutate(gain = arr_delay - dep_delay,
+         speed = distance / air_time * 60)
+
+dat[gain ~ arr_delay - dep_delay,
+    speed ~ distance / air_time * 60]
+```
 
 
 ```r
 dat %>%
   mutar(gain ~ arr_delay - dep_delay,
         speed ~ distance / air_time * 60) %>%
-  mutar("^gain|speed$")
+  mutar("^gain|speed$") # a regex
 ```
 
 ```
@@ -430,26 +327,22 @@ dat %>%
 ## ..   ...      ...
 ```
 
-```r
-myIdentical(
-  mutate(flights,
-         gain = arr_delay - dep_delay,
-         speed = distance / air_time * 60),
-  dat[gain ~ arr_delay - dep_delay,
-      speed ~ distance / air_time * 60]
-)
-```
-
-```
-## [1] TRUE
-```
-
 ### Summarise
 
 
 ```r
-dat %>%
-  mutar(delay ~ mean(dep_delay, na.rm = TRUE), by = "month")
+group_by(flights, month) %>% 
+    summarise(delay = mean(dep_delay, na.rm = TRUE))
+
+dat[delay ~ mean(dep_delay, na.rm = TRUE), 
+    by = "month"]
+```
+
+
+```r
+mutar(dat, 
+      delay ~ mean(dep_delay, na.rm = TRUE), 
+      by = "month")
 ```
 
 ```
@@ -471,17 +364,6 @@ dat %>%
 ## 12    12 16.576688
 ```
 
-```r
-myIdentical(
-  group_by(flights, month) %>% 
-    summarise(delay = mean(dep_delay, na.rm = TRUE)),
-  dat[delay ~ mean(dep_delay, na.rm = TRUE), by = "month"]
-)
-```
-
-```
-## [1] TRUE
-```
 
 ```r
 # dplyr:
@@ -495,6 +377,18 @@ delay1 <- flights %>%
   filter(count > 20, dist < 2000)
 
 # dat #1:
+delay2 <- dat[
+  count ~ n(),
+  dist ~ mean(distance, na.rm = TRUE),
+  delay ~ mean(arr_delay, na.rm = TRUE),
+  by = "tailnum"
+  ] %>%
+  .[~count > 20 & dist < 2000]
+```
+
+
+```r
+# dat #2:
 dat %>%
   mutar(count ~ n(),
         dist ~ mean(distance, na.rm = TRUE),
@@ -521,22 +415,6 @@ dat %>%
 ## ..     ...   ...      ...        ...
 ```
 
-```r
-# dat #2:
-delay2 <- dat[
-  count ~ n(),
-  dist ~ mean(distance, na.rm = TRUE),
-  delay ~ mean(arr_delay, na.rm = TRUE),
-  by = "tailnum"
-  ] %>%
-  .[~count > 20 & dist < 2000]
-
-myIdentical(delay1, delay2)
-```
-
-```
-## [1] TRUE
-```
 
 ### Mixing dplyr and mutar
 
