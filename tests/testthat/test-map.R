@@ -23,7 +23,7 @@ test_that("map", {
   # multivariate map
   map(L(1:2, 3:4), f(x, y) ~ x + y) %>% equals(list(4, 6))
   map(L(1:2, 3:4), f(x, y) ~ x + y, simplify = TRUE) %>% equals(c(4, 6))
-  map(L(1:2, 3:4), f(x, y, z) ~ x + y + z, z = 1) %>% equals(list(5, 7))
+  map(List(1:2, 3:4), f(x, y, z) ~ x + y + z, z = 1) %>% equals(list(5, 7))
 
   # check return types
   testthat::expect_error(map(1:2, numeric : x ~ x))
