@@ -1,15 +1,15 @@
 #' An implementation of map
 #'
-#' An implementation of map as a generic function.
+#' An implementation of map.
 #'
-#' @param x (\link{vector} | \link{data.frame}) if x inherits from data.frame, a data.frame is
-#'   returned. Use \link{as.list} if this is not what you want.
-#' @param f (\link{function} | \link{formula} | character | logical | numeric) something which
-#'   can be interpreted as a function. formula objects are coerced to a
-#'   function. atomics are used for subsetting in each element of x. See the
-#'   examples.
+#' @param x (\link{vector} | \link{data.frame}) if x inherits from data.frame, a
+#'   data.frame is returned. Use \link{as.list} if this is not what you want.
+#' @param f (\link{function} | \link{formula} | character | logical | numeric)
+#'   something which can be interpreted as a function. formula objects are
+#'   coerced to a function. atomics are used for subsetting in each element of
+#'   x. See the examples.
 #' @param p (function | formula) a predicate function indicating which columns
-#'   in a data.frame to use in map
+#'   in a data.frame to use in map.
 #' @param useNames see USE.NAMES in \link{vapply}
 #' @param simplify see SIMPLIFY in \link{mapply}
 #'
@@ -26,9 +26,9 @@
 #'
 #' map(1, x ~ x)
 #' map(list(1:2, 3:4), 2)
-#' map(L(1:2, 3:4), f(x, y) ~ x + y)
-#' map(L(1:2, 3:4), f(x, y) ~ x + y, simplify = TRUE)
-#' map(L(1:2, 3:4), f(x, y, z) ~ x + y + z, z = 1)
+#' map(ML(1:2, 3:4), f(x, y) ~ x + y)
+#' map(ML(1:2, 3:4), f(x, y) ~ x + y, simplify = TRUE)
+#' map(ML(1:2, 3:4), f(x, y, z) ~ x + y + z, z = 1)
 #'
 #' map(list(1:3, 2:5), 2:3)
 #' map(list(1:3, 2:5), c(TRUE, FALSE, TRUE))
@@ -73,12 +73,6 @@ map(x ~ ANY, f ~ FunctionWithPrototype, ..., useNames = TRUE) %m% {
 
 #' @export
 #' @rdname map
-map(x ~ ANY, f ~ FunctionWithType, ...) %m% {
-  map(x, addTypeCheck(f), ...)
-}
-
-#' @export
-#' @rdname map
 map(x ~ ANY, f ~ numeric | character | logical, ...) %m% {
   force(f)
   map(x, . ~ .[f], ...)
@@ -86,6 +80,6 @@ map(x ~ ANY, f ~ numeric | character | logical, ...) %m% {
 
 #' @export
 #' @rdname map
-map(x ~ List, f ~ "function", ..., simplify = FALSE) %m% {
+map(x ~ MList, f ~ "function", ..., simplify = FALSE) %m% {
   do.call(mapply, c(list(FUN = f), x, SIMPLIFY = simplify, ...))
 }

@@ -5,7 +5,7 @@ Version: 0.0.1
 Authors@R: person("Sebastian", "Warnholz", role = c("aut", "cre"),
                   email = "wahani@gmail.com")
 BugReports: https://github.com/wahani/aoos/dat
-Description: Some tools (linking to dplyr where possible) to work with data.frames and an implementation of map. The package follows a 'one-function-to-rule-them-all' mentallity apposed to packages like purrr and dplyr which have many simple functions.
+Description: An implementation of common higher order functions (map, extract and reduce) and a link to dplyr for common transoformations on data frames to work around non standard evaluation by default.
 License: GPL-3 | file LICENSE
 Depends:
     methods,
@@ -20,6 +20,7 @@ Suggests:
     nycflights13
 VignetteBuilder: knitr
 Encoding: UTF-8
+ByteCompile: TRUE
 RoxygenNote: 5.0.1
 Collate:
     'helper.R'
@@ -27,5 +28,7 @@ Collate:
     'List.R'
     'NAMESPACE.R'
     'as.function.R'
+    'extract.R'
     'map.R'
     'pipeExport.R'
+    'reduce.R'

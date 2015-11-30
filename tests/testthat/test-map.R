@@ -21,9 +21,9 @@ test_that("map", {
   map(list(1:3, 2:5), c(TRUE, FALSE, TRUE)) %>% equals(list(c(1, 3), c(2, 4, 5)))
 
   # multivariate map
-  map(L(1:2, 3:4), f(x, y) ~ x + y) %>% equals(list(4, 6))
-  map(L(1:2, 3:4), f(x, y) ~ x + y, simplify = TRUE) %>% equals(c(4, 6))
-  map(List(1:2, 3:4), f(x, y, z) ~ x + y + z, z = 1) %>% equals(list(5, 7))
+  map(ML(1:2, 3:4), f(x, y) ~ x + y) %>% equals(list(4, 6))
+  map(ML(1:2, 3:4), f(x, y) ~ x + y, simplify = TRUE) %>% equals(c(4, 6))
+  map(MList(1:2, 3:4), f(x, y, z) ~ x + y + z, z = 1) %>% equals(list(5, 7))
 
   # check return types
   testthat::expect_error(map(1:2, numeric : x ~ x))

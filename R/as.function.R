@@ -1,11 +1,20 @@
-#' Convert into function
+#' Coerce a formula into a function
 #'
-#' Convert a formula into a function. See \link{map} for examples.
+#' Convert a formula into a function. See \link{map}, \link{extract} and
+#' \link{reduce} for examples.
 #'
-#' @param x (formula)
+#' @param x (formula) see examples
 #' @param ... not used
 #'
+#' @return An object inheriting from class function.
+#'
 #' @export
+#' @examples
+#' as.function(~ .)(1)
+#' as.function(x ~ x)(1)
+#' as.function(f(x, y) ~ c(x, y))(1, 2)
+#' as.function(numeric : x ~ x)(1) # check for class
+#' as.function(numeric(1) : x ~ x)(1) # check for class + length
 as.function.formula <- function(x, ...) {
   # 1: ~ . -> function(.) .
   # 2: x ~ x -> function(x) x
@@ -55,7 +64,6 @@ as.function.formula <- function(x, ...) {
     type <- getType(x)
   }
   else stop ("Don't know what to do with this formula.")
-
 
   addReturnType(
     aoos:::makeFunDef(args, deparseRhs(x), environment(x)),

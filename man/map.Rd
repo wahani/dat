@@ -4,11 +4,10 @@
 \name{map}
 \alias{map}
 \alias{map,ANY,FunctionWithPrototype-method}
-\alias{map,ANY,FunctionWithType-method}
 \alias{map,ANY,formula-method}
 \alias{map,ANY,function-method}
 \alias{map,ANY,numericORcharacterORlogical-method}
-\alias{map,List,function-method}
+\alias{map,MList,function-method}
 \alias{map,data.frame,function-method}
 \title{An implementation of map}
 \usage{
@@ -22,33 +21,31 @@ map(x, f, ...)
 
 \S4method{map}{ANY,FunctionWithPrototype}(x, f, ..., useNames = TRUE)
 
-\S4method{map}{ANY,FunctionWithType}(x, f, ...)
-
 \S4method{map}{ANY,numericORcharacterORlogical}(x, f, ...)
 
-\S4method{map}{List,`function`}(x, f, ..., simplify = FALSE)
+\S4method{map}{MList,`function`}(x, f, ..., simplify = FALSE)
 }
 \arguments{
-\item{x}{(\link{vector} | \link{data.frame}) if x inherits from data.frame, a data.frame is
-returned. Use \link{as.list} if this is not what you want.}
+\item{x}{(\link{vector} | \link{data.frame}) if x inherits from data.frame, a
+data.frame is returned. Use \link{as.list} if this is not what you want.}
 
-\item{f}{(\link{function} | \link{formula} | character | logical | numeric) something which
-can be interpreted as a function. formula objects are coerced to a
-function. atomics are used for subsetting in each element of x. See the
-examples.}
+\item{f}{(\link{function} | \link{formula} | character | logical | numeric)
+something which can be interpreted as a function. formula objects are
+coerced to a function. atomics are used for subsetting in each element of
+x. See the examples.}
 
 \item{...}{further arguments passed to \link{lapply}, \link{vapply} or
 \link{mapply}}
 
 \item{p}{(function | formula) a predicate function indicating which columns
-in a data.frame to use in map}
+in a data.frame to use in map.}
 
 \item{useNames}{see USE.NAMES in \link{vapply}}
 
 \item{simplify}{see SIMPLIFY in \link{mapply}}
 }
 \description{
-An implementation of map as a generic function.
+An implementation of map.
 }
 \examples{
 map(data.frame(y = 1:10, z = 2), x ~ x + 1)
@@ -57,9 +54,9 @@ map(data.frame(y = 1:10, z = 2), x ~ x + 1, x ~ all(x == 2))
 
 map(1, x ~ x)
 map(list(1:2, 3:4), 2)
-map(L(1:2, 3:4), f(x, y) ~ x + y)
-map(L(1:2, 3:4), f(x, y) ~ x + y, simplify = TRUE)
-map(L(1:2, 3:4), f(x, y, z) ~ x + y + z, z = 1)
+map(ML(1:2, 3:4), f(x, y) ~ x + y)
+map(ML(1:2, 3:4), f(x, y) ~ x + y, simplify = TRUE)
+map(ML(1:2, 3:4), f(x, y, z) ~ x + y + z, z = 1)
 
 map(list(1:3, 2:5), 2:3)
 map(list(1:3, 2:5), c(TRUE, FALSE, TRUE))

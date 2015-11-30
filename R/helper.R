@@ -1,4 +1,9 @@
-# Internal helper functions
+# Internal helper functions and types
+
+setClassUnion(
+  "atomic",
+  c("logical", "integer", "numeric", "complex", "character", "raw")
+)
 
 character : ReturnPrototype() %type% {
   # wraps a protoype of the return value of a function
@@ -13,19 +18,38 @@ character : ReturnType() %type% {
   .Object
 }
 
-FunctionWithPrototype(fun ~ "function", prototype ~ ANY) %type% .Object
+"function" : FunctionWithPrototype(fun ~ "function", prototype ~ ANY) %type% {
+  S3Part(.Object) <- addTypeCheck(.Object@fun, class(.Object@prototype)) %>%
+    addLengthCheck(length(.Object@prototype))
+  .Object
+}
 
-FunctionWithType(fun ~ "function", type ~ ReturnType) %type% .Object
+"function" : FunctionWithType(fun ~ "function", type ~ ReturnType) %type% {
+  S3Part(.Object) <- addTypeCheck(.Object@fun, .Object@type)
+  .Object
+}
 
-"function" : addTypeCheck(f, type) %g% standardGeneric("addTypeCheck")
-
-addTypeCheck(f ~ FunctionWithType, type ~ missing) %m% {
-  force(f)
+addLengthCheck <- function(f, l) {
+  force(f); force(l)
   function(...) {
-    out <- f@fun(...)
-    if (!inherits(out, f@type))
+    out <- f(...)
+    if (length(out) != l) {
+      stop("Function does not return correct length
+           expected: ", l, "
+           observed: ", length(out))
+    } else {
+      out
+    }
+  }
+}
+
+addTypeCheck <- function(f, type) {
+  force(f); force(type)
+  function(...) {
+    out <- f(...)
+    if (!inherits(out, type))
       stop("Function does not return correct type
-           expected: ", f@type, "
+           expected: ", type, "
            observed: ", class(out))
     else out
   }
@@ -59,7 +83,7 @@ constructArgs <- function(i, j, ...) {
 dispatcher(x) %g% x
 
 dispatcher(x ~ character) %m% {
-  if (length(x) == 1 && grepl("^\\^", x)) RegEx(sub("^__", "", x))
+  if (length(x) == 1 && grepl("^\\^", x)) RegEx(x)
   else x
 }
 

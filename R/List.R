@@ -1,17 +1,17 @@
 #' S4 list
 #'
-#' A type inheriting from list. Mainly used for dispatch in \link{map}.
+#' A type inheriting from list. Used for dispatch in \link{map}.
 #'
 #' @param ... arguments passed to \link{list}
 #'
 #' @export
-#' @rdname List
-list : List() %type% .Object
+#' @rdname MList
+list : MList() %type% .Object
 
 #' @export
-#' @rdname List
-L <- function(...) new("List", list(...))
+#' @rdname MList
+ML <- function(...) new("MList", list(...))
 
 #' @export
-#' @rdname List
-List <- function(...) new("List", list(...))
+#' @rdname MList
+MList <- function(...) new("MList", list(...))
