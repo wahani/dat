@@ -53,7 +53,7 @@ map(dat, x ~ x + 1, is.numeric) # only operates on numeric cols
 
 ## extract
 
-Sum all even number from 1 to 10:
+Sum all even numbers from 1 to 10:
 
 ```{r}
 is.even <- function(x) (x %% 2) == 0
@@ -217,7 +217,7 @@ dat[gain ~ arr_delay - dep_delay,
 dat %>%
   mutar(gain ~ arr_delay - dep_delay,
         speed ~ distance / air_time * 60) %>%
-  mutar("^gain|speed$") # I assume a regex if the character begin with '^'
+  mutar("^gain|speed$") # I assume a regex if the character begins with '^'
 ```
 
 ### Summarise

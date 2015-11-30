@@ -1,6 +1,6 @@
 ---
 title: "Tools for Data Manipulation"
-date: "2015-11-26"
+date: "2015-11-30"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Tools for Data Manipulation}
@@ -13,7 +13,7 @@ vignette: >
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/dat)](http://cran.r-project.org/package=dat)
 [![Downloads](http://cranlogs.r-pkg.org/badges/dat?color=brightgreen)](http://www.r-pkg.org/pkg/dat)
 
-Some tools (linking to dplyr where possible) to work with data.frames and an implementation of map. The package follows a 'one-function-to-rule-them-all' mentallity apposed to packages like purrr and dplyr which have many simple functions.
+An implementation of common higher order functions (map, extract and reduce) and a link to dplyr for common transoformations on data frames to work around non standard evaluation by default.
 
 ## Installation
 
@@ -62,7 +62,7 @@ map(1:3, numeric(1) : x ~ x^2) # vapply
 ```
 
 ```r
-map(L(1:4, 4:1), integer : f(x, y) ~ rep(x, y)) # mapply + check return type
+map(ML(1:4, 4:1), integer : f(x, y) ~ rep(x, y)) # mapply + check return type
 ```
 
 ```
@@ -80,7 +80,19 @@ map(L(1:4, 4:1), integer : f(x, y) ~ rep(x, y)) # mapply + check return type
 ```
 
 ```r
-map(L(1:3, 11:13), c) # zip
+map(list(1:4, 4:1), 2:3) # subsetting on lists
+```
+
+```
+## [[1]]
+## [1] 2 3
+## 
+## [[2]]
+## [1] 3 2
+```
+
+```r
+map(ML(1:3, 11:13), c) # zip
 ```
 
 ```
@@ -95,8 +107,8 @@ map(L(1:3, 11:13), c) # zip
 ```
 
 ```r
-map(L(1:3, 11:13), c) %>% 
-  { map(do.call(L, .), c) } # unzip
+map(ML(1:3, 11:13), c) %>% 
+  { map(do.call(ML, .), c) } # unzip
 ```
 
 ```
@@ -108,16 +120,137 @@ map(L(1:3, 11:13), c) %>%
 ```
 
 ```r
-dat <- DataFrame(x = 1, y = "")
+dat <- data.frame(x = 1, y = "")
 map(dat, x ~ x + 1, is.numeric) # only operates on numeric cols
 ```
 
 ```
-## Source: local data frame [1 x 2]
-## 
-##       x     y
-##   (dbl) (chr)
-## 1     2
+##   x y
+## 1 2
+```
+
+
+## extract
+
+Sum all even numbers from 1 to 10:
+
+
+```r
+is.even <- function(x) (x %% 2) == 0
+sum((1:10)[is.even(1:10)])
+```
+
+```
+## [1] 30
+```
+
+```r
+1:10 %>% extract(~ . %% 2 == 0) %>% sum
+```
+
+```
+## [1] 30
+```
+
+```r
+1:10 %>% extract(is.even) %>% sum
+```
+
+```
+## [1] 30
+```
+
+Find all factors of 15:
+
+
+```r
+factors <- function(a, b = 1:a) b[a %% b == 0]
+factors(15)
+```
+
+```
+## [1]  1  3  5 15
+```
+
+```r
+extract(1:15, ~ 15 %% . == 0)
+```
+
+```
+## [1]  1  3  5 15
+```
+
+Find all relative prime numbers:
+
+
+```r
+gcd <- function(a, b) {
+  .gcd <- function(a, b) if (b == 0) a else Recall(b, a %% b)
+  map(ML(a, b), .gcd) %>% unlist
+}
+
+extract(1:10, x ~ gcd(x, 10) == 1)
+```
+
+```
+## [1] 1 3 7 9
+```
+
+Find real prime numbers:
+
+
+```r
+isPrime <- function(n) {
+  .isPrime <- function(n) {
+    iter <- function(i) {
+      if (i * i > n) TRUE
+      else if (n %% i == 0 || n %% (i + 2) == 0) FALSE
+      else Recall(i + 6)
+    }
+    if (n <= 1) FALSE
+    else if (n <= 3) TRUE
+    else if (n %% 2 == 0 || n %% 3 == 0) FALSE
+    else iter(5)
+  }
+  map(n, logical(1) : x ~ .isPrime(x))
+}
+
+extract(1:10, isPrime)
+```
+
+```
+## [1] 2 3 5 7
+```
+
+## reduce
+
+Let's define a sum function:
+
+
+```r
+newSum <- function(x) reduce(x, `+`)
+newSum(1:10)
+```
+
+```
+## [1] 55
+```
+
+Or bind some data frames together:
+
+
+```r
+dat <- data.frame(id = 1:2, y = 1:4)
+split(dat, dat$id) %>%
+  reduce(rbind) # and reverse the split
+```
+
+```
+##     id y
+## 1.1  1 1
+## 1.3  1 3
+## 2.2  2 2
+## 2.4  2 4
 ```
 
 
@@ -126,9 +259,9 @@ map(dat, x ~ x + 1, is.numeric) # only operates on numeric cols
 I took the examples from the introductory vignette of dplyr. Things that are not
 supported:
 
-- no rename
-- no distinct
-- no transmute
+- rename
+- distinct
+- transmute
 
 But you still work with data frames. So you can go back or mix in dplyr features
 when you need them.
@@ -306,7 +439,7 @@ dat[gain ~ arr_delay - dep_delay,
 dat %>%
   mutar(gain ~ arr_delay - dep_delay,
         speed ~ distance / air_time * 60) %>%
-  mutar("^gain|speed$") # a regex
+  mutar("^gain|speed$") # I assume a regex if the character begins with '^'
 ```
 
 ```
