@@ -13,7 +13,7 @@ vignette: >
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/dat)](http://cran.r-project.org/package=dat)
 [![Downloads](http://cranlogs.r-pkg.org/badges/dat?color=brightgreen)](http://www.r-pkg.org/pkg/dat)
 
-An implementation of common higher order functions (map, extract and reduce) and a link to dplyr for common transoformations on data frames to work around non standard evaluation by default.
+An implementation of common higher order functions (map, extract and reduce) and a link to dplyr for common transformations on data frames to work around non standard evaluation by default.
 
 ## Installation
 

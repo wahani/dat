@@ -5,7 +5,7 @@ Version: 0.0.1
 Authors@R: person("Sebastian", "Warnholz", role = c("aut", "cre"),
                   email = "wahani@gmail.com")
 BugReports: https://github.com/wahani/aoos/dat
-Description: An implementation of common higher order functions (map, extract and reduce) and a link to dplyr for common transoformations on data frames to work around non standard evaluation by default.
+Description: An implementation of common higher order functions (map, extract and reduce) and a link to dplyr for common transformations on data frames to work around non standard evaluation by default.
 License: GPL-3 | file LICENSE
 Depends:
     methods,
