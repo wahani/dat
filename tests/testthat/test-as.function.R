@@ -23,5 +23,6 @@ test_that("as.function", {
 
   error(as.function(numeric(2) : x ~ x)(1))
   error(as.function(integer(1) : x ~ x)(1))
+  equals(as.function(integer(1) : x ~ x)(1L), 1L)
 
 })
