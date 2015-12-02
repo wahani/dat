@@ -90,7 +90,7 @@ handleRows(x ~ data.frame, i ~ numeric | integer) %m% {
 handleRows(x ~ data.frame, i ~ OneSidedFormula) %m% {
   envir <- environment(i)
   expr <- parse(text = sub("~", "", deparse(i)))
-  mutar(x, do.call(with, list(x, expr)), )
+  handleRows(x, do.call(with, list(x, expr), envir = envir))
 }
 
 handleRows(x ~ data.frame, i ~ TwoSidedFormula) %m% x
