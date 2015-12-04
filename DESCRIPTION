@@ -11,6 +11,7 @@ Depends:
     methods,
     aoos
 Imports:
+    data.table,
     dplyr,
     magrittr
 Suggests:
