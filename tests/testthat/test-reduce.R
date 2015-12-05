@@ -12,5 +12,6 @@ test_that("reduce reduces", {
   isEqual(reduce(list(), c, list()), list())
   isEqual(reduce(list(), f(x, y) ~ c(x, y), list()), list())
   isEqual(reduce(list(), f(x, y) ~ c(x, y)), list())
+  isEqual(reduce(1:1e2, Dots(c)), 1:1e2)
 
 })

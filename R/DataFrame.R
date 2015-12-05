@@ -95,6 +95,7 @@ handleRows(x ~ data.frame, i ~ OneSidedFormula) %m% {
 
 handleRows(x ~ data.frame, i ~ TwoSidedFormula) %m% x
 
+################################################################################
 
 data.frame : handleCols(x, i, j, ..., by) %g% standardGeneric("handleCols")
 

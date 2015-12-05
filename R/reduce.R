@@ -6,28 +6,21 @@
 #'
 #' @export
 #' @rdname reduce
-reduce(x, f, init = NULL) %g% standardGeneric("reduce")
-
-#' @export
-#' @rdname reduce
-reduce(x ~ ANY, f ~ "function", init ~ ANY) %m% {
-  .reduce <- function(x, f, init) {
-    if (is.null(init)) {
-      init <- x[1]
-      x <- x[-1]
-    }
-    for (el in x) init <- f(init, el)
-    init
-  }
-  # browser()
-  if (length(x) == 0 && length(init) == 0) x
-  else if (length(x) == 0 && !is.null(init)) init
-  else if (names(formals(args(f)))[1] == "...") do.call(f, as.list(c(init, x)))
-  else .reduce(x, f, init)
+reduce(x, f, init) %g% {
+  f <- as.function(f)
+  for (el in x) init <- f(init, el)
+  init
 }
 
 #' @export
 #' @rdname reduce
-reduce(x ~ ANY, f ~ formula, init ~ ANY) %m% {
-  reduce(x, as.function(f), init)
+reduce(x ~ ANY, f ~ "function | formula", init ~ missing) %m% {
+  if (length(x) == 0) x
+  else reduce(x[-1], f, x[1])
+}
+
+#' @export
+#' @rdname reduce
+reduce(x ~ ANY, f ~ FunctionWithDots, init ~ missing) %m% {
+  do.call(what = f, args = as.list(x))
 }

@@ -3,15 +3,15 @@
 \docType{methods}
 \name{reduce}
 \alias{reduce}
-\alias{reduce,ANY,formula-method}
-\alias{reduce,ANY,function-method}
+\alias{reduce,ANY,FunctionWithDots,missing-method}
+\alias{reduce,ANY,functionORformula,missing-method}
 \title{Reduce}
 \usage{
-reduce(x, f, init = NULL)
+reduce(x, f, init)
 
-\S4method{reduce}{ANY,`function`}(x, f, init = NULL)
+\S4method{reduce}{ANY,functionORformula,missing}(x, f, init)
 
-\S4method{reduce}{ANY,formula}(x, f, init = NULL)
+\S4method{reduce}{ANY,FunctionWithDots,missing}(x, f, init)
 }
 \arguments{
 \item{x}{(ANY) a vector to be reduced}
