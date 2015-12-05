@@ -9,7 +9,8 @@
 #'   coerced to a function. atomics are used for subsetting in each element of
 #'   x. See the examples.
 #' @param p (function | formula) a predicate function indicating which columns
-#'   in a data.frame to use in map.
+#'   in a data.frame to use in map. This is a filter for the map operation, the
+#'   full data.frame is returned.
 #' @param useNames see USE.NAMES in \link{vapply}
 #' @param simplify see SIMPLIFY in \link{mapply}
 #'

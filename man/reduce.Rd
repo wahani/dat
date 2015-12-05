@@ -21,6 +21,6 @@ reduce(x, f, init)
 \item{init}{an optional initial value}
 }
 \description{
-Reduce
+Very similar to \link{Reduce}.
 }
 

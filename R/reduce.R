@@ -1,5 +1,7 @@
 #' Reduce
 #'
+#' Very similar to \link{Reduce}.
+#'
 #' @param x (ANY) a vector to be reduced
 #' @param f (function | formula) a binary function
 #' @param init an optional initial value
@@ -16,7 +18,7 @@ reduce(x, f, init) %g% {
 #' @rdname reduce
 reduce(x ~ ANY, f ~ "function | formula", init ~ missing) %m% {
   if (length(x) == 0) x
-  else reduce(x[-1], f, x[1])
+  else reduce(x[-1], f, x[[1]])
 }
 
 #' @export

@@ -2,9 +2,24 @@
 #'
 #' There are many ways to use a DataFrame. Please see the vignette to see some
 #' examples. \code{mutar} is literally the same function as \code{[.DataFrame}
-#' and can be used to mix up with dplyr.
+#' and can be used to mix in dplyr features.
 #'
 #' @include helper.R
+#'
+#' @param x (DataFrame | data.frame)
+#' @param i (logical | numeric | integer | OneSidedFormula | TwoSidedFormula)
+#' @param j (logical | character | TwoSidedFormula | function) character
+#'   beginning with '^' are interpreted as regular expression
+#' @param ... arbitrary number of args
+#'    \cr in \code{[} (TwoSidedFormulas)
+#'    \cr in constructor see \link[dplyr]{data_frame}
+#' @param by (character) variable name
+#' @param drop ignored
+#'
+#' @details
+#' \code{OneSidedFormula} is always used for subsetting rows.
+#'
+#' \code{TwoSidedFormula} is used instead of name-value expressions in \code{summarise} and \code{mutate}.
 #'
 #' @examples
 #' \dontrun{
@@ -26,24 +41,20 @@ setOldClass(c("tbl_df", "data.frame"))
 
 #' @rdname DataFrame
 #' @export
-as.DataFrame <- function(x) UseMethod("as.DataFrame")
+as.DataFrame <- function(x, ...) UseMethod("as.DataFrame")
 
 #' @rdname DataFrame
 #' @export
-as.DataFrame.default <- function(x) {
+as.DataFrame.default <- function(x, ...) {
   do.call(DataFrame, as.list(x))
 }
 
-#' @param x (DataFrame | ANY)
-#' @param i (logical | numeric | integer | OneSidedFormula | TwoSidedFormula)
-#' @param j (logical | character | TwoSidedFormula | function) character
-#'   beginning with '^' are interpreted as regular expression
-#' @param ... arbitrary number of args
-#'    \cr in \code{[} (TwoSidedFormulas)
-#'    \cr in constructor see \link[dplyr]{data_frame}
-#' @param by (character) variable name
-#' @param drop ignored
-#'
+#' @rdname DataFrame
+#' @export
+as.DataFrame.data.frame <- function(x, ...) {
+  addClass(x, c("DataFrame", "tbl_df", "tbl", "data.frame"))
+}
+
 #' @rdname DataFrame
 #' @export
 "[.DataFrame" <- function(x, i, j, ..., by, drop) {

@@ -1,4 +1,4 @@
-# helpers for testing:
+# helper for testing:
 isIdentical <- function(a, b) {
   unify <- function(x) {
     x <- as.data.frame(x)
@@ -152,12 +152,15 @@ test_that("Basic syntax of a DataFrame", {
 
 })
 
-
-
 test_that("Type conversion", {
 
   dat <- data.frame(x = 1)
-  expect_is(as.DataFrame(dat), "DataFrame")
-  expect_is(as.DataFrame(dat), "tbl_df")
+  testthat::expect_is(as.DataFrame(dat), "DataFrame")
+  testthat::expect_is(as.DataFrame(dat), "data.frame")
+  testthat::expect_is(as.DataFrame(dat), "tbl_df")
+
+  testthat::expect_is(as.DataFrame(list(x = 1)), "DataFrame")
+  testthat::expect_is(as.DataFrame(list(x = 1)), "data.frame")
+  testthat::expect_is(as.DataFrame(list(x = 1)), "tbl_df")
 
 })

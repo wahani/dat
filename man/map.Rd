@@ -38,7 +38,8 @@ x. See the examples.}
 \link{mapply}}
 
 \item{p}{(function | formula) a predicate function indicating which columns
-in a data.frame to use in map.}
+in a data.frame to use in map. This is a filter for the map operation, the
+full data.frame is returned.}
 
 \item{useNames}{see USE.NAMES in \link{vapply}}
 
