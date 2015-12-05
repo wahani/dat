@@ -3,7 +3,6 @@
 \docType{class}
 \name{MList-class}
 \alias{Dots}
-\alias{FunctionWithDots}
 \alias{FunctionWithDots-class}
 \alias{ML}
 \alias{MList}
@@ -15,8 +14,6 @@ ML(...)
 MList(...)
 
 Dots(f)
-
-FunctionWithDots(...)
 }
 \arguments{
 \item{...}{arguments passed to \link{list}}
@@ -24,6 +21,10 @@ FunctionWithDots(...)
 \item{f}{(function)}
 }
 \description{
-Defferent types used for dispatch.
+Defferent types used for dispatch. \code{ML} and \code{MList} are constructor
+functions for a list (used in \link{map} to indicate multivariate map).
+\code{Dots} wraps a function in a type to declare that it knows how to deal
+with an arbitrary number of arguments (used in \link{reduce} instead of
+\code{do.call}).
 }
 

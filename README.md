@@ -1,6 +1,6 @@
 ---
 title: "Tools for Data Manipulation"
-date: "2015-11-30"
+date: "2015-12-05"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Tools for Data Manipulation}
@@ -246,11 +246,11 @@ split(dat, dat$id) %>%
 ```
 
 ```
-##     id y
-## 1.1  1 1
-## 1.3  1 3
-## 2.2  2 2
-## 2.4  2 4
+##   id y
+## 1  1 1
+## 3  1 3
+## 2  2 2
+## 4  2 4
 ```
 
 

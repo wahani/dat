@@ -1,6 +1,10 @@
 #' Helper Types
 #'
-#' Defferent types used for dispatch.
+#' Defferent types used for dispatch. \code{ML} and \code{MList} are constructor
+#' functions for a list (used in \link{map} to indicate multivariate map).
+#' \code{Dots} wraps a function in a type to declare that it knows how to deal
+#' with an arbitrary number of arguments (used in \link{reduce} instead of
+#' \code{do.call}).
 #'
 #' @param ... arguments passed to \link{list}
 #' @param f (function)
@@ -30,7 +34,3 @@ Dots <- function(f) {
   force(f)
   new("FunctionWithDots", function(...) f(...))
 }
-
-#' @export
-#' @rdname HelperTypes
-FunctionWithDots <- Dots
