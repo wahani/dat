@@ -19,7 +19,8 @@
 #' @details
 #' \code{OneSidedFormula} is always used for subsetting rows.
 #'
-#' \code{TwoSidedFormula} is used instead of name-value expressions in \code{summarise} and \code{mutate}.
+#' \code{TwoSidedFormula} is used instead of name-value expressions in
+#' \code{summarise} and \code{mutate}.
 #'
 #' @examples
 #' \dontrun{
@@ -69,14 +70,13 @@ as.DataFrame.data.frame <- function(x, ...) {
   j <- if (!missing(i) && nargs() == 2) i else j
   i <- if (missing(i) || nargs() == 2) NULL else i
   by <- if (missing(by)) NULL else by
-  classOfX <- class(x)
+  memClassHandler <- MemClassHandler()
 
-  x %<>%
+  x %>%
+    memClassHandler$memClass() %>%
     handleRows(dispatcher(i)) %>%
-    handleCols(dispatcher(i), dispatcher(j), ..., by = dispatcher(by))
-
-  class(x) <- classOfX
-  x
+    handleCols(dispatcher(i), dispatcher(j), ..., by = dispatcher(by)) %>%
+    memClassHandler$wrapClass()
 
 }
 

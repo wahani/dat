@@ -45,7 +45,8 @@ and can be used to mix in dplyr features.
 \details{
 \code{OneSidedFormula} is always used for subsetting rows.
 
-\code{TwoSidedFormula} is used instead of name-value expressions in \code{summarise} and \code{mutate}.
+\code{TwoSidedFormula} is used instead of name-value expressions in
+\code{summarise} and \code{mutate}.
 }
 \examples{
 \dontrun{

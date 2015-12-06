@@ -1,5 +1,45 @@
 # Internal helper functions and types
 
+MemClassHandler <- function() {
+  # An instance can be used to memorize the class of an object. And then to add
+  # that class, or wrap that S4 instance to an object.
+
+  classOfX <- NULL
+  s4Object <- NULL
+
+  memClass <- function(x) {
+    if (isS4(x)) {
+      xS3 <- S3Part(x, TRUE)
+      .self$classOfX <- class(xS3)
+
+      S3Part(x, needClass = "data.frame") <- data.frame()
+      .self$s4Object <- x
+
+      xS3
+    }
+    else {
+      .self$classOfX <- class(x)
+      x
+    }
+  }
+
+  wrapClass <- function(x) {
+    if (!is.null(s4Object)) {
+      out <- s4Object
+      S3Part(out) <- addClass(x, classOfX)
+      out
+    }
+    else if (!is.null(classOfX)) {
+      addClass(x, classOfX)
+    }
+    else {
+      stop("Don't know what this is.")
+    }
+  }
+
+  retList("MemClassHandler")
+}
+
 setClassUnion(
   "atomic",
   c("logical", "integer", "numeric", "complex", "character", "raw")

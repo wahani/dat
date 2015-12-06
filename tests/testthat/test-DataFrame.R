@@ -164,3 +164,27 @@ test_that("Type conversion", {
   testthat::expect_is(as.DataFrame(list(x = 1)), "tbl_df")
 
 })
+
+test_that("S4 stuff", {
+
+  expectIs <- function(x, a) {
+    testthat::expect_is(x, a)
+  }
+
+  expectTrue <- function(x) {
+    testthat::expect_true(x)
+  }
+
+  DataFrame : SomeData() %type% .Object
+
+  dat <- SomeData(DataFrame(x = 1))
+  dat %<>%
+    mutar(~x == 1) %>%
+    mutar("^x$") %>%
+    mutar(y ~ x)
+
+  expectIs(dat, "SomeData")
+  expectTrue(isS4(dat))
+  expectIdentical(S3Part(dat, TRUE), data.frame(x = 1, y = 1))
+
+})
