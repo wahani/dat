@@ -1,6 +1,6 @@
 ---
 title: "Tools for Data Manipulation"
-date: "2015-12-05"
+date: "2015-12-06"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Tools for Data Manipulation}
@@ -295,26 +295,22 @@ str(dat)
 ##  $ minute   : num  17 33 42 44 54 54 55 57 57 58 ...
 ```
 
-### Filter rows
+### Filter
 
 
 ```r
-filter(flights, month == 1, day == 1)
-dat[~ month == 1 & day == 1]
-mutar(dat, ~ month == 1 & day == 1)
+filter(flights, month == 1, day == 1) # dplyr
+dat[~ month == 1 & day == 1]          # #1
+mutar(dat, ~ month == 1 & day == 1)   # #2
 
-slice(flights, 1:10)
-dat[~1:10]
-dat %>% mutar(~1:10)
-
-# It is truly amazing how many times I tried to subset a data frame with
-# dat[1:10] and meant rows. Thats why this is working:
-dat[~1:10]
+slice(flights, 1:10)                  # dplyr
+dat[~1:10]                            # #1
+dat %>% mutar(~1:10)                  # #2
 ```
 
 
 ```r
-dat[1:10, ]
+dat[1:10, ]                           # standard things
 ```
 
 ```
@@ -340,13 +336,13 @@ dat[1:10, ]
 
 
 ```r
-arrange(flights, year, month, day)
-dat[~order(year, month, day)]
+arrange(flights, year, month, day)    # dplyr
+dat[~order(year, month, day)]         # #1
 ```
 
 
 ```r
-dat %>% mutar(~order(year, month, day))
+dat %>% mutar(~order(year, month, day)) # #2
 ```
 
 ```
@@ -377,8 +373,8 @@ hours of my life debugging code where I relied on positions in a data frame.
 
 
 ```r
-select(flights, year, month, day)
-select(flights, year:day)
+select(flights, year, month, day)       # dplyr 
+select(flights, year:day)               # dplyr
 
 # characters are passed into dplyr::select_:
 dat %>%
@@ -579,5 +575,50 @@ dat %>%
 ## 9   N107US    41 528.7073 -5.7317073
 ## 10  N108UW    60 534.5000 -1.2500000
 ## ..     ...   ...      ...        ...
+```
+
+### Using S4
+
+Typical problems I have:
+- dplyr is not respecting the class of the object it operates on. The class
+attribute changes on-the-fly.
+- Neither dplyr nor data.table is playing nice with S4.
+
+Let's define a S4 class inheriting from data.table and do something with it.
+
+
+```r
+library(data.table)
+setOldClass(c("data.table", "data.frame"))
+
+setClass("DataTable", "data.table")
+
+DataTable <- function(...) {
+  new("DataTable", data.table::data.table(...))
+}
+
+dat <- DataTable(id = rep(1:2, each = 10), x = 101:120)
+# dat[1:2, ] # this won't work, because data.table can't handle the S4 type
+dat %>% 
+  mutar(~1:2)
+```
+
+```
+## Object of class "DataTable"
+##    id   x
+## 1:  1 101
+## 2:  1 102
+```
+
+```r
+dat %>%
+  mutar(sumOfX ~ sum(x), by = "id")
+```
+
+```
+## Object of class "DataTable"
+##    id sumOfX
+## 1:  1   1055
+## 2:  2   1155
 ```
 
