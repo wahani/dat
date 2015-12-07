@@ -2,7 +2,7 @@
 #'
 #' There are many ways to use a DataFrame. Please see the vignette to see some
 #' examples. \code{mutar} is literally the same function as \code{[.DataFrame}
-#' and can be used to mix in dplyr features.
+#' and can be used as a generic interface to use dplyr.
 #'
 #' @include helper.R
 #'

@@ -41,5 +41,6 @@ Extract elements from a vector
 extract(1:15, ~ 15 \%\% . == 0)
 extract(list(xy = 1, zy = 2), "^z")
 extract(list(x = 1, z = 2), 1)
+extract(list(x = 1, y = ""), is.character)
 }
 
