@@ -8,6 +8,18 @@
 #'
 #' @export
 #' @rdname reduce
+#'
+#' @examples
+#' add <- function(x) reduce(x, `+`)
+#' add(1:3)
+#'
+#' # Standard but inefficient:
+#' reduce(as.list(1:3), c)
+#' # Using Dots can be more efficient when the function itself already knows
+#' # how to reduce a vector into a scalar.
+#' reduce(as.list(1:3), Dots(c))
+#' # The result is the same as
+#' do.call(c, as.list(1:3))
 reduce(x, f, init) %g% {
   f <- as.function(f)
   for (el in x) init <- f(init, el)
