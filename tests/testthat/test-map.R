@@ -11,6 +11,8 @@ test_that("map", {
   map(dat %>% mutar(x ~ "x"), x ~ x + 1, is.numeric) %>%
     equals(data.frame(y = 2:11, z = 3, x = "x", stringsAsFactors = FALSE))
   map(dat, x ~ x + 1, x ~ all(x == 2)) %>% equals(data.frame(y = 1:10, z = 3))
+  map(dat, x ~ x + 1, "z") %>% equals(data.frame(y = 1:10, z = 3))
+  map(dat, x ~ x + 1, "^z$") %>% equals(data.frame(y = 1:10, z = 3))
 
   # vectors
   map(1, x ~ x) %>% equals(list(1))
@@ -33,3 +35,26 @@ test_that("map", {
 
 })
 
+test_that("split-apply-combine", {
+
+  expectEqual <- function(x, y) {
+    testthat::expect_equal(x, y)
+  }
+
+  isA <- function(x, a) {
+    testthat::expect_is(x, a)
+  }
+
+  dat <- DataFrame(y = 1:10, z = 2, id = rep(letters[1:2], 5))
+
+  map(dat, df ~ 1, By("id")) %>% expectEqual(list(a = 1, b = 1))
+  tmp <- map(dat, mutar, By("id"), count ~ n())
+  expectEqual(tmp$count, rep(5, 10))
+  expectEqual(NROW(tmp), 10)
+  expectEqual(NCOL(tmp), 4)
+
+  setClass("Dat", "data.frame")
+  dat <- new("Dat", dat)
+  map(dat, mutar, By("id"), count ~ n()) %>% isA("Dat")
+
+})

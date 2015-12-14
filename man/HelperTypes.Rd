@@ -2,6 +2,8 @@
 % Please edit documentation in R/HelperTypes.R
 \docType{class}
 \name{MList-class}
+\alias{By}
+\alias{By-class}
 \alias{Dots}
 \alias{FunctionWithDots-class}
 \alias{ML}
@@ -14,17 +16,20 @@ ML(...)
 MList(...)
 
 Dots(f)
+
+By(var, combine = bindRows, ...)
 }
 \arguments{
 \item{...}{arguments passed to \link{list}}
 
 \item{f}{(function)}
+
+\item{var}{(character) the variable names to use in split}
+
+\item{combine}{(function) a function which know how to combine the list of
+results. \link{bindRows} is the default.}
 }
 \description{
-Defferent types used for dispatch. \code{ML} and \code{MList} are constructor
-functions for a list (used in \link{map} to indicate multivariate map).
-\code{Dots} wraps a function in a type to declare that it knows how to deal
-with an arbitrary number of arguments (used in \link{reduce} instead of
-\code{do.call}).
+Helper Types
 }
 

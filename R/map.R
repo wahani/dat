@@ -50,14 +50,41 @@ map(x ~ ANY, f ~ "function", ...) %m% {
 #' @export
 #' @rdname map
 map(x ~ data.frame, f ~ "function", p = function(x) TRUE, ...) %m% {
+  mapDataFrame(x, f, p, ...)
+}
 
-  is.formula <- function(x) inherits(x, "formula")
-  stopifnot(is.formula(p) | is.function(p))
+mapDataFrame(x, f, p, ...) %g% {
+  # This generic exists to dipatch on p
+  standardGeneric("mapDataFrame")
+}
 
-  ind <- vapply(x, as.function(p), logical(1))
+mapDataFrame(x ~ data.frame, f ~ "function", p ~ formula, ...) %m% {
+  mapDataFrame(x, f, as.function(p), ...)
+}
+
+mapDataFrame(x ~ data.frame, f ~ "function", p ~ "function", ...) %m% {
+  ind <- names(x)[vapply(x, p, logical(1))]
+  mapDataFrameOnIndex(x, f, ind, ...)
+}
+
+mapDataFrame(x ~ data.frame, f ~ "function", p ~ character, ...) %m% {
+  ind <- if (length(p) == 1 && grepl("^\\^", p)) {
+    names(x)[grepl(p, names(x))]
+  } else p
+  mapDataFrameOnIndex(x, f, ind, ...)
+}
+
+mapDataFrame(x ~ data.frame, f ~ "function", p ~ By, ...) %m% {
+  split(seq_len(nrow(x)), mutar(x, j = p@var)) %>%
+    map(ind ~ f(mutar(x, i = ind, j = NULL), ...)) %>%
+    p@combine()
+}
+
+mapDataFrameOnIndex <- function(x, f, ind, ...) {
+  memClassHandler <- MemClassHandler()
+  x <- memClassHandler$memClass(x)
   x[ind] <- lapply(x[ind], f, ...)
-  x
-
+  memClassHandler$wrapClass(x)
 }
 
 #' @export

@@ -1,6 +1,6 @@
 ---
 title: "Tools for Data Manipulation"
-date: "2015-12-06"
+date: "2015-12-14"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Tools for Data Manipulation}
@@ -544,6 +544,26 @@ dat %>%
 ## ..     ...   ...      ...        ...
 ```
 
+### Split-apply-combine
+
+
+```r
+# The naive split-apply-combine
+map(dat, mutar, By("month"), count ~ n()) %>% 
+  mutar(27003:27006, j = c("month", "count"))
+```
+
+```
+## Source: local data frame [4 x 2]
+## 
+##   month count
+##   (int) (int)
+## 1     1 27004
+## 2     1 27004
+## 3     2 24951
+## 4     2 24951
+```
+
 
 ### Mixing dplyr and mutar
 
@@ -597,17 +617,18 @@ DataTable <- function(...) {
   new("DataTable", data.table::data.table(...))
 }
 
-dat <- DataTable(id = rep(1:2, each = 10), x = 101:120)
+set.seed(1)
+dat <- DataTable(id = rep(letters[1:2], each = 10), x = 101:120, y = rnorm(20))
 # dat[1:2, ] # this won't work, because data.table can't handle the S4 type
 dat %>% 
-  mutar(~1:2)
+  mutar(~1:2, y ~ runif(2))
 ```
 
 ```
 ## Object of class "DataTable"
-##    id   x
-## 1:  1 101
-## 2:  1 102
+##    id   x         y
+## 1:  a 101 0.8209463
+## 2:  a 102 0.6470602
 ```
 
 ```r
@@ -618,7 +639,46 @@ dat %>%
 ```
 ## Object of class "DataTable"
 ##    id sumOfX
-## 1:  1   1055
-## 2:  2   1155
+## 1:  a   1055
+## 2:  b   1155
+```
+
+```r
+map(dat, mutar, By("id"), sumOfX ~ sum(x)) %>% mutar(~1:5)
+```
+
+```
+## Object of class "DataTable"
+##    id   x          y sumOfX
+## 1:  a 101 -0.6264538   1055
+## 2:  a 102  0.1836433   1055
+## 3:  a 103 -0.8356286   1055
+## 4:  a 104  1.5952808   1055
+## 5:  a 105  0.3295078   1055
+```
+
+```r
+map(dat, df ~ lm(y ~ x, as.data.frame(df)), By("id"))
+```
+
+```
+## $a
+## 
+## Call:
+## lm(formula = y ~ x, data = as.data.frame(df))
+## 
+## Coefficients:
+## (Intercept)            x  
+##    -5.64203      0.05473  
+## 
+## 
+## $b
+## 
+## Call:
+## lm(formula = y ~ x, data = as.data.frame(df))
+## 
+## Coefficients:
+## (Intercept)            x  
+##    -5.35800      0.04854
 ```
 

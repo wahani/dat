@@ -263,6 +263,14 @@ dat %>%
   mutar(~count > 20 & dist < 2000)
 ```
 
+### Split-apply-combine
+
+```{r}
+# The naive split-apply-combine
+map(dat, mutar, By("month"), count ~ n()) %>% 
+  mutar(27003:27006, j = c("month", "count"))
+```
+
 
 ### Mixing dplyr and mutar
 
@@ -296,12 +304,16 @@ DataTable <- function(...) {
   new("DataTable", data.table::data.table(...))
 }
 
-dat <- DataTable(id = rep(1:2, each = 10), x = 101:120)
+set.seed(1)
+dat <- DataTable(id = rep(letters[1:2], each = 10), x = 101:120, y = rnorm(20))
 # dat[1:2, ] # this won't work, because data.table can't handle the S4 type
 dat %>% 
-  mutar(~1:2)
+  mutar(~1:2, y ~ runif(2))
 
 dat %>%
   mutar(sumOfX ~ sum(x), by = "id")
+
+map(dat, mutar, By("id"), sumOfX ~ sum(x)) %>% mutar(~1:5)
+map(dat, df ~ lm(y ~ x, as.data.frame(df)), By("id"))
 ```
 

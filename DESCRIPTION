@@ -28,6 +28,7 @@ RoxygenNote: 5.0.1
 Collate:
     'helper.R'
     'DataFrame.R'
+    'bindRows.R'
     'HelperTypes.R'
     'NAMESPACE.R'
     'as.function.R'
