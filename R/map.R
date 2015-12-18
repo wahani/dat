@@ -75,9 +75,9 @@ mapDataFrame(x ~ data.frame, f ~ "function", p ~ character, ...) %m% {
 }
 
 mapDataFrame(x ~ data.frame, f ~ "function", p ~ By, ...) %m% {
-  split(seq_len(nrow(x)), mutar(x, j = p@var)) %>%
-    map(ind ~ f(mutar(x, i = ind, j = NULL), ...)) %>%
-    p@combine()
+  indList <- split(seq_len(nrow(x)), mutar(x, j = p@var))
+  datList <- map(indList, ind ~ f(x[ind, , drop = FALSE], ...))
+  p@combine(datList)
 }
 
 mapDataFrameOnIndex <- function(x, f, ind, ...) {

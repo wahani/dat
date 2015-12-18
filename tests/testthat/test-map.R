@@ -53,7 +53,7 @@ test_that("split-apply-combine", {
   expectEqual(NROW(tmp), 10)
   expectEqual(NCOL(tmp), 4)
 
-  setClass("Dat", "data.frame")
+  setClass("Dat", "DataFrame")
   dat <- new("Dat", dat)
   map(dat, mutar, By("id"), count ~ n()) %>% isA("Dat")
 

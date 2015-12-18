@@ -1,6 +1,6 @@
 ---
 title: "Tools for Data Manipulation"
-date: "2015-12-14"
+date: "2015-12-18"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Tools for Data Manipulation}
@@ -27,6 +27,10 @@ devtools::install_github("wahani/dat")
 - You probably have to rewrite all your dplyr / data.table code once you put it 
 inside a package. I.e. working around non standard evaluation or find another
 way to satisfy R CMD check. And you don't like that.
+- dplyr is not respecting the class of the object it operates on; the class
+attribute changes on-the-fly.
+- Neither dplyr nor data.table is playing nice with S4, but you really, really
+want a S4 *data.table* or *tbl_df*.
 - You like currying as in rlist and purrr.
 - You find it annoying that you constantly have to switch between lapply, vapply
 and mapply (and other map functions).
@@ -597,12 +601,7 @@ dat %>%
 ## ..     ...   ...      ...        ...
 ```
 
-### Using S4
-
-Typical problems I have:
-- dplyr is not respecting the class of the object it operates on. The class
-attribute changes on-the-fly.
-- Neither dplyr nor data.table is playing nice with S4.
+### Example with S4 and data.table
 
 Let's define a S4 class inheriting from data.table and do something with it.
 
@@ -617,9 +616,27 @@ DataTable <- function(...) {
   new("DataTable", data.table::data.table(...))
 }
 
+setMethod("[", "DataTable", mutar)
+```
+
+```
+## [1] "["
+```
+
+```r
 set.seed(1)
 dat <- DataTable(id = rep(letters[1:2], each = 10), x = 101:120, y = rnorm(20))
-# dat[1:2, ] # this won't work, because data.table can't handle the S4 type
+dat[1:2, ]
+```
+
+```
+## Object of class "DataTable"
+##    id   x          y
+## 1:  a 101 -0.6264538
+## 2:  a 102  0.1836433
+```
+
+```r
 dat %>% 
   mutar(~1:2, y ~ runif(2))
 ```
@@ -644,7 +661,7 @@ dat %>%
 ```
 
 ```r
-map(dat, mutar, By("id"), sumOfX ~ sum(x)) %>% mutar(~1:5)
+map(dat, mutar, By("id"), sumOfX ~ sum(x))[~1:2]
 ```
 
 ```
@@ -652,33 +669,16 @@ map(dat, mutar, By("id"), sumOfX ~ sum(x)) %>% mutar(~1:5)
 ##    id   x          y sumOfX
 ## 1:  a 101 -0.6264538   1055
 ## 2:  a 102  0.1836433   1055
-## 3:  a 103 -0.8356286   1055
-## 4:  a 104  1.5952808   1055
-## 5:  a 105  0.3295078   1055
 ```
 
 ```r
-map(dat, df ~ lm(y ~ x, as.data.frame(df)), By("id"))
+map(dat, dt ~ DataTable(sumOfX = sum(dt$x)), By("id"))
 ```
 
 ```
-## $a
-## 
-## Call:
-## lm(formula = y ~ x, data = as.data.frame(df))
-## 
-## Coefficients:
-## (Intercept)            x  
-##    -5.64203      0.05473  
-## 
-## 
-## $b
-## 
-## Call:
-## lm(formula = y ~ x, data = as.data.frame(df))
-## 
-## Coefficients:
-## (Intercept)            x  
-##    -5.35800      0.04854
+## Object of class "DataTable"
+##    sumOfX
+## 1:   1055
+## 2:   1155
 ```
 
