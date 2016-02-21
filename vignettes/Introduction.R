@@ -7,7 +7,8 @@ cat(gsub("\\n   ", "", packageDescription("dat", fields = "Description")))
 ## ------------------------------------------------------------------------
 library(dat)
 map(1:3, ~ .^2) # lapply
-map(1:3, numeric(1) : x ~ x^2) # vapply
+flatmap(1:3, ~ .^2) # lapply + unlist
+flatmap(1:3, numeric(1) : x ~ x^2) # lapply + unlist + type check
 map(ML(1:4, 4:1), integer : f(x, y) ~ rep(x, y)) # mapply + check return type
 map(list(1:4, 4:1), 2:3) # subsetting on lists
 map(ML(1:3, 11:13), c) # zip
@@ -48,19 +49,10 @@ isPrime <- function(n) {
     else if (n %% 2 == 0 || n %% 3 == 0) FALSE
     else iter(5)
   }
-  map(n, logical(1) : x ~ .isPrime(x))
+  flatmap(n, logical(1) : x ~ .isPrime(x))
 }
 
 extract(1:10, isPrime)
-
-## ------------------------------------------------------------------------
-newSum <- function(x) reduce(x, `+`)
-newSum(1:10)
-
-## ------------------------------------------------------------------------
-dat <- data.frame(id = 1:2, y = 1:4)
-split(dat, dat$id) %>%
-  reduce(rbind) # and reverse the split
 
 ## ------------------------------------------------------------------------
 library(nycflights13)

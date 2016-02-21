@@ -4,8 +4,6 @@
 \name{MList-class}
 \alias{By}
 \alias{By-class}
-\alias{Dots}
-\alias{FunctionWithDots-class}
 \alias{ML}
 \alias{MList}
 \alias{MList-class}
@@ -15,14 +13,10 @@ ML(...)
 
 MList(...)
 
-Dots(f)
-
 By(var, combine = bindRows, ...)
 }
 \arguments{
 \item{...}{arguments passed to \link{list}}
-
-\item{f}{(function)}
 
 \item{var}{(character) the variable names to use in split}
 

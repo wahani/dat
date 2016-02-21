@@ -15,8 +15,8 @@
 An object inheriting from class function.
 }
 \description{
-Convert a formula into a function. See \link{map}, \link{extract} and
-\link{reduce} for examples.
+Convert a formula into a function. See \link{map} and \link{extract} for
+examples.
 }
 \examples{
 as.function(~ .)(1)

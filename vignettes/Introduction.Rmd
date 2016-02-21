@@ -33,8 +33,6 @@ attribute changes on-the-fly.
 - Neither dplyr nor data.table is playing nice with S4, but you really, really
 want a S4 *data.table* or *tbl_df*.
 - You like currying as in rlist and purrr.
-- You find it annoying that you constantly have to switch between lapply, vapply
-and mapply (and other map functions).
 - We work together and you have to understand code I wrote.
 
 ## map
@@ -44,7 +42,8 @@ What we can do with map:
 ```{r}
 library(dat)
 map(1:3, ~ .^2) # lapply
-map(1:3, numeric(1) : x ~ x^2) # vapply
+flatmap(1:3, ~ .^2) # lapply + unlist
+flatmap(1:3, numeric(1) : x ~ x^2) # lapply + unlist + type check
 map(ML(1:4, 4:1), integer : f(x, y) ~ rep(x, y)) # mapply + check return type
 map(list(1:4, 4:1), 2:3) # subsetting on lists
 map(ML(1:3, 11:13), c) # zip
@@ -100,29 +99,11 @@ isPrime <- function(n) {
     else if (n %% 2 == 0 || n %% 3 == 0) FALSE
     else iter(5)
   }
-  map(n, logical(1) : x ~ .isPrime(x))
+  flatmap(n, logical(1) : x ~ .isPrime(x))
 }
 
 extract(1:10, isPrime)
 ```
-
-## reduce
-
-Let's define a sum function:
-
-```{r}
-newSum <- function(x) reduce(x, `+`)
-newSum(1:10)
-```
-
-Or bind some data frames together:
-
-```{r}
-dat <- data.frame(id = 1:2, y = 1:4)
-split(dat, dat$id) %>%
-  reduce(rbind) # and reverse the split
-```
-
 
 ## Data Frame
 

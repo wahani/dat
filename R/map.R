@@ -11,11 +11,11 @@
 #' @param p (function | formula) a predicate function indicating which columns
 #'   in a data.frame to use in map. This is a filter for the map operation, the
 #'   full data.frame is returned.
-#' @param useNames see USE.NAMES in \link{vapply}
+#' @param recursive see recursive in \link{unlist}
+#' @param useNames see use.names in \link{unlist}
 #' @param simplify see SIMPLIFY in \link{mapply}
 #'
-#' @param ... further arguments passed to \link{lapply}, \link{vapply} or
-#'   \link{mapply}
+#' @param ... further arguments passed to \link{lapply} and \link{mapply}
 #'
 #' @export
 #' @rdname map
@@ -95,12 +95,6 @@ map(x ~ ANY, f ~ formula, ...) %m% {
 
 #' @export
 #' @rdname map
-map(x ~ ANY, f ~ FunctionWithPrototype, ..., useNames = TRUE) %m% {
-  vapply(X = x, FUN = f@fun, FUN.VALUE = f@prototype, ..., USE.NAMES = useNames)
-}
-
-#' @export
-#' @rdname map
 map(x ~ ANY, f ~ numeric | character | logical, ...) %m% {
   force(f)
   map(x, . ~ .[f], ...)
@@ -110,4 +104,20 @@ map(x ~ ANY, f ~ numeric | character | logical, ...) %m% {
 #' @rdname map
 map(x ~ MList, f ~ "function", ..., simplify = FALSE) %m% {
   do.call(mapply, c(list(FUN = f), x, SIMPLIFY = simplify, ...))
+}
+
+#' @export
+#' @rdname map
+flatmap(x, f, ...) %g% standardGeneric("flatmap")
+
+#' @export
+#' @rdname map
+flatmap(x, f, ...) %g% {
+  flatmap(x, as.function(f), ...)
+}
+
+#' @export
+#' @rdname map
+flatmap(x ~ ANY, f ~ "function", ..., recursive = FALSE, useNames = TRUE) %m% {
+  unlist(lapply(x, f, ...), recursive, useNames)
 }

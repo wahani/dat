@@ -30,8 +30,8 @@ test_that("map", {
   # check return types
   testthat::expect_error(map(1:2, numeric : x ~ x))
   map(as.numeric(1:2), numeric : x ~ x) %>% equals(as.list(1:2))
-  map(1:2, integer(1) : x ~ x) %>% equals(1:2)
-  map(1:2, numeric(1) : x ~ x + 0.5) %>% equals(c(1.5, 2.5))
+  map(1:2, integer(1) : x ~ x) %>% equals(as.list(1:2))
+  map(1:2, numeric(1) : x ~ x + 0.5) %>% equals(as.list(c(1.5, 2.5)))
 
 })
 
@@ -56,5 +56,22 @@ test_that("split-apply-combine", {
   setClass("Dat", "DataFrame")
   dat <- new("Dat", dat)
   map(dat, mutar, By("id"), count ~ n()) %>% isA("Dat")
+
+})
+
+test_that("flatmap", {
+
+  equals <- function(x, y) {
+    testthat::expect_equal(x, y)
+  }
+
+  error <- function(x, regex) {
+    testthat::expect_error(x, regex)
+  }
+
+  flatmap(1:2, integer(1) : x ~ x) %>% equals(1:2)
+  flatmap(1:2, numeric(1) : x ~ x + 0.5) %>% equals(c(1.5, 2.5))
+  error(flatmap(letters[1:2], numeric(1) : x ~ x),
+        "Function does not return correct type")
 
 })

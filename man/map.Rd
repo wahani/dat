@@ -2,8 +2,9 @@
 % Please edit documentation in R/map.R
 \docType{methods}
 \name{map}
+\alias{flatmap}
+\alias{flatmap,ANY,function-method}
 \alias{map}
-\alias{map,ANY,FunctionWithPrototype-method}
 \alias{map,ANY,formula-method}
 \alias{map,ANY,function-method}
 \alias{map,ANY,numericORcharacterORlogical-method}
@@ -19,11 +20,16 @@ map(x, f, ...)
 
 \S4method{map}{ANY,formula}(x, f, ...)
 
-\S4method{map}{ANY,FunctionWithPrototype}(x, f, ..., useNames = TRUE)
-
 \S4method{map}{ANY,numericORcharacterORlogical}(x, f, ...)
 
 \S4method{map}{MList,`function`}(x, f, ..., simplify = FALSE)
+
+flatmap(x, f, ...)
+
+flatmap(x, f, ...)
+
+\S4method{flatmap}{ANY,`function`}(x, f, ..., recursive = FALSE,
+  useNames = TRUE)
 }
 \arguments{
 \item{x}{(\link{vector} | \link{data.frame}) if x inherits from data.frame, a
@@ -34,16 +40,17 @@ something which can be interpreted as a function. formula objects are
 coerced to a function. atomics are used for subsetting in each element of
 x. See the examples.}
 
-\item{...}{further arguments passed to \link{lapply}, \link{vapply} or
-\link{mapply}}
+\item{...}{further arguments passed to \link{lapply} and \link{mapply}}
 
 \item{p}{(function | formula) a predicate function indicating which columns
 in a data.frame to use in map. This is a filter for the map operation, the
 full data.frame is returned.}
 
-\item{useNames}{see USE.NAMES in \link{vapply}}
-
 \item{simplify}{see SIMPLIFY in \link{mapply}}
+
+\item{recursive}{see recursive in \link{unlist}}
+
+\item{useNames}{see use.names in \link{unlist}}
 }
 \description{
 An implementation of map.

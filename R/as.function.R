@@ -1,7 +1,7 @@
 #' Coerce a formula into a function
 #'
-#' Convert a formula into a function. See \link{map}, \link{extract} and
-#' \link{reduce} for examples.
+#' Convert a formula into a function. See \link{map} and \link{extract} for
+#' examples.
 #'
 #' @param x (formula) see examples
 #' @param ... not used
