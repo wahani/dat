@@ -1,6 +1,6 @@
 ---
 title: "Tools for Data Manipulation"
-date: "2015-12-18"
+date: "2016-02-21"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Tools for Data Manipulation}
@@ -13,7 +13,7 @@ vignette: >
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/dat)](http://cran.r-project.org/package=dat)
 [![Downloads](http://cranlogs.r-pkg.org/badges/dat?color=brightgreen)](http://www.r-pkg.org/pkg/dat)
 
-An implementation of common higher order functions (map, extract and reduce) and a link to dplyr for common transformations on data frames to work around non standard evaluation by default.
+An implementation of common higher order functions (map, extract) and a link to dplyr for common transformations on data frames to work around non standard evaluation by default.
 
 ## Installation
 
@@ -32,8 +32,6 @@ attribute changes on-the-fly.
 - Neither dplyr nor data.table is playing nice with S4, but you really, really
 want a S4 *data.table* or *tbl_df*.
 - You like currying as in rlist and purrr.
-- You find it annoying that you constantly have to switch between lapply, vapply
-and mapply (and other map functions).
 - We work together and you have to understand code I wrote.
 
 ## map
@@ -58,7 +56,15 @@ map(1:3, ~ .^2) # lapply
 ```
 
 ```r
-map(1:3, numeric(1) : x ~ x^2) # vapply
+flatmap(1:3, ~ .^2) # lapply + unlist
+```
+
+```
+## [1] 1 4 9
+```
+
+```r
+flatmap(1:3, numeric(1) : x ~ x^2) # lapply + unlist + type check
 ```
 
 ```
@@ -216,7 +222,7 @@ isPrime <- function(n) {
     else if (n %% 2 == 0 || n %% 3 == 0) FALSE
     else iter(5)
   }
-  map(n, logical(1) : x ~ .isPrime(x))
+  flatmap(n, logical(1) : x ~ .isPrime(x))
 }
 
 extract(1:10, isPrime)
@@ -225,38 +231,6 @@ extract(1:10, isPrime)
 ```
 ## [1] 2 3 5 7
 ```
-
-## reduce
-
-Let's define a sum function:
-
-
-```r
-newSum <- function(x) reduce(x, `+`)
-newSum(1:10)
-```
-
-```
-## [1] 55
-```
-
-Or bind some data frames together:
-
-
-```r
-dat <- data.frame(id = 1:2, y = 1:4)
-split(dat, dat$id) %>%
-  reduce(rbind) # and reverse the split
-```
-
-```
-##   id y
-## 1  1 1
-## 3  1 3
-## 2  2 2
-## 4  2 4
-```
-
 
 ## Data Frame
 
