@@ -252,7 +252,7 @@ dat %>%
 
 ```{r}
 # The naive split-apply-combine
-map(dat, mutar, By("month"), count ~ n()) %>% 
+flatmap(dat, mutar, "month", count ~ n()) %>% 
   mutar(27003:27006, j = c("month", "count"))
 ```
 
@@ -295,7 +295,7 @@ dat %>%
 dat %>%
   mutar(sumOfX ~ sum(x), by = "id")
 
-map(dat, mutar, By("id"), sumOfX ~ sum(x))[~1:2]
-map(dat, dt ~ DataTable(sumOfX = sum(dt$x)), By("id"))
+flatmap(dat, mutar, "id", sumOfX ~ sum(x))[~1:2]
+flatmap(dat, dt ~ DataTable(sumOfX = sum(dt$x)), "id")
 ```
 

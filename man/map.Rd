@@ -3,7 +3,9 @@
 \docType{methods}
 \name{map}
 \alias{flatmap}
+\alias{flatmap,ANY,formula-method}
 \alias{flatmap,ANY,function-method}
+\alias{flatmap,data.frame,function-method}
 \alias{map}
 \alias{map,ANY,formula-method}
 \alias{map,ANY,function-method}
@@ -26,10 +28,12 @@ map(x, f, ...)
 
 flatmap(x, f, ...)
 
-flatmap(x, f, ...)
+\S4method{flatmap}{ANY,formula}(x, f, ...)
 
 \S4method{flatmap}{ANY,`function`}(x, f, ..., recursive = FALSE,
   useNames = TRUE)
+
+\S4method{flatmap}{data.frame,`function`}(x, f, by, ..., combine = bindRows)
 }
 \arguments{
 \item{x}{(\link{vector} | \link{data.frame}) if x inherits from data.frame, a
@@ -51,6 +55,12 @@ full data.frame is returned.}
 \item{recursive}{see recursive in \link{unlist}}
 
 \item{useNames}{see use.names in \link{unlist}}
+
+\item{by}{(e.g. character) argument is passed to \link{mutar} to select
+columns.}
+
+\item{combine}{(function | formula) a function which knows how to combine
+the list of results. \link{bindRows} is the default.}
 }
 \description{
 An implementation of map.

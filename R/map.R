@@ -14,6 +14,10 @@
 #' @param recursive see recursive in \link{unlist}
 #' @param useNames see use.names in \link{unlist}
 #' @param simplify see SIMPLIFY in \link{mapply}
+#' @param by (e.g. character) argument is passed to \link{mutar} to select
+#'   columns.
+#' @param combine (function | formula) a function which knows how to combine
+#'   the list of results. \link{bindRows} is the default.
 #'
 #' @param ... further arguments passed to \link{lapply} and \link{mapply}
 #'
@@ -74,12 +78,6 @@ mapDataFrame(x ~ data.frame, f ~ "function", p ~ character, ...) %m% {
   mapDataFrameOnIndex(x, f, ind, ...)
 }
 
-mapDataFrame(x ~ data.frame, f ~ "function", p ~ By, ...) %m% {
-  indList <- split(seq_len(nrow(x)), mutar(x, j = p@var))
-  datList <- map(indList, ind ~ f(x[ind, , drop = FALSE], ...))
-  p@combine(datList)
-}
-
 mapDataFrameOnIndex <- function(x, f, ind, ...) {
   memClassHandler <- MemClassHandler()
   x <- memClassHandler$memClass(x)
@@ -112,7 +110,7 @@ flatmap(x, f, ...) %g% standardGeneric("flatmap")
 
 #' @export
 #' @rdname map
-flatmap(x, f, ...) %g% {
+flatmap(x, f ~ formula, ...) %m% {
   flatmap(x, as.function(f), ...)
 }
 
@@ -121,3 +119,12 @@ flatmap(x, f, ...) %g% {
 flatmap(x ~ ANY, f ~ "function", ..., recursive = FALSE, useNames = TRUE) %m% {
   unlist(lapply(x, f, ...), recursive, useNames)
 }
+
+#' @export
+#' @rdname map
+flatmap(x ~ data.frame, f ~ "function", by, ..., combine = bindRows) %m% {
+  indList <- split(seq_len(nrow(x)), mutar(x, j = by))
+  datList <- map(indList, ind ~ f(x[ind, , drop = FALSE], ...))
+  as.function(combine)(datList)
+}
+

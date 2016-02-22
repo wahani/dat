@@ -47,15 +47,15 @@ test_that("split-apply-combine", {
 
   dat <- DataFrame(y = 1:10, z = 2, id = rep(letters[1:2], 5))
 
-  map(dat, df ~ 1, By("id")) %>% expectEqual(list(a = 1, b = 1))
-  tmp <- map(dat, mutar, By("id"), count ~ n())
+  flatmap(dat, df ~ 1, "id") %>% expectEqual(list(a = 1, b = 1))
+  tmp <- flatmap(dat, mutar, "id", count ~ n())
   expectEqual(tmp$count, rep(5, 10))
   expectEqual(NROW(tmp), 10)
   expectEqual(NCOL(tmp), 4)
 
   setClass("Dat", "DataFrame")
   dat <- new("Dat", dat)
-  map(dat, mutar, By("id"), count ~ n()) %>% isA("Dat")
+  flatmap(dat, mutar, "id", count ~ n()) %>% isA("Dat")
 
 })
 

@@ -1,6 +1,6 @@
 ---
 title: "Tools for Data Manipulation"
-date: "2016-02-21"
+date: "2016-02-22"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Tools for Data Manipulation}
@@ -527,7 +527,7 @@ dat %>%
 
 ```r
 # The naive split-apply-combine
-map(dat, mutar, By("month"), count ~ n()) %>% 
+flatmap(dat, mutar, "month", count ~ n()) %>% 
   mutar(27003:27006, j = c("month", "count"))
 ```
 
@@ -635,7 +635,7 @@ dat %>%
 ```
 
 ```r
-map(dat, mutar, By("id"), sumOfX ~ sum(x))[~1:2]
+flatmap(dat, mutar, "id", sumOfX ~ sum(x))[~1:2]
 ```
 
 ```
@@ -646,7 +646,7 @@ map(dat, mutar, By("id"), sumOfX ~ sum(x))[~1:2]
 ```
 
 ```r
-map(dat, dt ~ DataTable(sumOfX = sum(dt$x)), By("id"))
+flatmap(dat, dt ~ DataTable(sumOfX = sum(dt$x)), "id")
 ```
 
 ```

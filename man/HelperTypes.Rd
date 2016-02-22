@@ -2,8 +2,6 @@
 % Please edit documentation in R/HelperTypes.R
 \docType{class}
 \name{MList-class}
-\alias{By}
-\alias{By-class}
 \alias{ML}
 \alias{MList}
 \alias{MList-class}
@@ -12,16 +10,9 @@
 ML(...)
 
 MList(...)
-
-By(var, combine = bindRows, ...)
 }
 \arguments{
 \item{...}{arguments passed to \link{list}}
-
-\item{var}{(character) the variable names to use in split}
-
-\item{combine}{(function) a function which know how to combine the list of
-results. \link{bindRows} is the default.}
 }
 \description{
 Helper Types
