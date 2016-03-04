@@ -106,23 +106,19 @@ map(x ~ MList, f ~ "function", ..., simplify = FALSE) %m% {
 
 #' @export
 #' @rdname map
-flatmap(x, f, ...) %g% standardGeneric("flatmap")
-
-#' @export
-#' @rdname map
-flatmap(x, f ~ formula, ...) %m% {
-  flatmap(x, as.function(f), ...)
+flatmap(x, f, ..., recursive = FALSE, useNames = TRUE) %g% {
+  unlist(map(x, f, ...), recursive, useNames)
 }
 
 #' @export
 #' @rdname map
-flatmap(x ~ ANY, f ~ "function", ..., recursive = FALSE, useNames = TRUE) %m% {
-  unlist(lapply(x, f, ...), recursive, useNames)
+flatmap(x, f ~ formula, ..., recursive, useNames) %m% {
+  flatmap(x, as.function(f), ..., recursive = recursive, useNames = useNames)
 }
 
 #' @export
 #' @rdname map
-flatmap(x ~ data.frame, f ~ "function", by, ..., combine = bindRows) %m% {
+flatmap(x ~ data.frame, f ~ "function", by, ..., combine = bindRows, recursive, useNames) %m% {
   indList <- split(seq_len(nrow(x)), mutar(x, j = by))
   datList <- map(indList, ind ~ f(x[ind, , drop = FALSE], ...))
   as.function(combine)(datList)

@@ -4,7 +4,6 @@
 \name{map}
 \alias{flatmap}
 \alias{flatmap,ANY,formula-method}
-\alias{flatmap,ANY,function-method}
 \alias{flatmap,data.frame,function-method}
 \alias{map}
 \alias{map,ANY,formula-method}
@@ -26,14 +25,13 @@ map(x, f, ...)
 
 \S4method{map}{MList,`function`}(x, f, ..., simplify = FALSE)
 
-flatmap(x, f, ...)
+flatmap(x, f, ..., recursive = FALSE, useNames = TRUE)
 
-\S4method{flatmap}{ANY,formula}(x, f, ...)
-
-\S4method{flatmap}{ANY,`function`}(x, f, ..., recursive = FALSE,
+\S4method{flatmap}{ANY,formula}(x, f, ..., recursive = FALSE,
   useNames = TRUE)
 
-\S4method{flatmap}{data.frame,`function`}(x, f, by, ..., combine = bindRows)
+\S4method{flatmap}{data.frame,`function`}(x, f, by, ..., combine = bindRows,
+  recursive, useNames)
 }
 \arguments{
 \item{x}{(\link{vector} | \link{data.frame}) if x inherits from data.frame, a
