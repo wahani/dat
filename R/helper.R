@@ -116,7 +116,13 @@ constructArgs <- function(i, j, ...) {
   # '...' can be anything so the type is checked on the fly:
   args <- c(list(i, j), lapply(list(...), TwoSidedFormula))
   args <- args[sapply(args, Negate(is.null))]
-  lapply(args, function(x) sub("~", "=", deparse(x)))
+  argNames <- sapply(args, function(x) deparse(x[[2]]))
+  args <- lapply(args, function(x) {
+    x[2] <- NULL
+    S3Part(x, strictS3 = TRUE)
+  })
+  names(args) <- argNames
+  args
 }
 
 # dispatcher is used in "[.DataFrame" to link attributes to internal classes:

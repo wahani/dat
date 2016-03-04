@@ -188,3 +188,18 @@ test_that("S4 stuff", {
   expectIdentical(S3Part(dat, TRUE), data.frame(x = 1, y = 1))
 
 })
+
+test_that("Scoping", {
+
+  expectEqual <- function(x, a) {
+    testthat::expect_equal(x, a)
+  }
+
+  fun <- function(val) {
+    DataFrame(x = val) %>% mutar(y ~ val)
+  }
+
+  expectEqual(fun(1), DataFrame(x = 1, y = 1))
+
+})
+

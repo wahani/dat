@@ -1,6 +1,6 @@
 ---
 title: "Tools for Data Manipulation"
-date: "2016-02-22"
+date: "2016-03-04"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Tools for Data Manipulation}

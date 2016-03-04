@@ -143,9 +143,7 @@ handleCols(x ~ data.frame,
            j ~ TwoSidedFormula | NULL,
            ..., by ~ NULL) %m% {
              args <- constructArgs(i, j, ...)
-             eval(parse(text = paste0(
-               "dplyr::mutate(x,", paste0(args, collapse = ","), ")"))
-             )
+             dplyr::mutate_(x, .dots = args)
            }
 
 handleCols(x ~ data.frame,
@@ -153,9 +151,6 @@ handleCols(x ~ data.frame,
            j ~ TwoSidedFormula | NULL,
            ..., by ~ character) %m% {
              args <- constructArgs(i, j, ...)
-             x <- dplyr::group_by_(x, .dots = by)
-             eval(parse(text = paste0(
-               "dplyr::summarise(x,", paste0(args, collapse = ","), ")"))
-             )
-
+             dplyr::group_by_(x, .dots = by) %>%
+               dplyr::summarise_(.dots = args)
            }
