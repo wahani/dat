@@ -7,21 +7,21 @@
 \alias{flatmap,data.frame,function-method}
 \alias{map}
 \alias{map,ANY,formula-method}
-\alias{map,ANY,function-method}
-\alias{map,ANY,numericORcharacterORlogical-method}
 \alias{map,MList,function-method}
+\alias{map,atomicORlist,function-method}
+\alias{map,atomicORlist,numericORcharacterORlogical-method}
 \alias{map,data.frame,function-method}
 \title{An implementation of map}
 \usage{
 map(x, f, ...)
 
-\S4method{map}{ANY,`function`}(x, f, ...)
+\S4method{map}{atomicORlist,`function`}(x, f, ...)
 
 \S4method{map}{data.frame,`function`}(x, f, p = function(x) TRUE, ...)
 
 \S4method{map}{ANY,formula}(x, f, ...)
 
-\S4method{map}{ANY,numericORcharacterORlogical}(x, f, ...)
+\S4method{map}{atomicORlist,numericORcharacterORlogical}(x, f, ...)
 
 \S4method{map}{MList,`function`}(x, f, ..., simplify = FALSE)
 

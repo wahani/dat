@@ -47,7 +47,7 @@ map(x, f, ...) %g% {
 
 #' @export
 #' @rdname map
-map(x ~ ANY, f ~ "function", ...) %m% {
+map(x ~ atomic | list, f ~ "function", ...) %m% {
   lapply(x, f, ...)
 }
 
@@ -93,7 +93,7 @@ map(x ~ ANY, f ~ formula, ...) %m% {
 
 #' @export
 #' @rdname map
-map(x ~ ANY, f ~ numeric | character | logical, ...) %m% {
+map(x ~ atomic | list, f ~ numeric | character | logical, ...) %m% {
   force(f)
   map(x, . ~ .[f], ...)
 }
