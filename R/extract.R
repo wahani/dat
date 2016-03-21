@@ -39,7 +39,7 @@ extract(x ~ ANY, f ~ formula, ...) %m% {
 
 #' @export
 #' @rdname extract
-extract(x ~ ANY, f ~ numeric | integer | logical, ...) %m% {
+extract(x ~ atomic | list, f ~ numeric | integer | logical, ...) %m% {
   x[f]
 }
 
@@ -48,6 +48,8 @@ extract(x ~ ANY, f ~ numeric | integer | logical, ...) %m% {
 extract(x ~ ANY, f ~ character, ...) %m% {
   ind <- if (length(f) == 1 && grepl("^\\^", f)) {
     grepl(f, names(x), ...)
-  } else f
-  x[ind]
+  } else {
+    names(x) %in% f
+  }
+  extract(x, ind)
 }

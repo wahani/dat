@@ -35,3 +35,4 @@ Collate:
     'extract.R'
     'map.R'
     'pipeExport.R'
+    'replace.R'

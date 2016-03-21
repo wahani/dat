@@ -5,8 +5,8 @@
 \alias{extract}
 \alias{extract,ANY,character-method}
 \alias{extract,ANY,formula-method}
-\alias{extract,ANY,numericORintegerORlogical-method}
 \alias{extract,atomic,function-method}
+\alias{extract,atomicORlist,numericORintegerORlogical-method}
 \alias{extract,list,function-method}
 \title{Extract elements from a vector}
 \usage{
@@ -18,7 +18,7 @@ extract(x, f, ...)
 
 \S4method{extract}{ANY,formula}(x, f, ...)
 
-\S4method{extract}{ANY,numericORintegerORlogical}(x, f, ...)
+\S4method{extract}{atomicORlist,numericORintegerORlogical}(x, f, ...)
 
 \S4method{extract}{ANY,character}(x, f, ...)
 }
