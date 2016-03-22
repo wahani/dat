@@ -152,5 +152,6 @@ handleCols(x ~ data.frame,
            ..., by ~ character) %m% {
              args <- constructArgs(i, j, ...)
              dplyr::group_by_(x, .dots = by) %>%
-               dplyr::summarise_(.dots = args)
+               dplyr::summarise_(.dots = args) %>%
+               as.data.frame
            }
