@@ -1,6 +1,6 @@
 ---
 title: "Tools for Data Manipulation"
-date: "2016-03-04"
+date: "2016-03-26"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Tools for Data Manipulation}
@@ -13,7 +13,9 @@ vignette: >
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/dat)](http://cran.r-project.org/package=dat)
 [![Downloads](http://cranlogs.r-pkg.org/badges/dat?color=brightgreen)](http://www.r-pkg.org/pkg/dat)
 
-An implementation of common higher order functions (map, extract) and a link to dplyr for common transformations on data frames to work around non standard evaluation by default.
+An implementation of common higher order functions and a link to
+  dplyr for common transformations on data frames to work around non standard
+  evaluation by default.
 
 ## Installation
 
@@ -72,7 +74,7 @@ flatmap(1:3, numeric(1) : x ~ x^2) # lapply + unlist + type check
 ```
 
 ```r
-map(ML(1:4, 4:1), integer : f(x, y) ~ rep(x, y)) # mapply + check return type
+map(1:4 ~ 4:1, integer : f(x, y) ~ rep(x, y)) # mapply + check return type
 ```
 
 ```
@@ -102,7 +104,7 @@ map(list(1:4, 4:1), 2:3) # subsetting on lists
 ```
 
 ```r
-map(ML(1:3, 11:13), c) # zip
+map(1:3 ~ 11:13, c) # zip
 ```
 
 ```
@@ -114,19 +116,6 @@ map(ML(1:3, 11:13), c) # zip
 ## 
 ## [[3]]
 ## [1]  3 13
-```
-
-```r
-map(ML(1:3, 11:13), c) %>% 
-  { map(do.call(ML, .), c) } # unzip
-```
-
-```
-## [[1]]
-## [1] 1 2 3
-## 
-## [[2]]
-## [1] 11 12 13
 ```
 
 ```r
