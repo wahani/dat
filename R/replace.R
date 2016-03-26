@@ -1,11 +1,13 @@
 #' Replace elements in a vector
 #'
-#' This function replaces elements in a vector.
+#' This function replaces elements in a vector. It is a link to
+#' \link[base]{replace} as a generic function.
 #'
+#' @param x (atomic | list) a vector.
 #' @inheritParams extract
-#'
-#' @param with the values for replacement
-#' @param ... arguments passed to f
+#' @param values the values for replacement.
+#' @param ... arguments passed to \code{ind} if it can be interpreted as
+#'   function. For a regex arguments are passed to \link{grep}.
 #'
 #' @export
 #' @rdname replace
@@ -15,45 +17,39 @@
 #' replace(c(1, 2, NA), rep(TRUE, 3), 0)
 #' replace(c(1, 2, NA), 3, 0)
 #' replace(list(x = 1, y = 2), "x", 0)
-replace(x, f, with, ...) %g% standardGeneric("replace")
+replace(x, ind, values, ...) %g% standardGeneric("replace")
 
 #' @export
 #' @rdname replace
-replace(x ~ list, f ~ "function", with, ...) %m% {
-  replace(x, which(vapply(x, f, logical(1), ...)), with)
+replace(x ~ list, ind ~ "function", values, ...) %m% {
+  replace(x, vapply(x, ind, logical(1), ...), values)
 }
 
 #' @export
 #' @rdname replace
-replace(x ~ atomic, f ~ "function", with, ...) %m% {
-  replace(x, which(f(x, ...)), with)
+replace(x ~ atomic, ind ~ "function", values, ...) %m% {
+  replace(x, ind(x, ...), values)
 }
 
 #' @export
 #' @rdname replace
-replace(x ~ atomic | list, f ~ integer | numeric, with, ...) %m% {
-  base::replace(x, f, with)
+replace(x ~ atomic | list, ind ~ integer | numeric | logical, values, ...) %m% {
+  base::replace(x, ind, values)
 }
 
 #' @export
 #' @rdname replace
-replace(x ~ ANY, f ~ formula, with, ...) %m% {
-  replace(x, as.function(f), with, ...)
+replace(x ~ ANY, ind ~ formula, values, ...) %m% {
+  replace(x, as.function(ind), values, ...)
 }
 
 #' @export
 #' @rdname replace
-replace(x ~ ANY, f ~ logical, with, ...) %m% {
-  replace(x, which(f), with, ...)
-}
-
-#' @export
-#' @rdname replace
-replace(x ~ ANY, f ~ character, with, ...) %m% {
-  ind <- if (length(f) == 1 && grepl("^\\^", f)) {
-    grep(f, names(x), ...)
+replace(x ~ ANY, ind ~ character, values, ...) %m% {
+  ind <- if (length(ind) == 1 && grepl("^\\^", ind)) {
+    grep(ind, names(x), ...)
   } else {
-    names(x) %in% f
+    names(x) %in% ind
   }
-  replace(x, ind, with, ...)
+  replace(x, ind, values, ...)
 }

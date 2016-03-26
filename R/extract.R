@@ -1,13 +1,13 @@
 #' Extract elements from a vector
 #'
-#' @param x (ANY) a vector
-#' @param f (function | formula | character | numeric | integer | logical) a
+#' @param x (atomic | list) a vector.
+#' @param ind (function | formula | character | numeric | integer | logical) a
 #'   formula is coerced into a function. For lists the function is applied to
 #'   each element (and has to return a logical of length 1). For atomics a
 #'   vectorized function is expected. If you supply an atomic it is used for
 #'   subsetting. A character of length 1 beginning with "^" is interpreted as
 #'   regular expression.
-#' @param ... arguments passed to f
+#' @param ... arguments passed to ind.
 #'
 #' @export
 #' @rdname extract
@@ -17,39 +17,39 @@
 #' extract(list(xy = 1, zy = 2), "^z")
 #' extract(list(x = 1, z = 2), 1)
 #' extract(list(x = 1, y = ""), is.character)
-extract(x, f, ...) %g% standardGeneric("extract")
+extract(x, ind, ...) %g% standardGeneric("extract")
 
 #' @export
 #' @rdname extract
-extract(x ~ list, f ~ "function", ...) %m% {
-  x[vapply(x, f, logical(1), ...)]
+extract(x ~ list, ind ~ "function", ...) %m% {
+  x[vapply(x, ind, logical(1), ...)]
 }
 
 #' @export
 #' @rdname extract
-extract(x ~ atomic, f ~ "function", ...) %m% {
-  x[f(x, ...)]
+extract(x ~ atomic, ind ~ "function", ...) %m% {
+  x[ind(x, ...)]
 }
 
 #' @export
 #' @rdname extract
-extract(x ~ ANY, f ~ formula, ...) %m% {
-  extract(x, as.function(f), ...)
+extract(x ~ ANY, ind ~ formula, ...) %m% {
+  extract(x, as.function(ind), ...)
 }
 
 #' @export
 #' @rdname extract
-extract(x ~ atomic | list, f ~ numeric | integer | logical, ...) %m% {
-  x[f]
+extract(x ~ atomic | list, ind ~ numeric | integer | logical, ...) %m% {
+  x[ind]
 }
 
 #' @export
 #' @rdname extract
-extract(x ~ ANY, f ~ character, ...) %m% {
-  ind <- if (length(f) == 1 && grepl("^\\^", f)) {
-    grepl(f, names(x), ...)
+extract(x ~ ANY, ind ~ character, ...) %m% {
+  ind <- if (length(ind) == 1 && grepl("^\\^", ind)) {
+    grepl(ind, names(x), ...)
   } else {
-    names(x) %in% f
+    names(x) %in% ind
   }
   extract(x, ind)
 }

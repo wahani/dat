@@ -5,42 +5,41 @@
 \alias{replace}
 \alias{replace,ANY,character-method}
 \alias{replace,ANY,formula-method}
-\alias{replace,ANY,logical-method}
 \alias{replace,atomic,function-method}
-\alias{replace,atomicORlist,integerORnumeric-method}
+\alias{replace,atomicORlist,integerORnumericORlogical-method}
 \alias{replace,list,function-method}
 \title{Replace elements in a vector}
 \usage{
-replace(x, f, with, ...)
+replace(x, ind, values, ...)
 
-\S4method{replace}{list,`function`}(x, f, with, ...)
+\S4method{replace}{list,`function`}(x, ind, values, ...)
 
-\S4method{replace}{atomic,`function`}(x, f, with, ...)
+\S4method{replace}{atomic,`function`}(x, ind, values, ...)
 
-\S4method{replace}{atomicORlist,integerORnumeric}(x, f, with, ...)
+\S4method{replace}{atomicORlist,integerORnumericORlogical}(x, ind, values, ...)
 
-\S4method{replace}{ANY,formula}(x, f, with, ...)
+\S4method{replace}{ANY,formula}(x, ind, values, ...)
 
-\S4method{replace}{ANY,logical}(x, f, with, ...)
-
-\S4method{replace}{ANY,character}(x, f, with, ...)
+\S4method{replace}{ANY,character}(x, ind, values, ...)
 }
 \arguments{
-\item{x}{(ANY) a vector}
+\item{x}{(atomic | list) a vector.}
 
-\item{f}{(function | formula | character | numeric | integer | logical) a
-formula is coerced into a function. For lists the function is applied to
-each element (and has to return a logical of length 1). For atomics a
-vectorized function is expected. If you supply an atomic it is used for
-subsetting. A character of length 1 beginning with "^" is interpreted as
-regular expression.}
+\item{ind}{(integer | numeric | logical | character | function | formula) a
+formula is coerced to a function. A function is expected to return a
+logical of length one when applied to a list; otherwise a vector which can
+be used for subsetting of \code{x}. A character can be used when \code{x}
+is named; when has length one and a leading \code{^} it is interpreted as
+regex. Otherwise something which can be used for subsetting is expected.}
 
-\item{with}{the values for replacement}
+\item{values}{the values for replacement.}
 
-\item{...}{arguments passed to f}
+\item{...}{arguments passed to \code{ind} if it can be interpreted as
+function. For a regex arguments are passed to \link{grep}.}
 }
 \description{
-This function replaces elements in a vector.
+This function replaces elements in a vector. It is a link to
+\link[base]{replace} as a generic function.
 }
 \examples{
 replace(c(1, 2, NA), is.na, 0)
