@@ -27,6 +27,11 @@ test_that("map", {
   map(ML(1:2, 3:4), f(x, y) ~ x + y, simplify = TRUE) %>% equals(c(4, 6))
   map(MList(1:2, 3:4), f(x, y, z) ~ x + y + z, z = 1) %>% equals(list(5, 7))
 
+  map(1:2 ~ 3:4, f(x, y) ~ x + y) %>% equals(list(4, 6))
+  x <- 1:2
+  y <- 3:4
+  map(x ~ y, f(x, y) ~ x + y) %>% equals(list(4, 6))
+
   # check return types
   testthat::expect_error(map(1:2, numeric : x ~ x))
   map(as.numeric(1:2), numeric : x ~ x) %>% equals(as.list(1:2))

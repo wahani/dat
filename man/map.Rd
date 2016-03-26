@@ -11,6 +11,7 @@
 \alias{map,atomicORlist,function-method}
 \alias{map,atomicORlist,numericORcharacterORlogical-method}
 \alias{map,data.frame,function-method}
+\alias{map,formula,function-method}
 \title{An implementation of map}
 \usage{
 map(x, f, ...)
@@ -25,6 +26,8 @@ map(x, f, ...)
 
 \S4method{map}{MList,`function`}(x, f, ..., simplify = FALSE)
 
+\S4method{map}{formula,`function`}(x, f, ...)
+
 flatmap(x, f, ..., recursive = FALSE, useNames = TRUE)
 
 \S4method{flatmap}{ANY,formula}(x, f, ..., recursive = FALSE,
@@ -34,8 +37,10 @@ flatmap(x, f, ..., recursive = FALSE, useNames = TRUE)
   recursive, useNames)
 }
 \arguments{
-\item{x}{(\link{vector} | \link{data.frame}) if x inherits from data.frame, a
-data.frame is returned. Use \link{as.list} if this is not what you want.}
+\item{x}{(\link{vector} | \link{data.frame} | formula) if x inherits from
+data.frame, a data.frame is returned. Use \link{as.list} if this is not
+what you want. When x is a formula it is interpreted to trigger a
+multivariate map.}
 
 \item{f}{(\link{function} | \link{formula} | character | logical | numeric)
 something which can be interpreted as a function. formula objects are
@@ -70,9 +75,9 @@ map(data.frame(y = 1:10, z = 2), x ~ x + 1, x ~ all(x == 2))
 
 map(1, x ~ x)
 map(list(1:2, 3:4), 2)
-map(ML(1:2, 3:4), f(x, y) ~ x + y)
-map(ML(1:2, 3:4), f(x, y) ~ x + y, simplify = TRUE)
-map(ML(1:2, 3:4), f(x, y, z) ~ x + y + z, z = 1)
+map(1:2 ~ 3:4, f(x, y) ~ x + y)
+map(1:2 ~ 3:4, f(x, y) ~ x + y, simplify = TRUE)
+map(1:2 ~ 3:4, f(x, y, z) ~ x + y + z, z = 1)
 
 map(list(1:3, 2:5), 2:3)
 map(list(1:3, 2:5), c(TRUE, FALSE, TRUE))

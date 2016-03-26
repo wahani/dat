@@ -44,11 +44,9 @@ library(dat)
 map(1:3, ~ .^2) # lapply
 flatmap(1:3, ~ .^2) # lapply + unlist
 flatmap(1:3, numeric(1) : x ~ x^2) # lapply + unlist + type check
-map(ML(1:4, 4:1), integer : f(x, y) ~ rep(x, y)) # mapply + check return type
+map(1:4 ~ 4:1, integer : f(x, y) ~ rep(x, y)) # mapply + check return type
 map(list(1:4, 4:1), 2:3) # subsetting on lists
-map(ML(1:3, 11:13), c) # zip
-map(ML(1:3, 11:13), c) %>% 
-  { map(do.call(ML, .), c) } # unzip
+map(1:3 ~ 11:13, c) # zip
 dat <- data.frame(x = 1, y = "")
 map(dat, x ~ x + 1, is.numeric) # only operates on numeric cols
 ```

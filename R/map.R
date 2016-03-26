@@ -2,8 +2,10 @@
 #'
 #' An implementation of map and flatmap.
 #'
-#' @param x (\link{vector} | \link{data.frame}) if x inherits from data.frame, a
-#'   data.frame is returned. Use \link{as.list} if this is not what you want.
+#' @param x (\link{vector} | \link{data.frame} | formula) if x inherits from
+#'   data.frame, a data.frame is returned. Use \link{as.list} if this is not
+#'   what you want. When x is a formula it is interpreted to trigger a
+#'   multivariate map.
 #' @param f (\link{function} | \link{formula} | character | logical | numeric)
 #'   something which can be interpreted as a function. formula objects are
 #'   coerced to a function. atomics are used for subsetting in each element of
@@ -31,9 +33,9 @@
 #'
 #' map(1, x ~ x)
 #' map(list(1:2, 3:4), 2)
-#' map(ML(1:2, 3:4), f(x, y) ~ x + y)
-#' map(ML(1:2, 3:4), f(x, y) ~ x + y, simplify = TRUE)
-#' map(ML(1:2, 3:4), f(x, y, z) ~ x + y + z, z = 1)
+#' map(1:2 ~ 3:4, f(x, y) ~ x + y)
+#' map(1:2 ~ 3:4, f(x, y) ~ x + y, simplify = TRUE)
+#' map(1:2 ~ 3:4, f(x, y, z) ~ x + y + z, z = 1)
 #'
 #' map(list(1:3, 2:5), 2:3)
 #' map(list(1:3, 2:5), c(TRUE, FALSE, TRUE))
@@ -106,13 +108,23 @@ map(x ~ MList, f ~ "function", ..., simplify = FALSE) %m% {
 
 #' @export
 #' @rdname map
+map(x ~ formula, f ~ "function", ...) %m% {
+  mlist <- eval(
+    parse(text = paste0("list(", gsub("~", ",", deparse(x)), ")")),
+    envir = environment(x)
+  )
+  map(do.call(MList, mlist), f, ...)
+}
+
+#' @export
+#' @rdname map
 flatmap(x, f, ..., recursive = FALSE, useNames = TRUE) %g% {
   unlist(map(x, f, ...), recursive, useNames)
 }
 
 #' @export
 #' @rdname map
-flatmap(x, f ~ formula, ..., recursive, useNames) %m% {
+flatmap(x ~ ANY, f ~ formula, ..., recursive, useNames) %m% {
   flatmap(x, as.function(f), ..., recursive = recursive, useNames = useNames)
 }
 
