@@ -25,12 +25,12 @@ replace(x, ind, values, ...)
 \arguments{
 \item{x}{(atomic | list) a vector.}
 
-\item{ind}{(integer | numeric | logical | character | function | formula) a
-formula is coerced to a function. A function is expected to return a
-logical of length one when applied to a list; otherwise a vector which can
-be used for subsetting of \code{x}. A character can be used when \code{x}
-is named; when has length one and a leading \code{^} it is interpreted as
-regex. Otherwise something which can be used for subsetting is expected.}
+\item{ind}{(function | formula | character | numeric | integer | logical) a
+formula is coerced into a function. For lists the function is applied to
+each element (and has to return a logical of length 1). For atomics a
+vectorized function is expected. If you supply an atomic it is used for
+subsetting. A character of length 1 beginning with "^" is interpreted as
+regular expression.}
 
 \item{values}{the values for replacement.}
 

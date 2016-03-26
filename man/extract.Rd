@@ -10,29 +10,29 @@
 \alias{extract,list,function-method}
 \title{Extract elements from a vector}
 \usage{
-extract(x, f, ...)
+extract(x, ind, ...)
 
-\S4method{extract}{list,`function`}(x, f, ...)
+\S4method{extract}{list,`function`}(x, ind, ...)
 
-\S4method{extract}{atomic,`function`}(x, f, ...)
+\S4method{extract}{atomic,`function`}(x, ind, ...)
 
-\S4method{extract}{ANY,formula}(x, f, ...)
+\S4method{extract}{ANY,formula}(x, ind, ...)
 
-\S4method{extract}{atomicORlist,numericORintegerORlogical}(x, f, ...)
+\S4method{extract}{atomicORlist,numericORintegerORlogical}(x, ind, ...)
 
-\S4method{extract}{ANY,character}(x, f, ...)
+\S4method{extract}{ANY,character}(x, ind, ...)
 }
 \arguments{
-\item{x}{(ANY) a vector}
+\item{x}{(atomic | list) a vector.}
 
-\item{f}{(function | formula | character | numeric | integer | logical) a
+\item{ind}{(function | formula | character | numeric | integer | logical) a
 formula is coerced into a function. For lists the function is applied to
 each element (and has to return a logical of length 1). For atomics a
 vectorized function is expected. If you supply an atomic it is used for
 subsetting. A character of length 1 beginning with "^" is interpreted as
 regular expression.}
 
-\item{...}{arguments passed to f}
+\item{...}{arguments passed to ind.}
 }
 \description{
 Extract elements from a vector

@@ -61,7 +61,7 @@ columns.}
 the list of results. \link{bindRows} is the default.}
 }
 \description{
-An implementation of map.
+An implementation of map and flatmap.
 }
 \examples{
 map(data.frame(y = 1:10, z = 2), x ~ x + 1)

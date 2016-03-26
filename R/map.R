@@ -1,6 +1,6 @@
 #' An implementation of map
 #'
-#' An implementation of map.
+#' An implementation of map and flatmap.
 #'
 #' @param x (\link{vector} | \link{data.frame}) if x inherits from data.frame, a
 #'   data.frame is returned. Use \link{as.list} if this is not what you want.
