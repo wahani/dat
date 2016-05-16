@@ -40,7 +40,9 @@ beginning with '^' are interpreted as regular expression}
 \description{
 There are many ways to use a DataFrame. Please see the vignette to see some
 examples. \code{mutar} is literally the same function as \code{[.DataFrame}
-and can be used as a generic interface to use dplyr.
+and can be used as a generic interface to use dplyr. You can use \code{mutar}
+even if you do not want to use a \code{DataFrame}. Also it can be used with
+S4 data.frame(s) / data_frame(s) / data.table(s).
 }
 \details{
 \code{OneSidedFormula} is always used for subsetting rows.

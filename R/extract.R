@@ -1,5 +1,7 @@
 #' Extract elements from a vector
 #'
+#' Extract elements from an object as S4 generic function. See the examples.
+#'
 #' @param x (atomic | list) a vector.
 #' @param ind (function | formula | character | numeric | integer | logical) a
 #'   formula is coerced into a function. For lists the function is applied to

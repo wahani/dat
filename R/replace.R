@@ -4,10 +4,19 @@
 #' \link[base]{replace} as a generic function.
 #'
 #' @param x (atomic | list) a vector.
-#' @inheritParams extract
-#' @param values the values for replacement.
+#' @param ind used as index for elements to be replaced. See details.
+#' @param values the values used for replacement.
 #' @param ... arguments passed to \code{ind} if it can be interpreted as
 #'   function. For a regex arguments are passed to \link{grep}.
+#'
+#' @details The idea is to provide a more felxible interface for the
+#'   specification of the index. It can be a character, numeric, integer or
+#'   logical which is then simply used in \code{base::replace}. It can be a
+#'   regular expression in which case \code{x} should be named -- a character of
+#'   length 1 and a leading "^" is interpreted as regex. When \code{ind} is a
+#'   function (or formula) and \code{x} is a list then it should be a predicate
+#'   function -- see the examples. When x is a atomic the function is applied on
+#'   x and the results is used for subsetting.
 #'
 #' @export
 #' @rdname replace
@@ -17,6 +26,8 @@
 #' replace(c(1, 2, NA), rep(TRUE, 3), 0)
 #' replace(c(1, 2, NA), 3, 0)
 #' replace(list(x = 1, y = 2), "x", 0)
+#' replace(list(x = 1, y = 2), "^x$", 0)
+#' replace(list(x = 1, y = "a"), is.character, NULL)
 replace(x, ind, values, ...) %g% standardGeneric("replace")
 
 #' @export

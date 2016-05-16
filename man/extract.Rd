@@ -35,7 +35,7 @@ regular expression.}
 \item{...}{arguments passed to ind.}
 }
 \description{
-Extract elements from a vector
+Extract elements from an object as S4 generic function. See the examples.
 }
 \examples{
 extract(1:15, ~ 15 \%\% . == 0)

@@ -9,9 +9,9 @@
 \alias{map,ANY,formula-method}
 \alias{map,MList,function-method}
 \alias{map,atomicORlist,function-method}
-\alias{map,atomicORlist,numericORcharacterORlogical-method}
 \alias{map,data.frame,function-method}
 \alias{map,formula,function-method}
+\alias{map,list,numericORcharacterORlogical-method}
 \title{An implementation of map}
 \usage{
 map(x, f, ...)
@@ -22,7 +22,7 @@ map(x, f, ...)
 
 \S4method{map}{ANY,formula}(x, f, ...)
 
-\S4method{map}{atomicORlist,numericORcharacterORlogical}(x, f, ...)
+\S4method{map}{list,numericORcharacterORlogical}(x, f, ...)
 
 \S4method{map}{MList,`function`}(x, f, ..., simplify = FALSE)
 
@@ -66,22 +66,46 @@ columns.}
 the list of results. \link{bindRows} is the default.}
 }
 \description{
-An implementation of map and flatmap.
+An implementation of map and flatmap. It supports the use of formulas as
+syntactic sugar for anonymous functions. Also there is special awareness of
+data.frames.
+}
+\details{
+\code{map} will dispatch to \link{lapply}. When \code{x} is a formula this is
+interpreted as a multivariate map; this is implemented using \code{mapply}.
+
+\code{flatmap} will dispatch to \code{map}. The result is then wrapped by
+\link{unlist}.
+
+When the first argument is a \code{data.frame} the behaviour is
+special. If this is not what you want, then use \link{as.list}. \code{map}
+will iterate over columns, however the return value is a \code{data.frame}.
+\code{flatmap} is an implamentation of split-apply-combine; so we iterate
+over rows/blocks and then combine.
+
+\code{map} and \code{flatmap} can be extended; both are S4 generic functions.
+You don't and should not implement a new method for formulas. This method
+will coerce a formula into a function and pass it down to your map(newtype,
+function) method.
 }
 \examples{
+# Sugar for anonymous functions
 map(data.frame(y = 1:10, z = 2), x ~ x + 1)
 map(data.frame(y = 1:10, z = 2), x ~ x + 1, is.numeric)
 map(data.frame(y = 1:10, z = 2), x ~ x + 1, x ~ all(x == 2))
-
 map(1, x ~ x)
-map(list(1:2, 3:4), 2)
+
+# Trigger a multivariate map with a formula
 map(1:2 ~ 3:4, f(x, y) ~ x + y)
 map(1:2 ~ 3:4, f(x, y) ~ x + y, simplify = TRUE)
 map(1:2 ~ 3:4, f(x, y, z) ~ x + y + z, z = 1)
 
+# Extracting values from lists
+map(list(1:2, 3:4), 2)
 map(list(1:3, 2:5), 2:3)
 map(list(1:3, 2:5), c(TRUE, FALSE, TRUE))
 
+# Some type checking along the way
 map(as.numeric(1:2), numeric : x ~ x)
 map(1:2, integer(1) : x ~ x)
 map(1:2, numeric(1) : x ~ x + 0.5)

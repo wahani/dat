@@ -25,14 +25,9 @@ replace(x, ind, values, ...)
 \arguments{
 \item{x}{(atomic | list) a vector.}
 
-\item{ind}{(function | formula | character | numeric | integer | logical) a
-formula is coerced into a function. For lists the function is applied to
-each element (and has to return a logical of length 1). For atomics a
-vectorized function is expected. If you supply an atomic it is used for
-subsetting. A character of length 1 beginning with "^" is interpreted as
-regular expression.}
+\item{ind}{used as index for elements to be replaced. See details.}
 
-\item{values}{the values for replacement.}
+\item{values}{the values used for replacement.}
 
 \item{...}{arguments passed to \code{ind} if it can be interpreted as
 function. For a regex arguments are passed to \link{grep}.}
@@ -41,10 +36,22 @@ function. For a regex arguments are passed to \link{grep}.}
 This function replaces elements in a vector. It is a link to
 \link[base]{replace} as a generic function.
 }
+\details{
+The idea is to provide a more felxible interface for the
+  specification of the index. It can be a character, numeric, integer or
+  logical which is then simply used in \code{base::replace}. It can be a
+  regular expression in which case \code{x} should be named -- a character of
+  length 1 and a leading "^" is interpreted as regex. When \code{ind} is a
+  function (or formula) and \code{x} is a list then it should be a predicate
+  function -- see the examples. When x is a atomic the function is applied on
+  x and the results is used for subsetting.
+}
 \examples{
 replace(c(1, 2, NA), is.na, 0)
 replace(c(1, 2, NA), rep(TRUE, 3), 0)
 replace(c(1, 2, NA), 3, 0)
 replace(list(x = 1, y = 2), "x", 0)
+replace(list(x = 1, y = 2), "^x$", 0)
+replace(list(x = 1, y = "a"), is.character, NULL)
 }
 

@@ -1,13 +1,13 @@
 Package: dat
 Type: Package
 Title: Tools for Data Manipulation
-Version: 0.0.4
+Version: 0.0.5
 Authors@R: person("Sebastian", "Warnholz", role = c("aut", "cre"),
                   email = "wahani@gmail.com")
 BugReports: https://github.com/wahani/aoos/dat
 Description: An implementation of common higher order functions and a link to
-  dplyr for common transformations on data frames to work around non standard
-  evaluation by default.
+    dplyr for common transformations on data frames to work around non standard
+    evaluation by default.
 License: MIT + file LICENSE
 Depends:
     methods,
@@ -15,10 +15,12 @@ Depends:
 Imports:
     data.table,
     dplyr,
-    magrittr
+    magrittr,
+    modules
 Suggests:
     testthat,
     knitr,
+    microbenchmark,
     rmarkdown,
     nycflights13
 VignetteBuilder: knitr
@@ -28,10 +30,10 @@ RoxygenNote: 5.0.1
 Collate:
     'helper.R'
     'DataFrame.R'
-    'bindRows.R'
     'HelperTypes.R'
     'NAMESPACE.R'
     'as.function.R'
+    'bindRows.R'
     'extract.R'
     'map.R'
     'pipeExport.R'
