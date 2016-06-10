@@ -1,7 +1,7 @@
 #' An implementation of map
 #'
-#' An implementation of map and flatmap. It supports the use of formulas as
-#' syntactic sugar for anonymous functions. Also there is special awareness of
+#' An implementation of map and flatmap. They support the use of formulas as
+#' syntactic sugar for anonymous functions. Also they have special awareness of
 #' data.frames.
 #'
 #' @param x (\link{vector} | \link{data.frame} | formula) if x inherits from
@@ -15,33 +15,32 @@
 #' @param p (function | formula) a predicate function indicating which columns
 #'   in a data.frame to use in map. This is a filter for the map operation, the
 #'   full data.frame is returned.
-#' @param recursive see recursive in \link{unlist}
-#' @param useNames see use.names in \link{unlist}
 #' @param simplify see SIMPLIFY in \link{mapply}
 #' @param by (e.g. character) argument is passed to \link{mutar} to select
 #'   columns.
 #' @param combine (function | formula) a function which knows how to combine
 #'   the list of results. \link{bindRows} is the default.
+#' @param flatten (function | formula) a function used to flatten the results.
 #'
 #' @param ... further arguments passed to \link{lapply} and \link{mapply}
 #'
 #' @details
 #' \code{map} will dispatch to \link{lapply}. When \code{x} is a formula this is
 #' interpreted as a multivariate map; this is implemented using \code{mapply}.
+#' When \code{x} is a data.frame \code{map} will iterate over columns, however
+#' the return value is a \code{data.frame}. \code{p} can then be used to select
+#' columns.
 #'
 #' \code{flatmap} will dispatch to \code{map}. The result is then wrapped by
-#' \link{unlist}.
+#' \code{flatten} which is \link{unlist} by default.
 #'
-#' When the first argument is a \code{data.frame} the behaviour is
-#' special. If this is not what you want, then use \link{as.list}. \code{map}
-#' will iterate over columns, however the return value is a \code{data.frame}.
-#' \code{flatmap} is an implamentation of split-apply-combine; so we iterate
-#' over rows/blocks and then combine.
+#' \code{sac} is a naive implementation of split-apply-combine and implemented
+#' using \code{flatmap}.
 #'
-#' \code{map} and \code{flatmap} can be extended; both are S4 generic functions.
-#' You don't and should not implement a new method for formulas. This method
-#' will coerce a formula into a function and pass it down to your map(newtype,
-#' function) method.
+#' \code{map}, \code{flatmap}, and \code{sac} can be extended; they are S4
+#' generic functions. You don't and should not implement a new method for
+#' formulas. This method will coerce a formula into a function and pass it down
+#' to your map(newtype, function) method.
 #'
 #' @export
 #' @rdname map
@@ -142,21 +141,29 @@ map(x ~ formula, f ~ "function", ...) %m% {
 
 #' @export
 #' @rdname map
-flatmap(x, f, ..., recursive = FALSE, useNames = TRUE) %g% {
-  unlist(map(x, f, ...), recursive, useNames)
+flatmap(x, f, ..., flatten = unlist) %g% {
+  as.function(flatten)(map(x, f, ...))
 }
 
 #' @export
 #' @rdname map
-flatmap(x ~ ANY, f ~ formula, ..., recursive, useNames) %m% {
-  flatmap(x, as.function(f), ..., recursive = recursive, useNames = useNames)
+flatmap(x ~ ANY, f ~ formula, ..., flatten) %m% {
+  flatmap(x, as.function(f), ..., flatten = flatten)
 }
 
 #' @export
 #' @rdname map
-flatmap(x ~ data.frame, f ~ "function", by, ..., combine = bindRows, recursive, useNames) %m% {
+sac(x, f, by, ..., combine = bindRows) %g% standardGeneric("sac")
+
+#' @export
+#' @rdname map
+sac(x ~ data.frame, f ~ "function", by, ..., combine) %m% {
   indList <- split(seq_len(nrow(x)), mutar(x, j = by))
-  datList <- map(indList, ind ~ f(x[ind, , drop = FALSE], ...))
-  as.function(combine)(datList)
+  flatmap(indList, ind ~ f(x[ind, , drop = FALSE], ...), flatten = combine)
 }
 
+#' @export
+#' @rdname map
+sac(x, f ~ formula, by, ..., combine) %m% {
+  sac(x, as.function(f), by, ..., combine = combine)
+}

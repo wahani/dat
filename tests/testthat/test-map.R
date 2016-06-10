@@ -52,15 +52,15 @@ test_that("split-apply-combine", {
 
   dat <- DataFrame(y = 1:10, z = 2, id = rep(letters[1:2], 5))
 
-  flatmap(dat, df ~ 1, "id") %>% expectEqual(list(a = 1, b = 1))
-  tmp <- flatmap(dat, mutar, "id", count ~ n())
+  sac(dat, df ~ 1, "id") %>% expectEqual(list(a = 1, b = 1))
+  tmp <- sac(dat, mutar, "id", count ~ n())
   expectEqual(tmp$count, rep(5, 10))
   expectEqual(NROW(tmp), 10)
   expectEqual(NCOL(tmp), 4)
 
   setClass("Dat", "DataFrame")
   dat <- new("Dat", dat)
-  flatmap(dat, mutar, "id", count ~ n()) %>% isA("Dat")
+  sac(dat, mutar, "id", count ~ n()) %>% isA("Dat")
 
 })
 
@@ -78,5 +78,7 @@ test_that("flatmap", {
   flatmap(1:2, numeric(1) : x ~ x + 0.5) %>% equals(c(1.5, 2.5))
   error(flatmap(letters[1:2], numeric(1) : x ~ x),
         "Function does not return correct type")
+  flatmap(1:2, ~ ., flatten = as.character) %>% equals(c("1", "2"))
+  flatmap(1:2, ~ ., flatten = ~ as.character(.)) %>% equals(c("1", "2"))
 
 })
