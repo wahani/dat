@@ -36,5 +36,6 @@ Collate:
     'bindRows.R'
     'extract.R'
     'map.R'
+    'mutar.R'
     'pipeExport.R'
     'replace.R'

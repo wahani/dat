@@ -1,3 +1,5 @@
+context("map")
+
 test_that("map", {
 
   equals <- function(x, y) {

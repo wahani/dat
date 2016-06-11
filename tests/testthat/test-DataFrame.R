@@ -1,3 +1,5 @@
+context("Data Frame")
+
 # helper for testing:
 isIdentical <- function(a, b) {
   unify <- function(x) {
@@ -124,7 +126,7 @@ test_that("Basic syntax of a DataFrame", {
   )
 
   expectIdentical(
-    dat[id ~ x > 4][count ~ n(), by = "id"],
+    dat[id ~ x > 4][count ~ n(), sby = "id"],
     local({
       datRef$id <- datRef$x > 4
       datRef <- aggregate(x ~ id, datRef, length)
@@ -143,13 +145,6 @@ test_that("Basic syntax of a DataFrame", {
     datRef[]
   )
 
-  expectIdentical(
-    dat[id ~ x > 4][count ~ n(), by = "id"],
-    dat %>%
-      mutar(id ~ x > 4) %>%
-      mutar(count ~ n(), by = "id")
-  )
-
 })
 
 test_that("Type conversion", {
@@ -164,42 +159,3 @@ test_that("Type conversion", {
   testthat::expect_is(as.DataFrame(list(x = 1)), "tbl_df")
 
 })
-
-test_that("S4 stuff", {
-
-  expectIs <- function(x, a) {
-    testthat::expect_is(x, a)
-  }
-
-  expectTrue <- function(x) {
-    testthat::expect_true(x)
-  }
-
-  DataFrame : SomeData() %type% .Object
-
-  dat <- SomeData(DataFrame(x = 1))
-  dat %<>%
-    mutar(~x == 1) %>%
-    mutar("^x$") %>%
-    mutar(y ~ x)
-
-  expectIs(dat, "SomeData")
-  expectTrue(isS4(dat))
-  expectIdentical(S3Part(dat, TRUE), data.frame(x = 1, y = 1))
-
-})
-
-test_that("Scoping", {
-
-  expectEqual <- function(x, a) {
-    testthat::expect_equal(x, a)
-  }
-
-  fun <- function(val) {
-    DataFrame(x = val) %>% mutar(y ~ val)
-  }
-
-  expectEqual(fun(1), DataFrame(x = 1, y = 1))
-
-})
-

@@ -1,3 +1,5 @@
+context("extract")
+
 test_that("subset with extract", {
 
   isEqual <- function(a, b) {

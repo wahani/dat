@@ -1,3 +1,5 @@
+context("as function")
+
 test_that("as.function", {
 
   equals <- function(x, y) {

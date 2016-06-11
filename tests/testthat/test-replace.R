@@ -1,3 +1,5 @@
+context("replace")
+
 test_that("replace", {
 
   expectEqual <- function(a, b) {

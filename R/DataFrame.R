@@ -1,10 +1,7 @@
 #' DataFrame and methods
 #'
 #' There are many ways to use a DataFrame. Please see the vignette to see some
-#' examples. \code{mutar} is literally the same function as \code{[.DataFrame}
-#' and can be used as a generic interface to use dplyr. You can use \code{mutar}
-#' even if you do not want to use a \code{DataFrame}. Also it can be used with
-#' S4 data.frame(s) / data_frame(s) / data.table(s).
+#' examples.
 #'
 #' @include helper.R
 #'
@@ -15,7 +12,8 @@
 #' @param ... arbitrary number of args
 #'    \cr in \code{[} (TwoSidedFormulas)
 #'    \cr in constructor see \link[dplyr]{data_frame}
-#' @param by (character) variable name
+#' @param by,sby (character) variable names used in \link{group_by}. Using `sby`
+#'   triggers a summarise.
 #' @param drop ignored
 #'
 #' @details
@@ -60,7 +58,7 @@ as.DataFrame.data.frame <- function(x, ...) {
 
 #' @rdname DataFrame
 #' @export
-"[.DataFrame" <- function(x, i, j, ..., by, drop) {
+"[.DataFrame" <- function(x, i, j, ..., by, sby, drop) {
   # this is basically the dispatch function. I do NOT use default values because
   # missing arguments have a meaning in the special syntax expected from [
 
@@ -72,19 +70,16 @@ as.DataFrame.data.frame <- function(x, ...) {
   j <- if (!missing(i) && nargs() == 2) i else j
   i <- if (missing(i) || nargs() == 2) NULL else i
   by <- if (missing(by)) NULL else by
+  sby <- if (missing(sby)) NULL else sby
   memClassHandler <- MemClassHandler()
 
   x %>%
     memClassHandler$memClass() %>%
     handleRows(dispatcher(i)) %>%
-    handleCols(dispatcher(i), dispatcher(j), ..., by = dispatcher(by)) %>%
+    handleCols(dispatcher(i), dispatcher(j), ..., by = by, sby = sby) %>%
     memClassHandler$wrapClass()
 
 }
-
-#' @rdname DataFrame
-#' @export
-mutar <- `[.DataFrame`
 
 data.frame : handleRows(x, i) %g% standardGeneric("handleRows")
 
@@ -110,40 +105,40 @@ handleRows(x ~ data.frame, i ~ TwoSidedFormula) %m% x
 
 ################################################################################
 
-data.frame : handleCols(x, i, j, ..., by) %g% standardGeneric("handleCols")
+data.frame : handleCols(x, i, j, ..., by, sby) %g% standardGeneric("handleCols")
 
-handleCols(x ~ data.frame, i ~ NULL, j ~ NULL, ..., by ~ NULL) %m% x
+handleCols(x ~ data.frame, i ~ NULL, j ~ NULL, ..., by ~ NULL, sby ~ NULL) %m% x
 
-handleCols(x ~ data.frame, i ~ NULL, j ~ character, ..., by ~ NULL) %m% {
+handleCols(x ~ data.frame, i ~ NULL, j ~ character, ..., by ~ NULL, sby ~ NULL) %m% {
   dplyr::select_(x, .dots = j)
 }
 
-handleCols(x ~ data.frame, i ~ NULL, j ~ RegEx, ..., by ~ NULL) %m% {
+handleCols(x ~ data.frame, i ~ NULL, j ~ RegEx, ..., by ~ NULL, sby ~ NULL) %m% {
   dplyr::select(x, matches(j))
 }
 
-handleCols(x ~ data.frame, i ~ NULL, j ~ logical, ..., by ~ NULL) %m% {
+handleCols(x ~ data.frame, i ~ NULL, j ~ logical, ..., by ~ NULL, sby ~ NULL) %m% {
   `[.data.frame`(x, j)
 }
 
-handleCols(x ~ data.frame, i ~ NULL, j ~ "function", ..., by ~ NULL) %m% {
+handleCols(x ~ data.frame, i ~ NULL, j ~ "function", ..., by ~ NULL, sby ~ NULL) %m% {
   mutar(x, vapply(x, j, logical(1)))
 }
 
-handleCols(x ~ data.frame, i ~ NULL, j ~ OneSidedFormula, ..., by ~ NULL) %m% {
+handleCols(x ~ data.frame, i ~ NULL, j ~ OneSidedFormula, ..., by ~ NULL, sby ~ NULL) %m% {
   handleRows(x, j)
 }
 
 handleCols(x ~ data.frame,
            i ~ logical | numeric | integer | OneSidedFormula,
-           j ~ ANY, ..., by ~ ANY) %m% {
-             handleCols(x, NULL, j, ..., by = by)
+           j ~ ANY, ..., by ~ ANY, sby ~ ANY) %m% {
+             handleCols(x, NULL, j, ..., by = by, sby = sby)
            }
 
 handleCols(x ~ data.frame,
            i ~ TwoSidedFormula | NULL,
            j ~ TwoSidedFormula | NULL,
-           ..., by ~ NULL) %m% {
+           ..., by ~ NULL, sby ~ NULL) %m% {
              args <- constructArgs(i, j, ...)
              dplyr::mutate_(x, .dots = args)
            }
@@ -151,9 +146,19 @@ handleCols(x ~ data.frame,
 handleCols(x ~ data.frame,
            i ~ TwoSidedFormula | NULL,
            j ~ TwoSidedFormula | NULL,
-           ..., by ~ character) %m% {
+           ..., by ~ NULL, sby ~ character) %m% {
+             args <- constructArgs(i, j, ...)
+             dplyr::group_by_(x, .dots = sby) %>%
+               dplyr::summarise_(.dots = args) %>%
+               as.data.frame
+           }
+
+handleCols(x ~ data.frame,
+           i ~ TwoSidedFormula | NULL,
+           j ~ TwoSidedFormula | NULL,
+           ..., by ~ character, sby ~ NULL) %m% {
              args <- constructArgs(i, j, ...)
              dplyr::group_by_(x, .dots = by) %>%
-               dplyr::summarise_(.dots = args) %>%
+               dplyr::mutate_(.dots = args) %>%
                as.data.frame
            }

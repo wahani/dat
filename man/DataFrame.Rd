@@ -6,7 +6,6 @@
 \alias{as.DataFrame}
 \alias{as.DataFrame.data.frame}
 \alias{as.DataFrame.default}
-\alias{mutar}
 \title{DataFrame and methods}
 \usage{
 DataFrame(...)
@@ -17,9 +16,7 @@ as.DataFrame(x, ...)
 
 \method{as.DataFrame}{data.frame}(x, ...)
 
-\method{[}{DataFrame}(x, i, j, ..., by, drop)
-
-mutar(x, i, j, ..., by, drop)
+\method{[}{DataFrame}(x, i, j, ..., by, sby, drop)
 }
 \arguments{
 \item{...}{arbitrary number of args
@@ -33,16 +30,14 @@ mutar(x, i, j, ..., by, drop)
 \item{j}{(logical | character | TwoSidedFormula | function) character
 beginning with '^' are interpreted as regular expression}
 
-\item{by}{(character) variable name}
+\item{by, sby}{(character) variable names used in \link{group_by}. Using `sby`
+triggers a summarise.}
 
 \item{drop}{ignored}
 }
 \description{
 There are many ways to use a DataFrame. Please see the vignette to see some
-examples. \code{mutar} is literally the same function as \code{[.DataFrame}
-and can be used as a generic interface to use dplyr. You can use \code{mutar}
-even if you do not want to use a \code{DataFrame}. Also it can be used with
-S4 data.frame(s) / data_frame(s) / data.table(s).
+examples.
 }
 \details{
 \code{OneSidedFormula} is always used for subsetting rows.
