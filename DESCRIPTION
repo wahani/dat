@@ -15,8 +15,7 @@ Depends:
 Imports:
     data.table,
     dplyr,
-    magrittr,
-    modules
+    magrittr
 Suggests:
     testthat,
     knitr,
