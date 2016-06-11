@@ -7,9 +7,12 @@
 \alias{replace,ANY,formula-method}
 \alias{replace,atomic,function-method}
 \alias{replace,atomicORlist,integerORnumericORlogical-method}
+\alias{replace,list,function-method}
 \title{Replace elements in a vector}
 \usage{
 replace(x, ind, values, ...)
+
+\S4method{replace}{list,`function`}(x, ind, values, ...)
 
 \S4method{replace}{atomic,`function`}(x, ind, values, ...)
 

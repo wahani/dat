@@ -31,6 +31,7 @@
 replace(x, ind, values, ...) %g% standardGeneric("replace")
 
 #' @export
+#' @rdname replace
 replace(x ~ list, ind ~ "function", values, ...) %m% {
   replace(x, vapply(x, ind, logical(1), ...), values)
 }

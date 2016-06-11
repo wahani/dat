@@ -111,10 +111,3 @@ system.time(DT4[v1 ~ sum(v1), v2 ~ sum(v2), v3 ~ sum(v3), sby = "id6"])
 system.time(group_by(DT, id6) %>% summarise(V1 = sum(v1), V2 = sum(v2), V3 = sum(v3)))
 system.time(group_by(DT, id6) %>% summarise(V1 = sum(v1), V2 = sum(v2), V3 = sum(v3)))
 ```
-
-```{r}
-system.time(DT[, lapply(.SD, mean), keyby = id4, .SDcols = 7:9])
-system.time(DT[, list(v1 = mean(v1), mean(v2), mean(v3)), keyby = id4])
-
-```
-
