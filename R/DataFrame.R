@@ -27,6 +27,8 @@
 #'   vignette("Introduction", "dat")
 #' }
 #'
+#' @seealso \link{mutar}
+#'
 #' @rdname DataFrame
 #' @export
 DataFrame <- function(...) {

@@ -42,6 +42,11 @@ data.table(s). They will always preserve the input class.
 \details{
 The real workhorse of this interface is \code{mutar}. All other functions
 exist to ease the transition from dplyr.
+
+\code{OneSidedFormula} is always used for subsetting rows.
+
+\code{TwoSidedFormula} is used instead of name-value expressions in
+\link[dplyr]{summarise} and \link[dplyr]{mutate}.
 }
 \examples{
 data("airquality")
@@ -50,5 +55,8 @@ airquality \%>\%
   mutar(meanWind ~ mean(Wind), by = "Month") \%>\%
   sumar(meanWind ~ mean(Wind), by = "Month") \%>\%
   extract("meanWind")
+}
+\seealso{
+\link{extract}, \link{DataFrame}
 }
 

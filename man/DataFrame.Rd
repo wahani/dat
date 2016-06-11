@@ -51,4 +51,7 @@ examples.
 }
 
 }
+\seealso{
+\link{mutar}
+}
 

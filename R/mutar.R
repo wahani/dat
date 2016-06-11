@@ -12,8 +12,15 @@
 #' The real workhorse of this interface is \code{mutar}. All other functions
 #' exist to ease the transition from dplyr.
 #'
+#' \code{OneSidedFormula} is always used for subsetting rows.
+#'
+#' \code{TwoSidedFormula} is used instead of name-value expressions in
+#' \link[dplyr]{summarise} and \link[dplyr]{mutate}.
+#'
 #' @rdname mutar
 #' @export
+#'
+#' @seealso \link{extract}, \link{DataFrame}
 #'
 #' @examples
 #' data("airquality")

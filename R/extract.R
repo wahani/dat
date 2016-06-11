@@ -55,3 +55,9 @@ extract(x ~ ANY, ind ~ character, ...) %m% {
   }
   extract(x, ind)
 }
+
+#' @export
+#' @rdname extract
+extract(x ~ data.frame, ind ~ character, ...) %m% {
+  mutar(x, , j = ind)
+}
