@@ -34,7 +34,7 @@ mutar <- `[.DataFrame`
 #' @rdname mutar
 #' @export
 filtar <- function(x, i) {
-  mutar(x, i = i)
+  mutar(x, i = i, )
 }
 
 #' @rdname mutar
