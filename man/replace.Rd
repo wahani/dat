@@ -7,12 +7,9 @@
 \alias{replace,ANY,formula-method}
 \alias{replace,atomic,function-method}
 \alias{replace,atomicORlist,integerORnumericORlogical-method}
-\alias{replace,list,function-method}
 \title{Replace elements in a vector}
 \usage{
 replace(x, ind, values, ...)
-
-\S4method{replace}{list,`function`}(x, ind, values, ...)
 
 \S4method{replace}{atomic,`function`}(x, ind, values, ...)
 
@@ -43,8 +40,8 @@ The idea is to provide a more felxible interface for the
   regular expression in which case \code{x} should be named -- a character of
   length 1 and a leading "^" is interpreted as regex. When \code{ind} is a
   function (or formula) and \code{x} is a list then it should be a predicate
-  function -- see the examples. When x is a atomic the function is applied on
-  x and the results is used for subsetting.
+  function -- see the examples. When x is an atomic the function is applied
+  on x and the result is used for subsetting.
 }
 \examples{
 replace(c(1, 2, NA), is.na, 0)

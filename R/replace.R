@@ -15,8 +15,8 @@
 #'   regular expression in which case \code{x} should be named -- a character of
 #'   length 1 and a leading "^" is interpreted as regex. When \code{ind} is a
 #'   function (or formula) and \code{x} is a list then it should be a predicate
-#'   function -- see the examples. When x is a atomic the function is applied on
-#'   x and the results is used for subsetting.
+#'   function -- see the examples. When x is an atomic the function is applied
+#'   on x and the result is used for subsetting.
 #'
 #' @export
 #' @rdname replace
@@ -31,7 +31,6 @@
 replace(x, ind, values, ...) %g% standardGeneric("replace")
 
 #' @export
-#' @rdname replace
 replace(x ~ list, ind ~ "function", values, ...) %m% {
   replace(x, vapply(x, ind, logical(1), ...), values)
 }
