@@ -96,3 +96,26 @@ extract(x ~ ANY, ind ~ character, ...) %m% {
 extract(x ~ data.frame, ind ~ character, ...) %m% {
   mutar(x, , j = ind)
 }
+
+#' @export
+#' @rdname extract
+extract2(x, ind, ...) %g% standardGeneric("extract2")
+
+#' @export
+#' @rdname extract
+extract2(x ~ list, ind ~ character | numeric | integer, ...) %m% {
+  stopifnot(length(ind) == 1)
+  x[[ind]]
+}
+
+#' @export
+#' @rdname extract
+extract2(x ~ ANY, ind ~ formula, ...) %m% {
+  extract2(x, as.function(ind), ...)
+}
+
+#' @export
+#' @rdname extract
+extract2(x ~ list, ind ~ "function", ...) %m% {
+  Find(ind, x, ...)
+}

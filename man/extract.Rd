@@ -9,6 +9,10 @@
 \alias{extract,atomicORlist,numericORintegerORlogical-method}
 \alias{extract,data.frame,character-method}
 \alias{extract,list,function-method}
+\alias{extract2}
+\alias{extract2,ANY,formula-method}
+\alias{extract2,list,characterORnumericORinteger-method}
+\alias{extract2,list,function-method}
 \title{Extract elements from a vector}
 \usage{
 extract(x, ind, ...)
@@ -24,6 +28,14 @@ extract(x, ind, ...)
 \S4method{extract}{ANY,character}(x, ind, ...)
 
 \S4method{extract}{data.frame,character}(x, ind, ...)
+
+extract2(x, ind, ...)
+
+\S4method{extract2}{list,characterORnumericORinteger}(x, ind, ...)
+
+\S4method{extract2}{ANY,formula}(x, ind, ...)
+
+\S4method{extract2}{list,`function`}(x, ind, ...)
 }
 \arguments{
 \item{x}{(atomic | list) a vector.}
