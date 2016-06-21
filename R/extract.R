@@ -117,5 +117,5 @@ extract2(x ~ ANY, ind ~ formula, ...) %m% {
 #' @export
 #' @rdname extract
 extract2(x ~ list, ind ~ "function", ...) %m% {
-  Find(ind, x, ...)
+  Find(addLengthCheck(addTypeCheck(ind, "logical"), 1), x, ...)
 }
