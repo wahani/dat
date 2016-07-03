@@ -4,6 +4,7 @@
 #' examples.
 #'
 #' @include helper.R
+#' @include HelperTypes.R
 #'
 #' @param x (DataFrame | data.frame)
 #' @param i (logical | numeric | integer | OneSidedFormula | TwoSidedFormula)
@@ -105,6 +106,9 @@ handleRows(x ~ data.frame, i ~ OneSidedFormula) %m% {
 
 handleRows(x ~ data.frame, i ~ TwoSidedFormula) %m% x
 
+handleRows(x ~ data.frame, i ~ FormulaList) %m% x
+
+
 ################################################################################
 
 data.frame : handleCols(x, i, j, ..., by, sby) %g% standardGeneric("handleCols")
@@ -116,7 +120,7 @@ handleCols(x ~ data.frame, i ~ NULL, j ~ character, ..., by ~ NULL, sby ~ NULL) 
 }
 
 handleCols(x ~ data.frame, i ~ NULL, j ~ RegEx, ..., by ~ NULL, sby ~ NULL) %m% {
-  dplyr::select(x, matches(j))
+  dplyr::select(x, dplyr::matches(j))
 }
 
 handleCols(x ~ data.frame, i ~ NULL, j ~ logical, ..., by ~ NULL, sby ~ NULL) %m% {
@@ -130,6 +134,15 @@ handleCols(x ~ data.frame, i ~ NULL, j ~ "function", ..., by ~ NULL, sby ~ NULL)
 handleCols(x ~ data.frame, i ~ NULL, j ~ OneSidedFormula, ..., by ~ NULL, sby ~ NULL) %m% {
   handleRows(x, j)
 }
+
+handleCols(x ~ data.frame,
+           i ~ NULL | FormulaList, j ~ NULL | FormulaList, ...,
+           by ~ ANY, sby ~ ANY) %m% {
+             do.call(
+               handleCols,
+               c(list(x = x, i = NULL, by = by, sby = sby), i, j, list(...))
+             )
+           }
 
 handleCols(x ~ data.frame,
            i ~ logical | numeric | integer | OneSidedFormula,

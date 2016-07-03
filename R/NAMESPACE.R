@@ -3,9 +3,11 @@
 # I get obscure error messages from dplyr functions.
 
 #' @importFrom magrittr %>% %<>%
+#' @importFrom stats as.formula
 #' @import methods
 #' @import aoos
 #' @import data.table
+#'
 NULL
 
 globalVariables("matches")

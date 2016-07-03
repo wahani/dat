@@ -27,9 +27,9 @@ Encoding: UTF-8
 ByteCompile: TRUE
 RoxygenNote: 5.0.1
 Collate:
+    'HelperTypes.R'
     'helper.R'
     'DataFrame.R'
-    'HelperTypes.R'
     'NAMESPACE.R'
     'as.function.R'
     'bindRows.R'
