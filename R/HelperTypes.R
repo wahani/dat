@@ -7,7 +7,8 @@ MList <- function(...) new("MList", list(...))
 
 ##' Dynamically generate formulas
 ##'
-##' Function to dynamically generate formulas to be used in \link{mutar}.
+##' Function to dynamically generate formulas - (F)ormula (L)ist  to be used in
+##' \link{mutar}.
 ##'
 ##' @param ... (formulas)
 ##' @param .n (character) names to be used in formulas
