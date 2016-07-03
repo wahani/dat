@@ -1,7 +1,7 @@
 #' DataFrame and methods
 #'
-#' There are many ways to use a DataFrame. Please see the vignette to see some
-#' examples.
+#' This is a 'data.table' like implementation of a data.frame. dplyr is used as
+#' backend. The only purpose is to have \code{R CMD check} friendly syntax.
 #'
 #' @include helper.R
 #' @include HelperTypes.R
@@ -12,10 +12,10 @@
 #'   beginning with '^' are interpreted as regular expression
 #' @param ... arbitrary number of args
 #'    \cr in \code{[} (TwoSidedFormulas)
-#'    \cr in constructor see \link[dplyr]{data_frame}
+#'    \cr in constructor see \link[tibble]{data_frame}
 #' @param by,sby (character) variable names used in \link{group_by}. Using `sby`
 #'   triggers a summarise.
-#' @param drop ignored
+#' @param drop (ignored) never drops the class.
 #'
 #' @details
 #' \code{OneSidedFormula} is always used for subsetting rows.
@@ -33,15 +33,14 @@
 #' @rdname DataFrame
 #' @export
 DataFrame <- function(...) {
-  dat <- dplyr::data_frame(...)
+  dat <- tibble::data_frame(...)
   addClass(dat, "DataFrame")
 }
 
-# To make the inheritance of DataFrame clear for S4:
+#' @name DataFrame
+#' @export
+#' @rdname DataFrame
 setOldClass(c("DataFrame", "data.frame"))
-# dplyr functions destroy the class you give them, so we need to explain that
-# they are data.frames:
-setOldClass(c("tbl_df", "data.frame"))
 
 #' @rdname DataFrame
 #' @export

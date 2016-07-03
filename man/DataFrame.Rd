@@ -21,7 +21,7 @@ as.DataFrame(x, ...)
 \arguments{
 \item{...}{arbitrary number of args
 \cr in \code{[} (TwoSidedFormulas)
-\cr in constructor see \link[dplyr]{data_frame}}
+\cr in constructor see \link[tibble]{data_frame}}
 
 \item{x}{(DataFrame | data.frame)}
 
@@ -33,11 +33,11 @@ beginning with '^' are interpreted as regular expression}
 \item{by, sby}{(character) variable names used in \link{group_by}. Using `sby`
 triggers a summarise.}
 
-\item{drop}{ignored}
+\item{drop}{(ignored) never drops the class.}
 }
 \description{
-There are many ways to use a DataFrame. Please see the vignette to see some
-examples.
+This is a 'data.table' like implementation of a data.frame. dplyr is used as
+backend. The only purpose is to have \code{R CMD check} friendly syntax.
 }
 \details{
 \code{OneSidedFormula} is always used for subsetting rows.

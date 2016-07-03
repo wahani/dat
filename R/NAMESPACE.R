@@ -7,7 +7,5 @@
 #' @import methods
 #' @import aoos
 #' @import data.table
-#'
+#' @import tibble
 NULL
-
-globalVariables("matches")

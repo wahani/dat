@@ -115,6 +115,18 @@ sumar(flights, delay ~ mean(dep_delay, na.rm = TRUE), by = "month")
 ```
 
 
+### Same operations on different columns
+
+```{r}
+sumar(
+  flights, 
+  FL(.n ~ mean(.n, na.rm = TRUE), 
+     .n = c("arr_delay", "dep_delay")), 
+  by = "month"
+)
+```
+
+
 ## A link to S4
 
 Using this package you can create S4 classes to contain a data frame (or a 

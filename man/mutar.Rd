@@ -22,7 +22,7 @@ beginning with '^' are interpreted as regular expression}
 
 \item{...}{arbitrary number of args
 \cr in \code{[} (TwoSidedFormulas)
-\cr in constructor see \link[dplyr]{data_frame}}
+\cr in constructor see \link[tibble]{data_frame}}
 
 \item{by}{(character) variable names used in \link{group_by}. Using `sby`
 triggers a summarise.}
@@ -30,7 +30,7 @@ triggers a summarise.}
 \item{sby}{(character) variable names used in \link{group_by}. Using `sby`
 triggers a summarise.}
 
-\item{drop}{ignored}
+\item{drop}{(ignored) never drops the class.}
 }
 \description{
 \code{mutar} is literally the same function as \code{[.DataFrame} and can be
