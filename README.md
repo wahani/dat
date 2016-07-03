@@ -1,6 +1,6 @@
 ---
 title: "Tools for Data Manipulation"
-date: "2016-06-11"
+date: "2016-07-03"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Tools for Data Manipulation}
@@ -79,7 +79,7 @@ filtar(flights, ~order(year, month, day))
 ## Source: local data frame [336,776 x 19]
 ## 
 ##     year month   day dep_time sched_dep_time dep_delay arr_time
-##    (int) (int) (int)    (int)          (int)     (dbl)    (int)
+##    <int> <int> <int>    <int>          <int>     <dbl>    <int>
 ## 1   2013     1     1      517            515         2      830
 ## 2   2013     1     1      533            529         4      850
 ## 3   2013     1     1      542            540         2      923
@@ -91,9 +91,9 @@ filtar(flights, ~order(year, month, day))
 ## 9   2013     1     1      557            600        -3      838
 ## 10  2013     1     1      558            600        -2      753
 ## ..   ...   ...   ...      ...            ...       ...      ...
-## Variables not shown: sched_arr_time (int), arr_delay (dbl), carrier (chr),
-##   flight (int), tailnum (chr), origin (chr), dest (chr), air_time (dbl),
-##   distance (dbl), hour (dbl), minute (dbl), time_hour (time)
+## Variables not shown: sched_arr_time <int>, arr_delay <dbl>, carrier <chr>,
+##   flight <int>, tailnum <chr>, origin <chr>, dest <chr>, air_time <dbl>,
+##   distance <dbl>, hour <dbl>, minute <dbl>, time_hour <time>.
 ```
 
 
@@ -137,7 +137,7 @@ mutar(flights, n ~ n(), by = "month") %>%
 ## Source: local data frame [12 x 1]
 ## 
 ##        n
-##    (int)
+##    <int>
 ## 1  27004
 ## 2  28889
 ## 3  27268
@@ -158,6 +158,38 @@ mutar(flights, n ~ n(), by = "month") %>%
 
 ```r
 sumar(flights, delay ~ mean(dep_delay, na.rm = TRUE), by = "month")
+```
+
+
+### Same operations on different columns
+
+
+```r
+sumar(
+  flights, 
+  FL(.n ~ mean(.n, na.rm = TRUE), 
+     .n = c("arr_delay", "dep_delay")), 
+  by = "month"
+)
+```
+
+```
+## Source: local data frame [12 x 3]
+## 
+##    month  arr_delay dep_delay
+##    <int>      <dbl>     <dbl>
+## 1      1  6.1299720 10.036665
+## 2      2  5.6130194 10.816843
+## 3      3  5.8075765 13.227076
+## 4      4 11.1760630 13.938038
+## 5      5  3.5215088 12.986859
+## 6      6 16.4813296 20.846332
+## 7      7 16.7113067 21.727787
+## 8      8  6.0406524 12.611040
+## 9      9 -4.0183636  6.722476
+## 10    10 -0.1670627  6.243988
+## 11    11  0.4613474  5.435362
+## 12    12 14.8703553 16.576688
 ```
 
 
