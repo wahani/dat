@@ -147,7 +147,7 @@ DataTable <- function(...) {
 
 setMethod("[", "DataTable", mutar)
 
-dtflights <- do.call(DataTable, flights)
+dtflights <- do.call(DataTable, nycflights13::flights)
 
 dtflights[1:10, "year:day"]
 dtflights[n ~ n(), by = "month"] %>% extract("n") %>% unique
