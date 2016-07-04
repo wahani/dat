@@ -9,7 +9,7 @@ expectIdentical <- function(a, b) {
 }
 
 test_that("make formulas", {
-  
+
   tmp <- FL(.nMean ~ mean(.n), .nSd ~ sd(.n), .n = letters[1:2])
 
   expectIdenticalFormula(tmp[[1]], aMean ~ mean(a))
@@ -35,10 +35,10 @@ test_that("make formulas", {
     dat2,
     mutar(dat, FL(x ~ mean(x)))
   )
-  
+
   expectIdentical(
     dat3,
     mutar(dat, ~1:2, FL(x ~ mean(x)))
   )
-  
+
 })

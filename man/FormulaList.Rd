@@ -14,10 +14,13 @@ FL(..., .n = ".n", pattern = "\\\\.n")
 \item{pattern}{(character) pattern to be replaced in formulas}
 }
 \description{
-Function to dynamically generate formulas to be used in \link{mutar}.
+Function to dynamically generate formulas - (F)ormula (L)ist  to be used in
+\link{mutar}.
 }
 \examples{
-
 FL(.n ~ mean(.n), .n = "variable")
+}
+\seealso{
+\link{mutar}
 }
 

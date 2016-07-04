@@ -119,7 +119,7 @@ sumar(flights, delay ~ mean(dep_delay, na.rm = TRUE), by = "month")
 
 ```{r}
 sumar(
-  flights, 
+  flights,
   FL(.n ~ mean(.n, na.rm = TRUE), 
      .n = c("arr_delay", "dep_delay")), 
   by = "month"

@@ -7,9 +7,10 @@
 #' @include HelperTypes.R
 #'
 #' @param x (DataFrame | data.frame)
-#' @param i (logical | numeric | integer | OneSidedFormula | TwoSidedFormula)
-#' @param j (logical | character | TwoSidedFormula | function) character
-#'   beginning with '^' are interpreted as regular expression
+#' @param i (logical | numeric | integer | OneSidedFormula | TwoSidedFormula |
+#'   FormulaList) see the examples.
+#' @param j (logical | character | TwoSidedFormula | FormulaList | function)
+#'   character beginning with '^' are interpreted as regular expression
 #' @param ... arbitrary number of args
 #'    \cr in \code{[} (TwoSidedFormulas)
 #'    \cr in constructor see \link[tibble]{data_frame}
@@ -24,11 +25,12 @@
 #' \code{summarise} and \code{mutate}.
 #'
 #' @examples
-#' \dontrun{
-#'   vignette("Introduction", "dat")
-#' }
+#' data("airquality")
+#' dat <- as.DataFrame(airquality)
+#' dat[~ Month > 4, ][meanWind ~ mean(Wind), sby = "Month"]["meanWind"]
+#' dat[FL(.n ~ mean(.n), .n = c("Wind", "Temp")), sby = "Month"]
 #'
-#' @seealso \link{mutar}
+#' @seealso \link{mutar}, \link{FL}
 #'
 #' @rdname DataFrame
 #' @export

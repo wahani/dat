@@ -14,9 +14,11 @@ MList <- function(...) new("MList", list(...))
 ##' @param .n (character) names to be used in formulas
 ##' @param pattern (character) pattern to be replaced in formulas
 ##'
+##' @seealso \link{mutar}
+##'
+##' @rdname FormulaList
 ##' @export
 ##' @examples
-##'
 ##' FL(.n ~ mean(.n), .n = "variable")
 FL <- function(..., .n = ".n", pattern = "\\.n") {
   new("FormulaList", makeFormulas(..., .n = .n, pattern = pattern), .n = .n)

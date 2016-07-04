@@ -15,10 +15,11 @@ sumar(x, j, ..., by)
 \arguments{
 \item{x}{(DataFrame | data.frame)}
 
-\item{i}{(logical | numeric | integer | OneSidedFormula | TwoSidedFormula)}
+\item{i}{(logical | numeric | integer | OneSidedFormula | TwoSidedFormula |
+FormulaList) see the examples.}
 
-\item{j}{(logical | character | TwoSidedFormula | function) character
-beginning with '^' are interpreted as regular expression}
+\item{j}{(logical | character | TwoSidedFormula | FormulaList | function)
+character beginning with '^' are interpreted as regular expression}
 
 \item{...}{arbitrary number of args
 \cr in \code{[} (TwoSidedFormulas)
@@ -47,6 +48,9 @@ exist to ease the transition from dplyr.
 
 \code{TwoSidedFormula} is used instead of name-value expressions in
 \link[dplyr]{summarise} and \link[dplyr]{mutate}.
+
+\code{FormulaList} can be used to repeat the same operation on different
+columns.
 }
 \examples{
 data("airquality")
@@ -55,8 +59,14 @@ airquality \%>\%
   mutar(meanWind ~ mean(Wind), by = "Month") \%>\%
   sumar(meanWind ~ mean(Wind), by = "Month") \%>\%
   extract("meanWind")
+
+airquality \%>\%
+  sumar(
+    FL(.n ~ mean(.n), .n = c("Wind", "Temp")),
+    by = "Month"
+  )
 }
 \seealso{
-\link{extract}, \link{DataFrame}
+\link{extract}, \link{DataFrame}, \link{FL}
 }
 

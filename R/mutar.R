@@ -17,10 +17,13 @@
 #' \code{TwoSidedFormula} is used instead of name-value expressions in
 #' \link[dplyr]{summarise} and \link[dplyr]{mutate}.
 #'
+#' \code{FormulaList} can be used to repeat the same operation on different
+#' columns.
+#'
 #' @rdname mutar
 #' @export
 #'
-#' @seealso \link{extract}, \link{DataFrame}
+#' @seealso \link{extract}, \link{DataFrame}, \link{FL}
 #'
 #' @examples
 #' data("airquality")
@@ -29,6 +32,12 @@
 #'   mutar(meanWind ~ mean(Wind), by = "Month") %>%
 #'   sumar(meanWind ~ mean(Wind), by = "Month") %>%
 #'   extract("meanWind")
+#'
+#' airquality %>%
+#'   sumar(
+#'     FL(.n ~ mean(.n), .n = c("Wind", "Temp")),
+#'     by = "Month"
+#'   )
 mutar <- `[.DataFrame`
 
 #' @rdname mutar
