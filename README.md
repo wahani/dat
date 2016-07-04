@@ -200,68 +200,27 @@ summarise. In the background `dplyr`s ability to work on a `data.table` is being
 used.
 
 
-```
-## [1] "["
-```
+```r
+library(data.table)
 
-```
-## Object of class "DataTable"
-##     year month day
-##  1: 2013     1   1
-##  2: 2013     1   1
-##  3: 2013     1   1
-##  4: 2013     1   1
-##  5: 2013     1   1
-##  6: 2013     1   1
-##  7: 2013     1   1
-##  8: 2013     1   1
-##  9: 2013     1   1
-## 10: 2013     1   1
-```
+setClass("DataTable", "data.table")
 
-```
-## Object of class "DataTable"
-##         n
-##  1: 27004
-##  2: 28889
-##  3: 27268
-##  4: 28135
-##  5: 24951
-##  6: 28834
-##  7: 28330
-##  8: 28796
-##  9: 28243
-## 10: 29425
-## 11: 29327
-## 12: 27574
-```
+DataTable <- function(...) {
+  new("DataTable", data.table::data.table(...))
+}
 
-```
-## Object of class "DataTable"
-##     month     n
-##  1:     1 27004
-##  2:     2 24951
-##  3:     3 28834
-##  4:     4 28330
-##  5:     5 28796
-##  6:     6 28243
-##  7:     7 29425
-##  8:     8 29327
-##  9:     9 27574
-## 10:    10 28889
-## 11:    11 27268
-## 12:    12 28135
-```
+setMethod("[", "DataTable", mutar)
 
-```
-## Object of class "DataTable"
-##    month     n
-## 1:     7 29425
-## 2:     8 29327
-## 3:     9 27574
-## 4:    10 28889
-## 5:    11 27268
-## 6:    12 28135
+dtflights <- do.call(DataTable, flights)
+
+dtflights[1:10, "year:day"]
+dtflights[n ~ n(), by = "month"] %>% extract("n") %>% unique
+dtflights[n ~ n(), sby = "month"]
+
+dtflights %>%
+  filtar(~month > 6) %>%
+  mutar(n ~ n(), by = "month") %>%
+  sumar(n ~ dplyr::first(n), by = "month")
 ```
 
 

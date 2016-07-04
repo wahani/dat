@@ -136,7 +136,7 @@ generic enough to link to subsetting of rows and cols as well as mutate and
 summarise. In the background `dplyr`s ability to work on a `data.table` is being
 used.
 
-```{r echo = FALSE}
+```{r eval = FALSE}
 library(data.table)
 
 setClass("DataTable", "data.table")
