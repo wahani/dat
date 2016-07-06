@@ -3,7 +3,7 @@
 # I get obscure error messages from dplyr functions.
 
 #' @importFrom magrittr %>% %<>%
-#' @importFrom stats as.formula
+#' @importFrom stats as.formula update
 #' @import methods
 #' @import aoos
 #' @import data.table

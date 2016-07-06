@@ -4,7 +4,7 @@
 \alias{FL}
 \title{Dynamically generate formulas}
 \usage{
-FL(..., .n = ".n", pattern = "\\\\.n")
+FL(..., .n = ".n", pattern = "\\\\.n", lazy = isLazyFormula(.n))
 }
 \arguments{
 \item{...}{(formulas)}
@@ -12,6 +12,10 @@ FL(..., .n = ".n", pattern = "\\\\.n")
 \item{.n}{(character) names to be used in formulas}
 
 \item{pattern}{(character) pattern to be replaced in formulas}
+
+\item{lazy}{(logical) flag to indicate if \code{.n} should be interpreted
+within the data, i.e. in the future. In this cas \code{.n} is an object
+which can be used in \link{extract}.}
 }
 \description{
 Function to dynamically generate formulas - (F)ormula (L)ist  to be used in

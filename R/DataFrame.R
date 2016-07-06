@@ -138,7 +138,9 @@ handleCols(x ~ data.frame, i ~ NULL, j ~ OneSidedFormula, ..., by ~ NULL, sby ~ 
 
 handleCols(x ~ data.frame,
            i ~ NULL | FormulaList, j ~ NULL | FormulaList, ...,
-           by ~ ANY, sby ~ ANY) %m% {
+           by ~ ANY, sby ~ ANY) %m% {             
+             i <- update(i, x)
+             j <- update(j, x)             
              do.call(
                handleCols,
                c(list(x = x, i = NULL, by = by, sby = sby), i, j, list(...))

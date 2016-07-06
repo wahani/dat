@@ -41,4 +41,27 @@ test_that("make formulas", {
     mutar(dat, ~1:2, FL(x ~ mean(x)))
   )
 
+  dat <- data.frame(x = 1:10, group = letters[1:2])
+  dat1 <- data.frame(group = letters[1:2], x = c(5, 6))
+
+  expectIdentical(
+    dat1,
+    mutar(dat, FL(.n ~ mean(.n), .n = is.numeric), sby = "group")
+  )
+
+  expectIdentical(
+    dat1,
+    mutar(dat, FL(.n ~ mean(.n), .n = "^x$"), sby = "group")
+  )
+
+  expectIdentical(
+    dat1,
+    mutar(dat, FL(.n ~ mean(.n), .n = ~ is.numeric(.)), sby = "group")
+  )
+
+  expectIdentical(
+    dat1,
+    mutar(dat, FL(.n ~ mean(.n), .n = 1), sby = "group")
+  )
+
 })
