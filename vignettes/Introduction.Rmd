@@ -89,8 +89,11 @@ flights %>%
 ```
 
 
-### Mutate
+### Operations on columns
 
+The main difference between `mutate` and `mutar` is that you use a `~`
+instead of `=`.
+    
 ```{r results='hide'}
 mutar(
   flights,
@@ -101,30 +104,38 @@ mutar(
 
 Grouping data is handled within `mutar`:
 
-```{r}
-mutar(flights, n ~ n(), by = "month") %>%
-  extract("n") %>% 
-  unique
+```{r results = 'hide'}
+mutar(flights, n ~ n(), by = "month")
 ```
-
-
-### Summarise
 
 ```{r results='hide'}
 sumar(flights, delay ~ mean(dep_delay, na.rm = TRUE), by = "month")
 ```
 
+You can also provide lists of formulas and use some black magic to select
+columns:
+    
+```{r}
+sumar(
+  flights,
+  FL(.n_sd ~ sd(.n, na.rm = TRUE),
+     .n ~ mean(.n, na.rm = TRUE),
+     .n = "^.*delay$"), 
+  by = "month"
+)
+```
+
 
 ## A link to S4
 
-Using this package you can create S4 classes to contain a data frame (or a 
-data.table) and use the interface to `dplyr`. Both `dplyr` and `data.table` do 
+Using this package you can create S4 classes to contain a data frame (or a
+data.table) and use the interface to `dplyr`. Both `dplyr` and `data.table` do
 not support integration with S4. The main function here is `mutar` which is
-generic enough to link to subsetting of rows and cols as well as mutate and 
+generic enough to link to subsetting of rows and cols as well as mutate and
 summarise. In the background `dplyr`s ability to work on a `data.table` is being
 used.
 
-```{r echo = FALSE}
+```{r eval = FALSE}
 library(data.table)
 
 setClass("DataTable", "data.table")
@@ -135,16 +146,16 @@ DataTable <- function(...) {
 
 setMethod("[", "DataTable", mutar)
 
-dtflights <- do.call(DataTable, flights)
+dtflights <- do.call(DataTable, nycflights13::flights)
 
 dtflights[1:10, "year:day"]
-dtflights[n ~ n(), by = "month"] %>% extract("n") %>% unique
+dtflights[n ~ n(), by = "month"]
 dtflights[n ~ n(), sby = "month"]
 
 dtflights %>%
   filtar(~month > 6) %>%
   mutar(n ~ n(), by = "month") %>%
-  sumar(n ~ dplyr::first(n), by = "month")
+  sumar(n ~ first(n), by = "month")
 ```
 
 

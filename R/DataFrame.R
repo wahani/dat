@@ -1,20 +1,22 @@
 #' DataFrame and methods
 #'
-#' There are many ways to use a DataFrame. Please see the vignette to see some
-#' examples.
+#' This is a 'data.table' like implementation of a data.frame. dplyr is used as
+#' backend. The only purpose is to have \code{R CMD check} friendly syntax.
 #'
 #' @include helper.R
+#' @include FormulaList.R
 #'
 #' @param x (DataFrame | data.frame)
-#' @param i (logical | numeric | integer | OneSidedFormula | TwoSidedFormula)
-#' @param j (logical | character | TwoSidedFormula | function) character
-#'   beginning with '^' are interpreted as regular expression
+#' @param i (logical | numeric | integer | OneSidedFormula | TwoSidedFormula |
+#'   FormulaList) see the examples.
+#' @param j (logical | character | TwoSidedFormula | FormulaList | function)
+#'   character beginning with '^' are interpreted as regular expression
 #' @param ... arbitrary number of args
 #'    \cr in \code{[} (TwoSidedFormulas)
-#'    \cr in constructor see \link[dplyr]{data_frame}
+#'    \cr in constructor see \link[tibble]{data_frame}
 #' @param by,sby (character) variable names used in \link{group_by}. Using `sby`
 #'   triggers a summarise.
-#' @param drop ignored
+#' @param drop (ignored) never drops the class.
 #'
 #' @details
 #' \code{OneSidedFormula} is always used for subsetting rows.
@@ -23,24 +25,24 @@
 #' \code{summarise} and \code{mutate}.
 #'
 #' @examples
-#' \dontrun{
-#'   vignette("Introduction", "dat")
-#' }
+#' data("airquality")
+#' dat <- as.DataFrame(airquality)
+#' dat[~ Month > 4, ][meanWind ~ mean(Wind), sby = "Month"]["meanWind"]
+#' dat[FL(.n ~ mean(.n), .n = c("Wind", "Temp")), sby = "Month"]
 #'
-#' @seealso \link{mutar}
+#' @seealso \link{mutar}, \link{FL}
 #'
 #' @rdname DataFrame
 #' @export
 DataFrame <- function(...) {
-  dat <- dplyr::data_frame(...)
+  dat <- tibble::data_frame(...)
   addClass(dat, "DataFrame")
 }
 
-# To make the inheritance of DataFrame clear for S4:
+#' @name DataFrame
+#' @export
+#' @rdname DataFrame
 setOldClass(c("DataFrame", "data.frame"))
-# dplyr functions destroy the class you give them, so we need to explain that
-# they are data.frames:
-setOldClass(c("tbl_df", "data.frame"))
 
 #' @rdname DataFrame
 #' @export
@@ -73,8 +75,8 @@ as.DataFrame.data.frame <- function(x, ...) {
   i <- if (missing(i) || nargs() == 2) NULL else i
   by <- if (missing(by)) NULL else by
   sby <- if (missing(sby)) NULL else sby
+  
   memClassHandler <- MemClassHandler()
-
   x %>%
     memClassHandler$memClass() %>%
     handleRows(dispatcher(i)) %>%
@@ -105,6 +107,9 @@ handleRows(x ~ data.frame, i ~ OneSidedFormula) %m% {
 
 handleRows(x ~ data.frame, i ~ TwoSidedFormula) %m% x
 
+handleRows(x ~ data.frame, i ~ FormulaList) %m% x
+
+
 ################################################################################
 
 data.frame : handleCols(x, i, j, ..., by, sby) %g% standardGeneric("handleCols")
@@ -116,7 +121,7 @@ handleCols(x ~ data.frame, i ~ NULL, j ~ character, ..., by ~ NULL, sby ~ NULL) 
 }
 
 handleCols(x ~ data.frame, i ~ NULL, j ~ RegEx, ..., by ~ NULL, sby ~ NULL) %m% {
-  dplyr::select(x, matches(j))
+  dplyr::select(x, dplyr::matches(j))
 }
 
 handleCols(x ~ data.frame, i ~ NULL, j ~ logical, ..., by ~ NULL, sby ~ NULL) %m% {
@@ -130,6 +135,20 @@ handleCols(x ~ data.frame, i ~ NULL, j ~ "function", ..., by ~ NULL, sby ~ NULL)
 handleCols(x ~ data.frame, i ~ NULL, j ~ OneSidedFormula, ..., by ~ NULL, sby ~ NULL) %m% {
   handleRows(x, j)
 }
+
+handleCols(x ~ data.frame,
+           i ~ NULL | FormulaList, j ~ NULL | FormulaList, ...,
+           by ~ ANY, sby ~ ANY) %m% {
+             
+             i <- update(i, x)
+             j <- update(j, x)
+             
+             do.call(
+               mutar,
+               c(list(x = x, i = NULL, by = by, sby = sby), i, j, list(...))
+             )
+             
+           }
 
 handleCols(x ~ data.frame,
            i ~ logical | numeric | integer | OneSidedFormula,

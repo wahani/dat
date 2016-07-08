@@ -21,23 +21,24 @@ as.DataFrame(x, ...)
 \arguments{
 \item{...}{arbitrary number of args
 \cr in \code{[} (TwoSidedFormulas)
-\cr in constructor see \link[dplyr]{data_frame}}
+\cr in constructor see \link[tibble]{data_frame}}
 
 \item{x}{(DataFrame | data.frame)}
 
-\item{i}{(logical | numeric | integer | OneSidedFormula | TwoSidedFormula)}
+\item{i}{(logical | numeric | integer | OneSidedFormula | TwoSidedFormula |
+FormulaList) see the examples.}
 
-\item{j}{(logical | character | TwoSidedFormula | function) character
-beginning with '^' are interpreted as regular expression}
+\item{j}{(logical | character | TwoSidedFormula | FormulaList | function)
+character beginning with '^' are interpreted as regular expression}
 
 \item{by, sby}{(character) variable names used in \link{group_by}. Using `sby`
 triggers a summarise.}
 
-\item{drop}{ignored}
+\item{drop}{(ignored) never drops the class.}
 }
 \description{
-There are many ways to use a DataFrame. Please see the vignette to see some
-examples.
+This is a 'data.table' like implementation of a data.frame. dplyr is used as
+backend. The only purpose is to have \code{R CMD check} friendly syntax.
 }
 \details{
 \code{OneSidedFormula} is always used for subsetting rows.
@@ -46,12 +47,13 @@ examples.
 \code{summarise} and \code{mutate}.
 }
 \examples{
-\dontrun{
-  vignette("Introduction", "dat")
-}
+data("airquality")
+dat <- as.DataFrame(airquality)
+dat[~ Month > 4, ][meanWind ~ mean(Wind), sby = "Month"]["meanWind"]
+dat[FL(.n ~ mean(.n), .n = c("Wind", "Temp")), sby = "Month"]
 
 }
 \seealso{
-\link{mutar}
+\link{mutar}, \link{FL}
 }
 

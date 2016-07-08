@@ -1,7 +1,7 @@
 Package: dat
 Type: Package
 Title: Tools for Data Manipulation
-Version: 0.0.5
+Version: 0.0.6
 Authors@R: person("Sebastian", "Warnholz", role = c("aut", "cre"),
                   email = "wahani@gmail.com")
 BugReports: https://github.com/wahani/aoos/dat
@@ -15,7 +15,8 @@ Depends:
 Imports:
     data.table,
     dplyr,
-    magrittr
+    magrittr,
+    tibble
 Suggests:
     testthat,
     knitr,
@@ -27,9 +28,9 @@ Encoding: UTF-8
 ByteCompile: TRUE
 RoxygenNote: 5.0.1
 Collate:
+    'FormulaList.R'
     'helper.R'
     'DataFrame.R'
-    'HelperTypes.R'
     'NAMESPACE.R'
     'as.function.R'
     'bindRows.R'

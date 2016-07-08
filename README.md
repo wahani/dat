@@ -1,6 +1,6 @@
 ---
 title: "Tools for Data Manipulation"
-date: "2016-06-11"
+date: "2016-07-08"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Tools for Data Manipulation}
@@ -76,10 +76,9 @@ filtar(flights, ~order(year, month, day))
 ```
 
 ```
-## Source: local data frame [336,776 x 19]
-## 
+## # A tibble: 336,776 x 19
 ##     year month   day dep_time sched_dep_time dep_delay arr_time
-##    (int) (int) (int)    (int)          (int)     (dbl)    (int)
+##    <int> <int> <int>    <int>          <int>     <dbl>    <int>
 ## 1   2013     1     1      517            515         2      830
 ## 2   2013     1     1      533            529         4      850
 ## 3   2013     1     1      542            540         2      923
@@ -90,10 +89,10 @@ filtar(flights, ~order(year, month, day))
 ## 8   2013     1     1      557            600        -3      709
 ## 9   2013     1     1      557            600        -3      838
 ## 10  2013     1     1      558            600        -2      753
-## ..   ...   ...   ...      ...            ...       ...      ...
-## Variables not shown: sched_arr_time (int), arr_delay (dbl), carrier (chr),
-##   flight (int), tailnum (chr), origin (chr), dest (chr), air_time (dbl),
-##   distance (dbl), hour (dbl), minute (dbl), time_hour (time)
+## # ... with 336,766 more rows, and 12 more variables: sched_arr_time <int>,
+## #   arr_delay <dbl>, carrier <chr>, flight <int>, tailnum <chr>,
+## #   origin <chr>, dest <chr>, air_time <dbl>, distance <dbl>, hour <dbl>,
+## #   minute <dbl>, time_hour <time>
 ```
 
 
@@ -113,8 +112,11 @@ flights %>%
 ```
 
 
-### Mutate
+### Operations on columns
 
+The main difference between `mutate` and `mutar` is that you use a `~`
+instead of `=`.
+    
 
 ```r
 mutar(
@@ -128,45 +130,53 @@ Grouping data is handled within `mutar`:
 
 
 ```r
-mutar(flights, n ~ n(), by = "month") %>%
-  extract("n") %>% 
-  unique
+mutar(flights, n ~ n(), by = "month")
 ```
-
-```
-## Source: local data frame [12 x 1]
-## 
-##        n
-##    (int)
-## 1  27004
-## 2  28889
-## 3  27268
-## 4  28135
-## 5  24951
-## 6  28834
-## 7  28330
-## 8  28796
-## 9  28243
-## 10 29425
-## 11 29327
-## 12 27574
-```
-
-
-### Summarise
 
 
 ```r
 sumar(flights, delay ~ mean(dep_delay, na.rm = TRUE), by = "month")
 ```
 
+You can also provide lists of formulas and use some black magic to select
+columns:
+    
+
+```r
+sumar(
+  flights,
+  FL(.n_sd ~ sd(.n, na.rm = TRUE),
+     .n ~ mean(.n, na.rm = TRUE),
+     .n = "^.*delay$"), 
+  by = "month"
+)
+```
+
+```
+## # A tibble: 12 x 5
+##    month dep_delay_sd arr_delay_sd dep_delay  arr_delay
+##    <int>        <dbl>        <dbl>     <dbl>      <dbl>
+## 1      1     36.39031     40.42390 10.036665  6.1299720
+## 2      2     36.26655     39.52862 10.816843  5.6130194
+## 3      3     40.13097     44.11919 13.227076  5.8075765
+## 4      4     42.96626     47.49115 13.938038 11.1760630
+## 5      5     39.35283     44.23761 12.986859  3.5215088
+## 6      6     51.45694     56.13087 20.846332 16.4813296
+## 7      7     51.61608     57.11709 21.727787 16.7113067
+## 8      8     37.66692     42.59514 12.611040  6.0406524
+## 9      9     35.61480     39.71031  6.722476 -4.0183636
+## 10    10     29.67176     32.64986  6.243988 -0.1670627
+## 11    11     27.58836     31.38741  5.435362  0.4613474
+## 12    12     41.87681     46.13311 16.576688 14.8703553
+```
+
 
 ## A link to S4
 
-Using this package you can create S4 classes to contain a data frame (or a 
-data.table) and use the interface to `dplyr`. Both `dplyr` and `data.table` do 
+Using this package you can create S4 classes to contain a data frame (or a
+data.table) and use the interface to `dplyr`. Both `dplyr` and `data.table` do
 not support integration with S4. The main function here is `mutar` which is
-generic enough to link to subsetting of rows and cols as well as mutate and 
+generic enough to link to subsetting of rows and cols as well as mutate and
 summarise. In the background `dplyr`s ability to work on a `data.table` is being
 used.
 
@@ -181,91 +191,17 @@ DataTable <- function(...) {
 }
 
 setMethod("[", "DataTable", mutar)
-```
 
-```
-## [1] "["
-```
-
-```r
-dtflights <- do.call(DataTable, flights)
+dtflights <- do.call(DataTable, nycflights13::flights)
 
 dtflights[1:10, "year:day"]
-```
-
-```
-## Object of class "DataTable"
-##     year month day
-##  1: 2013     1   1
-##  2: 2013     1   1
-##  3: 2013     1   1
-##  4: 2013     1   1
-##  5: 2013     1   1
-##  6: 2013     1   1
-##  7: 2013     1   1
-##  8: 2013     1   1
-##  9: 2013     1   1
-## 10: 2013     1   1
-```
-
-```r
-dtflights[n ~ n(), by = "month"] %>% extract("n") %>% unique
-```
-
-```
-## Object of class "DataTable"
-##         n
-##  1: 27004
-##  2: 28889
-##  3: 27268
-##  4: 28135
-##  5: 24951
-##  6: 28834
-##  7: 28330
-##  8: 28796
-##  9: 28243
-## 10: 29425
-## 11: 29327
-## 12: 27574
-```
-
-```r
+dtflights[n ~ n(), by = "month"]
 dtflights[n ~ n(), sby = "month"]
-```
 
-```
-## Object of class "DataTable"
-##     month     n
-##  1:     1 27004
-##  2:    10 28889
-##  3:    11 27268
-##  4:    12 28135
-##  5:     2 24951
-##  6:     3 28834
-##  7:     4 28330
-##  8:     5 28796
-##  9:     6 28243
-## 10:     7 29425
-## 11:     8 29327
-## 12:     9 27574
-```
-
-```r
 dtflights %>%
   filtar(~month > 6) %>%
   mutar(n ~ n(), by = "month") %>%
-  sumar(n ~ dplyr::first(n), by = "month")
-```
-
-```
-## Object of class "DataTable"
-##    month     n
-## 1:    10 28889
-## 2:    11 27268
-## 3:    12 28135
-## 4:     7 29425
-## 5:     8 29327
-## 6:     9 27574
+  sumar(n ~ first(n), by = "month")
 ```
 
 
