@@ -1,5 +1,12 @@
 # Internal helper functions and types
 
+list : MList() %type% .Object
+
+ML <- function(...) new("MList", list(...))
+
+MList <- function(...) new("MList", list(...))
+
+
 MemClassHandler <- function() {
   # An instance can be used to memorize the class of an object. And then to add
   # that class, or wrap that S4 instance to an object.

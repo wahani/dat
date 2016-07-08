@@ -4,7 +4,7 @@
 #' backend. The only purpose is to have \code{R CMD check} friendly syntax.
 #'
 #' @include helper.R
-#' @include HelperTypes.R
+#' @include FormulaList.R
 #'
 #' @param x (DataFrame | data.frame)
 #' @param i (logical | numeric | integer | OneSidedFormula | TwoSidedFormula |
@@ -75,8 +75,8 @@ as.DataFrame.data.frame <- function(x, ...) {
   i <- if (missing(i) || nargs() == 2) NULL else i
   by <- if (missing(by)) NULL else by
   sby <- if (missing(sby)) NULL else sby
+  
   memClassHandler <- MemClassHandler()
-
   x %>%
     memClassHandler$memClass() %>%
     handleRows(dispatcher(i)) %>%
@@ -138,13 +138,16 @@ handleCols(x ~ data.frame, i ~ NULL, j ~ OneSidedFormula, ..., by ~ NULL, sby ~ 
 
 handleCols(x ~ data.frame,
            i ~ NULL | FormulaList, j ~ NULL | FormulaList, ...,
-           by ~ ANY, sby ~ ANY) %m% {             
+           by ~ ANY, sby ~ ANY) %m% {
+             
              i <- update(i, x)
-             j <- update(j, x)             
+             j <- update(j, x)
+             
              do.call(
-               handleCols,
+               mutar,
                c(list(x = x, i = NULL, by = by, sby = sby), i, j, list(...))
              )
+             
            }
 
 handleCols(x ~ data.frame,

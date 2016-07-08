@@ -10,14 +10,20 @@ expectIdentical <- function(a, b) {
 
 test_that("make formulas", {
 
-  tmp <- FL(.nMean ~ mean(.n), .nSd ~ sd(.n), .n = letters[1:2])
+  tmp <- do.call(
+    FL,
+    makeFormulas(.nMean ~ mean(.n), .nSd ~ sd(.n), .n = letters[1:2])
+  )
 
   expectIdenticalFormula(tmp[[1]], aMean ~ mean(a))
 	expectIdenticalFormula(tmp[[2]], bMean ~ mean(b))
 	expectIdenticalFormula(tmp[[3]], aSd ~ sd(a))
 	expectIdenticalFormula(tmp[[4]], bSd ~ sd(b))
 
-  tmp <- FL(.nMean ~ mean(.n), bMean ~ mean(b), .n = "a")
+  tmp <- as(
+    makeFormulas(.nMean ~ mean(.n), bMean ~ mean(b), .n = "a"),
+    "FormulaList"
+  )
   expectIdenticalFormula(tmp[[1]], aMean ~ mean(a))
 	expectIdenticalFormula(tmp[[2]], bMean ~ mean(b))
 

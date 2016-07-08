@@ -28,7 +28,7 @@ Encoding: UTF-8
 ByteCompile: TRUE
 RoxygenNote: 5.0.1
 Collate:
-    'HelperTypes.R'
+    'FormulaList.R'
     'helper.R'
     'DataFrame.R'
     'NAMESPACE.R'
