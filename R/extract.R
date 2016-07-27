@@ -83,6 +83,7 @@ extract(x ~ atomic | list, ind ~ numeric | integer | logical, ...) %m% {
 #' @export
 #' @rdname extract
 extract(x ~ ANY, ind ~ character, ...) %m% {
+  stopifnot(!is.null(names(x)))
   ind <- if (length(ind) == 1 && grepl("^\\^", ind)) {
     grepl(ind, names(x), ...)
   } else {
@@ -103,7 +104,7 @@ extract2(x, ind, ...) %g% standardGeneric("extract2")
 
 #' @export
 #' @rdname extract
-extract2(x ~ list, ind ~ character | numeric | integer, ...) %m% {
+extract2(x ~ atomic | list, ind ~ numeric | integer, ...) %m% {
   stopifnot(length(ind) == 1)
   x[[ind]]
 }
@@ -116,6 +117,19 @@ extract2(x ~ ANY, ind ~ formula, ...) %m% {
 
 #' @export
 #' @rdname extract
-extract2(x ~ list, ind ~ "function", ...) %m% {
-  Find(addLengthCheck(addTypeCheck(ind, "logical"), 1), x, ...)
+extract2(x ~ atomic | list, ind ~ "function", ...) %m% {
+  Find(addLengthCheck(addTypeCheck(ind, "logical"), 1), as.list(x), ...)
+}
+
+#' @export
+#' @rdname extract
+extract2(x ~ ANY, ind ~ character, ...) %m% {
+  stopifnot(length(ind) == 1)
+  stopifnot(!is.null(names(x)))
+  ind <- if (grepl("^\\^", ind)) {
+    grep(ind, names(x), ...)[1]
+  } else {
+    which(names(x) == ind)[1]
+  }
+  extract2(x, ind)
 }
