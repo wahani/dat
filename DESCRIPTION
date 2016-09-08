@@ -18,11 +18,12 @@ Imports:
     magrittr,
     tibble
 Suggests:
-    testthat,
+    lintr,
     knitr,
     microbenchmark,
+    nycflights13,
     rmarkdown,
-    nycflights13
+    testthat
 VignetteBuilder: knitr
 Encoding: UTF-8
 ByteCompile: TRUE

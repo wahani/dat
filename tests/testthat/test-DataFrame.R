@@ -1,6 +1,5 @@
 context("Data Frame")
 
-# helper for testing:
 isIdentical <- function(a, b) {
   unify <- function(x) {
     x <- as.data.frame(x)
@@ -30,8 +29,8 @@ test_that("Basic syntax of a DataFrame", {
   )
 
   expectIdentical(
-    dat[-(1:2), ],
-    datRef[-(1:2), ]
+    dat[- (1:2), ],
+    datRef[- (1:2), ]
   )
 
   expectIdentical(

@@ -1,23 +1,23 @@
-##' Dynamically generate formulas
-##'
-##' Function to dynamically generate formulas - (F)ormula (L)ist - to be used in
-##' \link{mutar}.
-##'
-##' @param ... (formulas)
-##' @param .n names to be used in formulas. Can be any object which
-##'   can be used by \link{extract} to select columns. NULL is
-##'   interpreted to use the formulas without change.
-##' @param pattern (character) pattern to be replaced in formulas
-##' @param object (FormulaList)
-##' @param data (data.frame)
-##'
-##' @seealso \link{mutar}
-##'
-##' @rdname FormulaList
-##' @export
-##' @examples
-##' FL(.n ~ mean(.n), .n = "variable")
-##' as(makeFormulas(.n ~ mean(.n), .n = "variable"), "FormulaList")
+#' Dynamically generate formulas
+#'
+#' Function to dynamically generate formulas - (F)ormula (L)ist - to be used in
+#' \link{mutar}.
+#'
+#' @param ... (formulas)
+#' @param .n names to be used in formulas. Can be any object which
+#'	 can be used by \link{extract} to select columns. NULL is
+#'	 interpreted to use the formulas without change.
+#' @param pattern (character) pattern to be replaced in formulas
+#' @param object (FormulaList)
+#' @param data (data.frame)
+#'
+#' @seealso \link{mutar}
+#'
+#' @rdname FormulaList
+#' @export
+#' @examples
+#' FL(.n ~ mean(.n), .n = "variable")
+#' as(makeFormulas(.n ~ mean(.n), .n = "variable"), "FormulaList")
 FL <- function(..., .n = NULL, pattern = "\\.n") {
   new("FormulaList", list(...), .n = .n, pattern = pattern)
 }

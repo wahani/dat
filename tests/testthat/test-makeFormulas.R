@@ -16,16 +16,16 @@ test_that("make formulas", {
   )
 
   expectIdenticalFormula(tmp[[1]], aMean ~ mean(a))
-	expectIdenticalFormula(tmp[[2]], bMean ~ mean(b))
-	expectIdenticalFormula(tmp[[3]], aSd ~ sd(a))
-	expectIdenticalFormula(tmp[[4]], bSd ~ sd(b))
+  expectIdenticalFormula(tmp[[2]], bMean ~ mean(b))
+  expectIdenticalFormula(tmp[[3]], aSd ~ sd(a))
+  expectIdenticalFormula(tmp[[4]], bSd ~ sd(b))
 
   tmp <- as(
     makeFormulas(.nMean ~ mean(.n), bMean ~ mean(b), .n = "a"),
     "FormulaList"
   )
   expectIdenticalFormula(tmp[[1]], aMean ~ mean(a))
-	expectIdenticalFormula(tmp[[2]], bMean ~ mean(b))
+  expectIdenticalFormula(tmp[[2]], bMean ~ mean(b))
 
   dat <- data.frame(x = 1:10, group = rep(1:2, 5))
   dat1 <- data.frame(group = 1:2, x = as.numeric(5:6))

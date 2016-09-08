@@ -10,7 +10,7 @@ mutar(x, i, j, ..., by, sby, drop)
 
 filtar(x, i)
 
-sumar(x, j, ..., by)
+sumar(x, ..., by)
 }
 \arguments{
 \item{x}{(DataFrame | data.frame)}

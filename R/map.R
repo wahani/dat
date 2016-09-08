@@ -83,7 +83,7 @@ map(x ~ data.frame, f ~ "function", p = function(x) TRUE, ...) %m% {
 }
 
 mapDataFrame(x, f, p, ...) %g% {
-  # This generic exists to dipatch on p
+  # nolint This generic exists to dipatch on p
   standardGeneric("mapDataFrame")
 }
 
@@ -159,7 +159,7 @@ sac(x, f, by, ..., combine = bindRows) %g% standardGeneric("sac")
 #' @rdname map
 sac(x ~ data.frame, f ~ "function", by, ..., combine) %m% {
   indList <- split(seq_len(nrow(x)), mutar(x, j = by))
-  flatmap(indList, ind ~ f(x[ind, , drop = FALSE], ...), flatten = combine)
+  flatmap(indList, ind ~ f(x[ind, TRUE, drop = FALSE], ...), flatten = combine)
 }
 
 #' @export

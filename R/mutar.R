@@ -48,6 +48,6 @@ filtar <- function(x, i) {
 
 #' @rdname mutar
 #' @export
-sumar <- function(x, j, ..., by) {
-  mutar(x, , j = j, ..., sby = by)
+sumar <- function(x, ..., by) {
+  mutar(x, ..., sby = by)
 }
