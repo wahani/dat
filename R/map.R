@@ -67,53 +67,53 @@
 #' map(1:2, integer(1) : x ~ x)
 #' map(1:2, numeric(1) : x ~ x + 0.5)
 map(x, f, ...) %g% {
-  standardGeneric("map")
-}
-
-#' @export
-#' @rdname map
-map(x ~ atomic | list, f ~ "function", ...) %m% {
   lapply(x, f, ...)
-}
-
-#' @export
-#' @rdname map
-map(x ~ data.frame, f ~ "function", p = function(x) TRUE, ...) %m% {
-  mapDataFrame(x, f, p, ...)
-}
-
-mapDataFrame(x, f, p, ...) %g% {
-  # nolint This generic exists to dipatch on p
-  standardGeneric("mapDataFrame")
-}
-
-mapDataFrame(x ~ data.frame, f ~ "function", p ~ formula, ...) %m% {
-  mapDataFrame(x, f, as.function(p), ...)
-}
-
-mapDataFrame(x ~ data.frame, f ~ "function", p ~ "function", ...) %m% {
-  ind <- names(x)[vapply(x, p, logical(1))]
-  mapDataFrameOnIndex(x, f, ind, ...)
-}
-
-mapDataFrame(x ~ data.frame, f ~ "function", p ~ character, ...) %m% {
-  ind <- if (length(p) == 1 && grepl("^\\^", p)) {
-    names(x)[grepl(p, names(x))]
-  } else p
-  mapDataFrameOnIndex(x, f, ind, ...)
-}
-
-mapDataFrameOnIndex <- function(x, f, ind, ...) {
-  memClassHandler <- MemClassHandler()
-  x <- memClassHandler$memClass(x)
-  x[ind] <- lapply(x[ind], f, ...)
-  memClassHandler$wrapClass(x)
 }
 
 #' @export
 #' @rdname map
 map(x ~ ANY, f ~ formula, ...) %m% {
   map(x, as.function(f), ...)
+}
+
+#' @export
+#' @rdname map
+map(x ~ atomic, f ~ "function", ...) %m% {
+  map(as.list(x), f, ...)
+}
+
+#' @export
+#' @rdname map
+map(x ~ list, f ~ "function", p = function(x) TRUE, ...) %m% {
+  mapList(x, f, p, ...)
+}
+
+# This generic exists to dipatch on p
+mapList(x, f, p, ...) %g% {
+  standardGeneric("mapList")
+}
+
+mapList(x ~ list, f ~ "function", p ~ formula, ...) %m% {
+  mapList(x, f, as.function(p), ...)
+}
+
+mapList(x ~ list, f ~ "function", p ~ "function", ...) %m% {
+  ind <- names(x)[vapply(x, p, logical(1))]
+  mapListOnIndex(x, f, ind, ...)
+}
+
+mapList(x ~ list, f ~ "function", p ~ character, ...) %m% {
+  ind <- if (length(p) == 1 && grepl("^\\^", p)) {
+    names(x)[grepl(p, names(x))]
+  } else p
+  mapListOnIndex(x, f, ind, ...)
+}
+
+mapListOnIndex <- function(x, f, ind, ...) {
+  memClassHandler <- MemClassHandler()
+  x <- memClassHandler$memClass(x)
+  x[ind] <- lapply(as.list(x[ind]), f, ...)
+  memClassHandler$wrapClass(x)
 }
 
 #' @export
