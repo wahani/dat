@@ -40,3 +40,4 @@ Collate:
     'mutar.R'
     'pipeExport.R'
     'replace.R'
+    'verboseApply.R'

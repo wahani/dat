@@ -1,8 +1,7 @@
 #' An implementation of map
 #'
 #' An implementation of map and flatmap. They support the use of formulas as
-#' syntactic sugar for anonymous functions. Also they have special awareness of
-#' data.frames.
+#' syntactic sugar for anonymous functions. 
 #'
 #' @param x (\link{vector} | \link{data.frame} | formula) if x inherits from
 #'   data.frame, a data.frame is returned. Use \link{as.list} if this is not
@@ -36,6 +35,9 @@
 #'
 #' \code{sac} is a naive implementation of split-apply-combine and implemented
 #' using \code{flatmap}.
+#'
+#' \code{vmap} is a 'verbose' version and provides a progress bar and a link to
+#' parallel map (\link{mclapply}).
 #'
 #' \code{map}, \code{flatmap}, and \code{sac} can be extended; they are S4
 #' generic functions. You don't and should not implement a new method for
@@ -98,7 +100,7 @@ mapList(x ~ list, f ~ "function", p ~ formula, ...) %m% {
 }
 
 mapList(x ~ list, f ~ "function", p ~ "function", ...) %m% {
-  ind <- names(x)[vapply(x, p, logical(1))]
+  ind <- vapply(x, p, logical(1))
   mapListOnIndex(x, f, ind, ...)
 }
 
@@ -112,21 +114,27 @@ mapList(x ~ list, f ~ "function", p ~ character, ...) %m% {
 mapListOnIndex <- function(x, f, ind, ...) {
   memClassHandler <- MemClassHandler()
   x <- memClassHandler$memClass(x)
-  x[ind] <- lapply(as.list(x[ind]), f, ...)
+  x[ind] <- verboseApply(as.list(x[ind]), f, ...)
   memClassHandler$wrapClass(x)
 }
 
 #' @export
 #' @rdname map
 map(x ~ list, f ~ numeric | character | logical, ...) %m% {
-  force(f)
+  force(f)  
   map(x, . ~ .[f], ...)
 }
 
 #' @export
 #' @rdname map
 map(x ~ MList, f ~ "function", ..., simplify = FALSE) %m% {
-  do.call(mapply, c(list(FUN = f), x, SIMPLIFY = simplify, ...))
+
+  localmc <- function(x, f, ...) {
+    do.call(mcmapply, c(list(FUN = f), x, SIMPLIFY = simplify, ...))
+  }
+
+  verboseApply(x, f, ..., .mapper = localmc)
+  
 }
 
 #' @export
@@ -166,4 +174,10 @@ sac(x ~ data.frame, f ~ "function", by, ..., combine) %m% {
 #' @rdname map
 sac(x, f ~ formula, by, ..., combine) %m% {
   sac(x, as.function(f), by, ..., combine = combine)
+}
+
+#' @export
+#' @rdname map
+vmap <- function(x, f, ..., .mc = min(length(x), detectCores()), .bar = "bar") {
+  map(x, f, ..., .mc = .mc, .bar = .bar)
 }

@@ -7,22 +7,23 @@
 \alias{map}
 \alias{map,ANY,formula-method}
 \alias{map,MList,function-method}
-\alias{map,atomicORlist,function-method}
-\alias{map,data.frame,function-method}
+\alias{map,atomic,function-method}
 \alias{map,formula,function-method}
+\alias{map,list,function-method}
 \alias{map,list,numericORcharacterORlogical-method}
 \alias{sac}
 \alias{sac,ANY,formula-method}
 \alias{sac,data.frame,function-method}
+\alias{vmap}
 \title{An implementation of map}
 \usage{
 map(x, f, ...)
 
-\S4method{map}{atomicORlist,`function`}(x, f, ...)
-
-\S4method{map}{data.frame,`function`}(x, f, p = function(x) TRUE, ...)
-
 \S4method{map}{ANY,formula}(x, f, ...)
+
+\S4method{map}{atomic,`function`}(x, f, ...)
+
+\S4method{map}{list,`function`}(x, f, p = function(x) TRUE, ...)
 
 \S4method{map}{list,numericORcharacterORlogical}(x, f, ...)
 
@@ -39,6 +40,8 @@ sac(x, f, by, ..., combine = bindRows)
 \S4method{sac}{data.frame,`function`}(x, f, by, ..., combine = bindRows)
 
 \S4method{sac}{ANY,formula}(x, f, by, ..., combine = bindRows)
+
+vmap(x, f, ..., .mc = min(length(x), detectCores()), .bar = "bar")
 }
 \arguments{
 \item{x}{(\link{vector} | \link{data.frame} | formula) if x inherits from
@@ -69,8 +72,7 @@ the list of results. \link{bindRows} is the default.}
 }
 \description{
 An implementation of map and flatmap. They support the use of formulas as
-syntactic sugar for anonymous functions. Also they have special awareness of
-data.frames.
+syntactic sugar for anonymous functions.
 }
 \details{
 \code{map} will dispatch to \link{lapply}. When \code{x} is a formula this is
@@ -84,6 +86,9 @@ columns.
 
 \code{sac} is a naive implementation of split-apply-combine and implemented
 using \code{flatmap}.
+
+\code{vmap} is a 'verbose' version and provides a progress bar and a link to
+parallel map (\link{mclapply}).
 
 \code{map}, \code{flatmap}, and \code{sac} can be extended; they are S4
 generic functions. You don't and should not implement a new method for
