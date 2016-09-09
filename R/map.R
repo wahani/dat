@@ -17,18 +17,21 @@
 #' @param simplify see SIMPLIFY in \link{mapply}
 #' @param by (e.g. character) argument is passed to \link{mutar} to select
 #'   columns.
-#' @param combine (function | formula) a function which knows how to combine
-#'   the list of results. \link{bindRows} is the default.
+#' @param combine (function | formula) a function which knows how to combine the
+#'   list of results. \link{bindRows} is the default.
 #' @param flatten (function | formula) a function used to flatten the results.
+#' @param .mc (integer) the number of cores. Passed down to \link{mclapply} or
+#'   \link{mcmapply}.
+#' @param .bar (character) see \link{verboseApply}.
 #'
 #' @param ... further arguments passed to \link{lapply} and \link{mapply}
 #'
 #' @details
-#' \code{map} will dispatch to \link{lapply}. When \code{x} is a formula this is
-#' interpreted as a multivariate map; this is implemented using \code{mapply}.
-#' When \code{x} is a data.frame \code{map} will iterate over columns, however
-#' the return value is a \code{data.frame}. \code{p} can then be used to select
-#' columns.
+#' \code{map} will dispatch to \link{lapply}. When \code{x} is a
+#' formula this is interpreted as a multivariate map; this is implemented
+#' using \code{mapply}.  When \code{x} is a data.frame \code{map} will iterate
+#' over columns, however the return value is a \code{data.frame}. \code{p} can
+#' be used to map over a subset of \code{x}.
 #'
 #' \code{flatmap} will dispatch to \code{map}. The result is then wrapped by
 #' \code{flatten} which is \link{unlist} by default.
@@ -36,8 +39,8 @@
 #' \code{sac} is a naive implementation of split-apply-combine and implemented
 #' using \code{flatmap}.
 #'
-#' \code{vmap} is a 'verbose' version and provides a progress bar and a link to
-#' parallel map (\link{mclapply}).
+#' \code{vmap} is a 'verbose' version of \code{map} and provides a progress bar
+#' and a link to parallel map (\link{mclapply}).
 #'
 #' \code{map}, \code{flatmap}, and \code{sac} can be extended; they are S4
 #' generic functions. You don't and should not implement a new method for

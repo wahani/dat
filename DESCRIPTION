@@ -1,7 +1,7 @@
 Package: dat
 Type: Package
 Title: Tools for Data Manipulation
-Version: 0.0.6
+Version: 0.0.7
 Authors@R: person("Sebastian", "Warnholz", role = c("aut", "cre"),
                   email = "wahani@gmail.com")
 BugReports: https://github.com/wahani/aoos/dat
@@ -22,6 +22,7 @@ Suggests:
     knitr,
     microbenchmark,
     nycflights13,
+    progress,
     rmarkdown,
     testthat
 VignetteBuilder: knitr
