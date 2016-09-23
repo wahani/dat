@@ -15,7 +15,7 @@ verboseApply(x, f, ..., .mc = 1, .mapper = mclapply, .bar = "none")
 
 \item{.mc}{(integer) the number of processes to start}
 
-\item{.mapper}{(function) the actal apply function used. Should have an
+\item{.mapper}{(function) the actual apply function used. Should have an
 argument \code{mc.cores}.}
 
 \item{.bar}{(character) one in 'none', '.' or 'bar'}

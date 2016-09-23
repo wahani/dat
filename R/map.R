@@ -15,7 +15,7 @@
 #'   in a data.frame to use in map. This is a filter for the map operation, the
 #'   full data.frame is returned.
 #' @param simplify see SIMPLIFY in \link{mapply}
-#' @param by (e.g. character) argument is passed to \link{mutar} to select
+#' @param by (e.g. character) argument is passed to \link{extract} to select
 #'   columns.
 #' @param combine (function | formula) a function which knows how to combine the
 #'   list of results. \link{bindRows} is the default.
@@ -24,7 +24,7 @@
 #'   \link{mcmapply}.
 #' @param .bar (character) see \link{verboseApply}.
 #'
-#' @param ... further arguments passed to \link{lapply} and \link{mapply}
+#' @param ... further arguments passed to the apply function.
 #'
 #' @details
 #' \code{map} will dispatch to \link{lapply}. When \code{x} is a
@@ -55,8 +55,8 @@
 #' map(data.frame(y = 1:10, z = 2), x ~ x + 1)
 #' map(data.frame(y = 1:10, z = 2), x ~ x + 1, is.numeric)
 #' map(data.frame(y = 1:10, z = 2), x ~ x + 1, x ~ all(x == 2))
-#' map(1, x ~ x)
-#'
+#' sac(data.frame(y = 1:10, z = 1:2), df ~ data.frame(my = mean(df$y)), "z")
+#' 
 #' # Trigger a multivariate map with a formula
 #' map(1:2 ~ 3:4, f(x, y) ~ x + y)
 #' map(1:2 ~ 3:4, f(x, y) ~ x + y, simplify = TRUE)
@@ -169,7 +169,7 @@ sac(x, f, by, ..., combine = bindRows) %g% standardGeneric("sac")
 #' @export
 #' @rdname map
 sac(x ~ data.frame, f ~ "function", by, ..., combine) %m% {
-  indList <- split(seq_len(nrow(x)), mutar(x, j = by))
+  indList <- split(seq_len(nrow(x)), extract(x, by))
   flatmap(indList, ind ~ f(x[ind, TRUE, drop = FALSE], ...), flatten = combine)
 }
 

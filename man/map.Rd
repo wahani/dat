@@ -54,7 +54,7 @@ something which can be interpreted as a function. formula objects are
 coerced to a function. atomics are used for subsetting in each element of
 x. See the examples.}
 
-\item{...}{further arguments passed to \link{lapply} and \link{mapply}}
+\item{...}{further arguments passed to the apply function.}
 
 \item{p}{(function | formula) a predicate function indicating which columns
 in a data.frame to use in map. This is a filter for the map operation, the
@@ -64,7 +64,7 @@ full data.frame is returned.}
 
 \item{flatten}{(function | formula) a function used to flatten the results.}
 
-\item{by}{(e.g. character) argument is passed to \link{mutar} to select
+\item{by}{(e.g. character) argument is passed to \link{extract} to select
 columns.}
 
 \item{combine}{(function | formula) a function which knows how to combine the
@@ -105,7 +105,7 @@ to your map(newtype, function) method.
 map(data.frame(y = 1:10, z = 2), x ~ x + 1)
 map(data.frame(y = 1:10, z = 2), x ~ x + 1, is.numeric)
 map(data.frame(y = 1:10, z = 2), x ~ x + 1, x ~ all(x == 2))
-map(1, x ~ x)
+sac(data.frame(y = 1:10, z = 1:2), df ~ data.frame(my = mean(df$y)), "z")
 
 # Trigger a multivariate map with a formula
 map(1:2 ~ 3:4, f(x, y) ~ x + y)

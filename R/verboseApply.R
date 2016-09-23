@@ -8,7 +8,7 @@
 #' @param f (function)
 #' @param ... arguments passed to \code{.mapper} and hence \code{f}
 #' @param .mc (integer) the number of processes to start
-#' @param .mapper (function) the actal apply function used. Should have an
+#' @param .mapper (function) the actual apply function used. Should have an
 #'   argument \code{mc.cores}.
 #' @param .bar (character) one in 'none', '.' or 'bar'
 #'
@@ -33,8 +33,8 @@ verboseApply <- function(x, f, ..., .mc = 1, .mapper = mclapply, .bar = "none") 
   }
 
   bar <- if (.bar == "none") function() NULL
-  else if (.bar == ".") function() cat(".")
-  else if (.bar == "bar") initStatusBar(length(x), .mc)
+    else if (.bar == ".") function() cat(".")
+    else if (.bar == "bar") initStatusBar(length(x), .mc)
 
   fun <- function(...) {
     res <- f(...)
