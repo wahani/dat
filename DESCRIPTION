@@ -1,13 +1,14 @@
 Package: dat
 Type: Package
 Title: Tools for Data Manipulation
-Version: 0.0.6
+Version: 0.0.8
 Authors@R: person("Sebastian", "Warnholz", role = c("aut", "cre"),
                   email = "wahani@gmail.com")
 BugReports: https://github.com/wahani/aoos/dat
-Description: An implementation of common higher order functions and a link to
-    dplyr for common transformations on data frames to work around non standard
-    evaluation by default.
+Description: An implementation of common higher order functions with syntactic
+    sugar for anonymous function. Provides also a link to dplyr for common
+    transformations on data frames to work around non standard evaluation by
+    default.
 License: MIT + file LICENSE
 Depends:
     methods,
@@ -22,6 +23,7 @@ Suggests:
     knitr,
     microbenchmark,
     nycflights13,
+    progress,
     rmarkdown,
     testthat
 VignetteBuilder: knitr
@@ -40,3 +42,4 @@ Collate:
     'mutar.R'
     'pipeExport.R'
     'replace.R'
+    'verboseApply.R'

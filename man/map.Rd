@@ -7,22 +7,23 @@
 \alias{map}
 \alias{map,ANY,formula-method}
 \alias{map,MList,function-method}
-\alias{map,atomicORlist,function-method}
-\alias{map,data.frame,function-method}
+\alias{map,atomic,function-method}
 \alias{map,formula,function-method}
+\alias{map,list,function-method}
 \alias{map,list,numericORcharacterORlogical-method}
 \alias{sac}
 \alias{sac,ANY,formula-method}
 \alias{sac,data.frame,function-method}
+\alias{vmap}
 \title{An implementation of map}
 \usage{
 map(x, f, ...)
 
-\S4method{map}{atomicORlist,`function`}(x, f, ...)
-
-\S4method{map}{data.frame,`function`}(x, f, p = function(x) TRUE, ...)
-
 \S4method{map}{ANY,formula}(x, f, ...)
+
+\S4method{map}{atomic,`function`}(x, f, ...)
+
+\S4method{map}{list,`function`}(x, f, p = function(x) TRUE, ...)
 
 \S4method{map}{list,numericORcharacterORlogical}(x, f, ...)
 
@@ -39,6 +40,8 @@ sac(x, f, by, ..., combine = bindRows)
 \S4method{sac}{data.frame,`function`}(x, f, by, ..., combine = bindRows)
 
 \S4method{sac}{ANY,formula}(x, f, by, ..., combine = bindRows)
+
+vmap(x, f, ..., .mc = min(length(x), detectCores()), .bar = "bar")
 }
 \arguments{
 \item{x}{(\link{vector} | \link{data.frame} | formula) if x inherits from
@@ -51,7 +54,7 @@ something which can be interpreted as a function. formula objects are
 coerced to a function. atomics are used for subsetting in each element of
 x. See the examples.}
 
-\item{...}{further arguments passed to \link{lapply} and \link{mapply}}
+\item{...}{further arguments passed to the apply function.}
 
 \item{p}{(function | formula) a predicate function indicating which columns
 in a data.frame to use in map. This is a filter for the map operation, the
@@ -61,29 +64,36 @@ full data.frame is returned.}
 
 \item{flatten}{(function | formula) a function used to flatten the results.}
 
-\item{by}{(e.g. character) argument is passed to \link{mutar} to select
+\item{by}{(e.g. character) argument is passed to \link{extract} to select
 columns.}
 
-\item{combine}{(function | formula) a function which knows how to combine
-the list of results. \link{bindRows} is the default.}
+\item{combine}{(function | formula) a function which knows how to combine the
+list of results. \link{bindRows} is the default.}
+
+\item{.mc}{(integer) the number of cores. Passed down to \link{mclapply} or
+\link{mcmapply}.}
+
+\item{.bar}{(character) see \link{verboseApply}.}
 }
 \description{
 An implementation of map and flatmap. They support the use of formulas as
-syntactic sugar for anonymous functions. Also they have special awareness of
-data.frames.
+syntactic sugar for anonymous functions.
 }
 \details{
-\code{map} will dispatch to \link{lapply}. When \code{x} is a formula this is
-interpreted as a multivariate map; this is implemented using \code{mapply}.
-When \code{x} is a data.frame \code{map} will iterate over columns, however
-the return value is a \code{data.frame}. \code{p} can then be used to select
-columns.
+\code{map} will dispatch to \link{lapply}. When \code{x} is a
+formula this is interpreted as a multivariate map; this is implemented
+using \code{mapply}.  When \code{x} is a data.frame \code{map} will iterate
+over columns, however the return value is a \code{data.frame}. \code{p} can
+be used to map over a subset of \code{x}.
 
 \code{flatmap} will dispatch to \code{map}. The result is then wrapped by
 \code{flatten} which is \link{unlist} by default.
 
 \code{sac} is a naive implementation of split-apply-combine and implemented
 using \code{flatmap}.
+
+\code{vmap} is a 'verbose' version of \code{map} and provides a progress bar
+and a link to parallel map (\link{mclapply}).
 
 \code{map}, \code{flatmap}, and \code{sac} can be extended; they are S4
 generic functions. You don't and should not implement a new method for
@@ -95,7 +105,7 @@ to your map(newtype, function) method.
 map(data.frame(y = 1:10, z = 2), x ~ x + 1)
 map(data.frame(y = 1:10, z = 2), x ~ x + 1, is.numeric)
 map(data.frame(y = 1:10, z = 2), x ~ x + 1, x ~ all(x == 2))
-map(1, x ~ x)
+sac(data.frame(y = 1:10, z = 1:2), df ~ data.frame(my = mean(df$y)), "z")
 
 # Trigger a multivariate map with a formula
 map(1:2 ~ 3:4, f(x, y) ~ x + y)

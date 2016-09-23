@@ -4,6 +4,7 @@
 
 #' @importFrom magrittr %>% %<>%
 #' @importFrom stats as.formula update
+#' @importFrom parallel mclapply mcmapply detectCores
 #' @import methods
 #' @import aoos
 #' @import data.table
