@@ -1,19 +1,11 @@
----
-title: "Tools for Data Manipulation"
-date: "2016-07-08"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{Tools for Data Manipulation}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
----
-
 [![Travis-CI Build Status](https://travis-ci.org/wahani/dat.svg?branch=master)](https://travis-ci.org/wahani/dat)
 [![codecov.io](https://codecov.io/github/wahani/dat/coverage.svg?branch=master)](https://codecov.io/github/wahani/dat?branch=master)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/dat)](http://cran.r-project.org/package=dat)
 [![Downloads](http://cranlogs.r-pkg.org/badges/dat?color=brightgreen)](http://www.r-pkg.org/pkg/dat)
-
-An implementation of common higher order functions and a link to dplyr for common transformations on data frames to work around non standard evaluation by default.
+An implementation of common higher order functions with syntactic
+sugar for anonymous function. Provides also a link to dplyr for common
+transformations on data frames to work around non standard evaluation by
+default.
 
 ## Installation
 
@@ -29,7 +21,7 @@ inside a package. I.e. working around non standard evaluation or find another
 way to satisfy `R CMD check`. And you don't like that.
 - `dplyr` is not respecting the class of the object it operates on; the class
 attribute changes on-the-fly.
-- Neither `dplyr` nor `data.table` is playing nice with S4, but you really,
+- Neither `dplyr` nor `data.table` are playing nice with S4, but you really,
 really want a S4 *data.table* or *tbl_df*.
 - You like currying as in `rlist` and `purrr`.
 
@@ -76,7 +68,7 @@ filtar(flights, ~order(year, month, day))
 ```
 
 ```
-## # A tibble: 336,776 x 19
+## # A tibble: 336,776 × 19
 ##     year month   day dep_time sched_dep_time dep_delay arr_time
 ##    <int> <int> <int>    <int>          <int>     <dbl>    <int>
 ## 1   2013     1     1      517            515         2      830
@@ -92,7 +84,7 @@ filtar(flights, ~order(year, month, day))
 ## # ... with 336,766 more rows, and 12 more variables: sched_arr_time <int>,
 ## #   arr_delay <dbl>, carrier <chr>, flight <int>, tailnum <chr>,
 ## #   origin <chr>, dest <chr>, air_time <dbl>, distance <dbl>, hour <dbl>,
-## #   minute <dbl>, time_hour <time>
+## #   minute <dbl>, time_hour <dttm>
 ```
 
 
@@ -153,7 +145,7 @@ sumar(
 ```
 
 ```
-## # A tibble: 12 x 5
+## # A tibble: 12 × 5
 ##    month dep_delay_sd arr_delay_sd dep_delay  arr_delay
 ##    <int>        <dbl>        <dbl>     <dbl>      <dbl>
 ## 1      1     36.39031     40.42390 10.036665  6.1299720

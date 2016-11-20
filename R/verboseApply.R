@@ -15,12 +15,14 @@
 #' @export
 #' 
 #' @examples
+#' \dontrun{
 #' verboseApply(
 #'   1:4,
 #'   function(...) Sys.sleep(1),
 #'   .bar = "bar",
 #'   .mc = 2 
 #' )
+#' }
 verboseApply <- function(x, f, ..., .mc = 1, .mapper = mclapply, .bar = "none") {
   stopifnot(is.element(.bar, c("none", ".", "bar")))
   stopifnot(is.numeric(.mc) & length(.mc) == 1)
