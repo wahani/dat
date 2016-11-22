@@ -26,11 +26,13 @@ parallel. By default it is not verbose. As an interactive version with proper
 'verbose' output by default please use \link{vmap}.
 }
 \examples{
+\dontrun{
 verboseApply(
   1:4,
   function(...) Sys.sleep(1),
   .bar = "bar",
   .mc = 2 
 )
+}
 }
 

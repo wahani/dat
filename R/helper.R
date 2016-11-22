@@ -47,11 +47,6 @@ MemClassHandler <- function() {
   retList("MemClassHandler")
 }
 
-setClassUnion(
-  "atomic",
-  c("logical", "integer", "numeric", "complex", "character", "raw")
-)
-
 character : ReturnPrototype() %type% {
   # wraps a protoype of the return value of a function
   stopifnot(length(.Object) == 1)

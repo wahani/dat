@@ -10,3 +10,9 @@
 #' @import data.table
 #' @import tibble
 NULL
+
+setClassUnion(
+  "atomic",
+  c("logical", "integer", "numeric", "complex", "character", "raw"),
+  topenv(environment())
+)

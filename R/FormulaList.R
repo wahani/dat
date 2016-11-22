@@ -13,6 +13,7 @@
 #'
 #' @seealso \link{mutar}
 #'
+#' @include NAMESPACE.R
 #' @rdname FormulaList
 #' @export
 #' @examples

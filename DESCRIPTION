@@ -31,10 +31,10 @@ Encoding: UTF-8
 ByteCompile: TRUE
 RoxygenNote: 5.0.1
 Collate:
+    'NAMESPACE.R'
     'FormulaList.R'
     'helper.R'
     'DataFrame.R'
-    'NAMESPACE.R'
     'as.function.R'
     'bindRows.R'
     'extract.R'

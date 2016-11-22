@@ -17,7 +17,7 @@
 #' as.function(numeric(1) : x ~ x)(1) # check for class + length
 as.function.formula <- function(x, ...) {
   ## nolint start
-  ## 1: ~ . -> function(.) .O
+  ## 1: ~ . -> function(.) .
   ## 2: x ~ x -> function(x) x
   ## 3: f(x, y) ~ x + y -> function(x, y) x + y
   ## 4: numeric : x ~ x -> checkType(function(x) x)
