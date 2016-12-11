@@ -160,7 +160,7 @@ handleCols(x ~ data.frame,
            i ~ TwoSidedFormula | NULL,
            j ~ TwoSidedFormula | NULL,
            ..., by ~ NULL, sby ~ NULL) %m% {
-             args <- constructArgs(i, j, ...)
+             args <- constructArgs(i, j, ..., dat = x)
              dplyr::mutate_(x, .dots = args)
            }
 
@@ -168,7 +168,7 @@ handleCols(x ~ data.frame,
            i ~ TwoSidedFormula | NULL,
            j ~ TwoSidedFormula | NULL,
            ..., by ~ NULL, sby ~ character) %m% {
-             args <- constructArgs(i, j, ...)
+             args <- constructArgs(i, j, ..., dat = x)
              dplyr::group_by_(x, .dots = sby) %>%
                dplyr::summarise_(.dots = args) %>%
                as.data.frame
@@ -178,7 +178,7 @@ handleCols(x ~ data.frame,
            i ~ TwoSidedFormula | NULL,
            j ~ TwoSidedFormula | NULL,
            ..., by ~ character, sby ~ NULL) %m% {
-             args <- constructArgs(i, j, ...)
+             args <- constructArgs(i, j, ..., dat = x)
              dplyr::group_by_(x, .dots = by) %>%
                dplyr::mutate_(.dots = args) %>%
                as.data.frame

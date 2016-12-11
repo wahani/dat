@@ -2,6 +2,7 @@
 [![codecov.io](https://codecov.io/github/wahani/dat/coverage.svg?branch=master)](https://codecov.io/github/wahani/dat?branch=master)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/dat)](http://cran.r-project.org/package=dat)
 [![Downloads](http://cranlogs.r-pkg.org/badges/dat?color=brightgreen)](http://www.r-pkg.org/pkg/dat)
+
 An implementation of common higher order functions with syntactic
 sugar for anonymous function. Provides also a link to dplyr for common
 transformations on data frames to work around non standard evaluation by
@@ -64,7 +65,7 @@ And for sorting:
 
 
 ```r
-filtar(flights, ~order(year, month, day))
+filtar(flights, ~ order(year, month, day))
 ```
 
 ```
@@ -130,36 +131,36 @@ mutar(flights, n ~ n(), by = "month")
 sumar(flights, delay ~ mean(dep_delay, na.rm = TRUE), by = "month")
 ```
 
-You can also provide lists of formulas and use some black magic to select
-columns:
+You can also provide additional arguments to a formula. This is especially
+helpful when you want to pass arguments from a function to such expressions. The
+additional augmentation can be anything which you can use to select columns
+(character, regular expression, function).
     
 
 ```r
 sumar(
   flights,
-  FL(.n_sd ~ sd(.n, na.rm = TRUE),
-     .n ~ mean(.n, na.rm = TRUE),
-     .n = "^.*delay$"), 
+  .n ~ mean(.n, na.rm = TRUE) | "^.*delay$",
   by = "month"
 )
 ```
 
 ```
-## # A tibble: 12 × 5
-##    month dep_delay_sd arr_delay_sd dep_delay  arr_delay
-##    <int>        <dbl>        <dbl>     <dbl>      <dbl>
-## 1      1     36.39031     40.42390 10.036665  6.1299720
-## 2      2     36.26655     39.52862 10.816843  5.6130194
-## 3      3     40.13097     44.11919 13.227076  5.8075765
-## 4      4     42.96626     47.49115 13.938038 11.1760630
-## 5      5     39.35283     44.23761 12.986859  3.5215088
-## 6      6     51.45694     56.13087 20.846332 16.4813296
-## 7      7     51.61608     57.11709 21.727787 16.7113067
-## 8      8     37.66692     42.59514 12.611040  6.0406524
-## 9      9     35.61480     39.71031  6.722476 -4.0183636
-## 10    10     29.67176     32.64986  6.243988 -0.1670627
-## 11    11     27.58836     31.38741  5.435362  0.4613474
-## 12    12     41.87681     46.13311 16.576688 14.8703553
+## # A tibble: 12 × 3
+##    month dep_delay  arr_delay
+##    <int>     <dbl>      <dbl>
+## 1      1 10.036665  6.1299720
+## 2      2 10.816843  5.6130194
+## 3      3 13.227076  5.8075765
+## 4      4 13.938038 11.1760630
+## 5      5 12.986859  3.5215088
+## 6      6 20.846332 16.4813296
+## 7      7 21.727787 16.7113067
+## 8      8 12.611040  6.0406524
+## 9      9  6.722476 -4.0183636
+## 10    10  6.243988 -0.1670627
+## 11    11  5.435362  0.4613474
+## 12    12 16.576688 14.8703553
 ```
 
 

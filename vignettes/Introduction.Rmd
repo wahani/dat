@@ -65,7 +65,7 @@ filtar(flights, 1:10)
 And for sorting:
 
 ```{r}
-filtar(flights, ~order(year, month, day))
+filtar(flights, ~ order(year, month, day))
 ```
 
 
@@ -107,15 +107,15 @@ mutar(flights, n ~ n(), by = "month")
 sumar(flights, delay ~ mean(dep_delay, na.rm = TRUE), by = "month")
 ```
 
-You can also provide lists of formulas and use some black magic to select
-columns:
+You can also provide additional arguments to a formula. This is especially
+helpful when you want to pass arguments from a function to such expressions. The
+additional augmentation can be anything which you can use to select columns
+(character, regular expression, function).
     
 ```{r}
 sumar(
   flights,
-  FL(.n_sd ~ sd(.n, na.rm = TRUE),
-     .n ~ mean(.n, na.rm = TRUE),
-     .n = "^.*delay$"), 
+  .n ~ mean(.n, na.rm = TRUE) | "^.*delay$",
   by = "month"
 )
 ```

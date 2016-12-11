@@ -112,11 +112,11 @@ addClass <- function(x, class) {
   x
 }
 
-constructArgs <- function(i, j, ...) {
+constructArgs <- function(i, j, ..., dat) {
   # constructs arguments (name-value expressions) for the use in mutate and
   # summarise.
-  # '...' can be anything so the type is checked on the fly:
-  args <- c(list(i, j), lapply(list(...), TwoSidedFormula))
+  formulas <- c(list(i, j, lapply(list(...), asFormula)), recursive = TRUE)
+  args <- c(lapply(formulas, resolveFormula, dat = dat), recursive = TRUE)
   args <- args[sapply(args, Negate(is.null))]
   argNames <- sapply(args, function(x) deparse(x[[2]]))
   args <- lapply(args, function(x) {
@@ -136,8 +136,17 @@ dispatcher(x ~ character) %m% {
 }
 
 dispatcher(x ~ formula) %m% {
-  if (length(x) == 2) OneSidedFormula(x)
-  else TwoSidedFormula(x)
+  asFormula(x)
+}
+
+asFormula <- function(x) {
+
+  tmp <- Formula(x)
+  
+  if (all(length(tmp) == c(0, 1))) OneSidedFormula(x)
+  else if (length(tmp)[2] == 1) TwoSidedFormula(x)
+  else AugmentedTwoSidedFormula(x)
+  
 }
 
 # This type is used for dispatch
@@ -146,8 +155,6 @@ character : RegEx() %type% {
   .Object
 }
 
-# I distiguish between one and two sided formulas. They are interpreted
-# differnetly
 formula : OneSidedFormula() %type% {
   stopifnot(length(.Object) == 2)
   .Object
@@ -157,3 +164,22 @@ formula : TwoSidedFormula() %type% {
   stopifnot(length(.Object) == 3)
   .Object
 }
+
+TwoSidedFormula : AugmentedTwoSidedFormula(.n ~ ANY) %type% {
+  tmp <- Formula(.Object)
+  S3Part(.Object) <- formula(tmp, lhs = 1, rhs = 1)
+  .nUnevaluated <- formula(tmp, lhs = 0, rhs = 2)[[2]]
+  .Object@.n <- eval(.nUnevaluated, envir = environment(.Object))
+  .Object
+}
+
+AugmentedTwoSidedFormula <- function(f, .n = NULL) {
+  new("AugmentedTwoSidedFormula", .n = .n, f)
+}
+
+resolveFormula(x, ...) %g% x
+
+resolveFormula(x ~ AugmentedTwoSidedFormula, dat, ...) %m% {
+  update(FL(S3Part(x, TRUE), .n = x@.n), data = dat)
+} 
+

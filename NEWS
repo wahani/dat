@@ -1,3 +1,6 @@
+*Version 0.0.10
+- Syntactic sugar for fomula lists in mutar
+
 * Version 0.0.8
 - new functions verboseApply and vmap
 - minor fixes

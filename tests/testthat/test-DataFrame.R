@@ -158,3 +158,21 @@ test_that("Type conversion", {
   testthat::expect_is(as.DataFrame(list(x = 1)), "tbl_df")
 
 })
+
+test_that("Parameterized formulas", {
+
+  dat <- data.frame(x = 1, y = "", stringsAsFactors = FALSE)
+  dat1 <- data.frame(x = 2, y = NA)
+
+  someCol <- "x"
+
+  dat <- mutar(
+    dat,
+    .n ~ .n + 1 | someCol,
+    .n ~ .n | someCol,
+    .n ~ NA | is.character
+  )
+
+  testthat::expect_identical(dat, dat1)
+  
+})
