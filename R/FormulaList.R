@@ -58,7 +58,16 @@ update.FormulaList <- function(object, data, ...) {
   
   if (is.null(object@.n)) {
     object
-  } else {    
+  }
+  else if (is.list(object@.n)) {
+    new(
+      "FormulaList",
+      .n = NULL,
+      pattern = object@pattern,
+      substituteFormulas(object, object@.n)
+    )
+  }
+  else {    
     .n <- extractNames(data, object@.n)
     new(
       "FormulaList",
@@ -70,3 +79,15 @@ update.FormulaList <- function(object, data, ...) {
 }
 
 extractNames <- function(x, ind, ...) names(extract(x, ind))
+
+substituteFormulas <- function(listOfFormulas, .n) {
+  lapply(listOfFormulas, function(f) {
+    env <- environment(f)
+    subs <- lapply(.n, asQuoted)
+    formula(eval(call("substitute", f, subs)), env)
+  })  
+}
+
+asQuoted <- function(x) {
+  as.formula(paste0("~", x))[[2]]
+}

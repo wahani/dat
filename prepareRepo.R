@@ -23,4 +23,10 @@ dat::vmap(1:10, ~ Sys.sleep(.))
 data.frame(x = 1:10, y = 2) %>%
   mutar(.n ~ mean(.n) | "x", sby = "y")
 
+a <- "x"
+data.frame(x = 1:10, y = 2) %>%
+  mutar(n ~ mean(n) | list(n = a), sby = "y")
 
+ll <- list(n = a)
+data.frame(x = 1:10, y = 2) %>%
+  mutar(n ~ mean(n) | ll, sby = "y")
