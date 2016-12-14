@@ -3,10 +3,7 @@
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/dat)](http://cran.r-project.org/package=dat)
 [![Downloads](http://cranlogs.r-pkg.org/badges/dat?color=brightgreen)](http://www.r-pkg.org/pkg/dat)
 
-An implementation of common higher order functions with syntactic
-sugar for anonymous function. Provides also a link to dplyr for common
-transformations on data frames to work around non standard evaluation by
-default.
+An implementation of common higher order functions with syntactic sugar for anonymous function. Provides also a link to dplyr for common transformations on data frames to work around non standard evaluation by default.
 
 ## Installation
 
@@ -29,24 +26,18 @@ really want a S4 *data.table* or *tbl_df*.
 
 ## A link to `dplyr`
 
-The examples are from the introductory vignette of `dplyr`. Things that are not
-supported:
-
-- rename
-- distinct
-- transmute
-
-But you still work with data frames: so you can simply mix in dplyr features 
-whenever you need them. The functions `filtar`, `mutar` and `sumar` are `R CMD 
-check` friendly replacements for the corresponding versions in `dplyr`. For 
-`select` you can use `extract`. The function names are chosen so that they are 
-similar but do not conflict with `dplyr`s function names - so `dplyr` can be
-savely attached to the search path.
+The examples are from the introductory vignette of `dplyr`. You still work with
+data frames: so you can simply mix in dplyr features whenever you need them. The
+functions `filtar`, `mutar` and `sumar` are `R CMD check` friendly replacements
+for the corresponding versions in `dplyr`. For `select` you can use
+`extract`. The function names are chosen so that they are similar but do not
+conflict with `dplyr`s function names - so `dplyr` can be savely attached to the
+search path.
 
 
 ```r
-library(nycflights13)
-library(dat)
+library("nycflights13")
+library("dat")
 ```
 
 ### Select rows
@@ -134,33 +125,35 @@ sumar(flights, delay ~ mean(dep_delay, na.rm = TRUE), by = "month")
 You can also provide additional arguments to a formula. This is especially
 helpful when you want to pass arguments from a function to such expressions. The
 additional augmentation can be anything which you can use to select columns
-(character, regular expression, function).
+(character, regular expression, function) or a named list where each element is
+a character.
     
 
 ```r
 sumar(
   flights,
   .n ~ mean(.n, na.rm = TRUE) | "^.*delay$",
+  x ~ mean(x, na.rm = TRUE) | list(x = "arr_time"),
   by = "month"
 )
 ```
 
 ```
-## # A tibble: 12 × 3
-##    month dep_delay  arr_delay
-##    <int>     <dbl>      <dbl>
-## 1      1 10.036665  6.1299720
-## 2      2 10.816843  5.6130194
-## 3      3 13.227076  5.8075765
-## 4      4 13.938038 11.1760630
-## 5      5 12.986859  3.5215088
-## 6      6 20.846332 16.4813296
-## 7      7 21.727787 16.7113067
-## 8      8 12.611040  6.0406524
-## 9      9  6.722476 -4.0183636
-## 10    10  6.243988 -0.1670627
-## 11    11  5.435362  0.4613474
-## 12    12 16.576688 14.8703553
+## # A tibble: 12 × 4
+##    month dep_delay  arr_delay arr_time
+##    <int>     <dbl>      <dbl>    <dbl>
+## 1      1 10.036665  6.1299720 1523.155
+## 2      2 10.816843  5.6130194 1522.207
+## 3      3 13.227076  5.8075765 1509.743
+## 4      4 13.938038 11.1760630 1500.704
+## 5      5 12.986859  3.5215088 1502.685
+## 6      6 20.846332 16.4813296 1467.994
+## 7      7 21.727787 16.7113067 1455.944
+## 8      8 12.611040  6.0406524 1495.368
+## 9      9  6.722476 -4.0183636 1503.549
+## 10    10  6.243988 -0.1670627 1519.899
+## 11    11  5.435362  0.4613474 1522.722
+## 12    12 16.576688 14.8703553 1505.252
 ```
 
 
@@ -175,7 +168,7 @@ used.
 
 
 ```r
-library(data.table)
+library("data.table")
 
 setClass("DataTable", "data.table")
 

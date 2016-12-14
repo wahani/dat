@@ -32,23 +32,17 @@ really want a S4 *data.table* or *tbl_df*.
 
 ## A link to `dplyr`
 
-The examples are from the introductory vignette of `dplyr`. Things that are not
-supported:
-
-- rename
-- distinct
-- transmute
-
-But you still work with data frames: so you can simply mix in dplyr features 
-whenever you need them. The functions `filtar`, `mutar` and `sumar` are `R CMD 
-check` friendly replacements for the corresponding versions in `dplyr`. For 
-`select` you can use `extract`. The function names are chosen so that they are 
-similar but do not conflict with `dplyr`s function names - so `dplyr` can be
-savely attached to the search path.
+The examples are from the introductory vignette of `dplyr`. You still work with
+data frames: so you can simply mix in dplyr features whenever you need them. The
+functions `filtar`, `mutar` and `sumar` are `R CMD check` friendly replacements
+for the corresponding versions in `dplyr`. For `select` you can use
+`extract`. The function names are chosen so that they are similar but do not
+conflict with `dplyr`s function names - so `dplyr` can be savely attached to the
+search path.
 
 ```{r}
-library(nycflights13)
-library(dat)
+library("nycflights13")
+library("dat")
 ```
 
 ### Select rows
@@ -110,12 +104,14 @@ sumar(flights, delay ~ mean(dep_delay, na.rm = TRUE), by = "month")
 You can also provide additional arguments to a formula. This is especially
 helpful when you want to pass arguments from a function to such expressions. The
 additional augmentation can be anything which you can use to select columns
-(character, regular expression, function).
+(character, regular expression, function) or a named list where each element is
+a character.
     
 ```{r}
 sumar(
   flights,
   .n ~ mean(.n, na.rm = TRUE) | "^.*delay$",
+  x ~ mean(x, na.rm = TRUE) | list(x = "arr_time"),
   by = "month"
 )
 ```
@@ -131,7 +127,7 @@ summarise. In the background `dplyr`s ability to work on a `data.table` is being
 used.
 
 ```{r eval = FALSE}
-library(data.table)
+library("data.table")
 
 setClass("DataTable", "data.table")
 
