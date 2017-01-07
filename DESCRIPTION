@@ -1,12 +1,12 @@
 Package: dat
 Type: Package
 Title: Tools for Data Manipulation
-Version: 0.0.11
+Version: 0.1.0
 Authors@R: person("Sebastian", "Warnholz", role = c("aut", "cre"),
                   email = "wahani@gmail.com")
-BugReports: https://github.com/wahani/aoos/dat
+BugReports: https://github.com/wahani/dat/issues
 Description: An implementation of common higher order functions with syntactic
-    sugar for anonymous function. Provides also a link to dplyr for common
+    sugar for anonymous function. Provides also a link to 'dplyr' for common
     transformations on data frames to work around non standard evaluation by
     default.
 License: MIT + file LICENSE

@@ -14,9 +14,18 @@ cat(gsub("\\n   ", "", packageDescription("dat", fields = "Description")))
 
 ## Installation
 
+### From GitHub
+
 ```{r eval=FALSE}
 devtools::install_github("wahani/dat")
 ```
+
+### From CRAN
+
+```{r eval=FALSE}
+install.packages("dat")
+```
+
 
 ## Why should you care?
 
