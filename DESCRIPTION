@@ -1,7 +1,7 @@
 Package: dat
 Type: Package
 Title: Tools for Data Manipulation
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: person("Sebastian", "Warnholz", role = c("aut", "cre"),
                   email = "wahani@gmail.com")
 BugReports: https://github.com/wahani/dat/issues

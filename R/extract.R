@@ -54,7 +54,7 @@
 #' }
 #'
 #' extract(1:10, isPrime)
-extract(x, ind, ...) %g% standardGeneric("extract")
+extract(x, ind, ...) %g% x[ind, ...]
 
 #' @export
 #' @rdname extract
@@ -100,12 +100,11 @@ extract(x ~ data.frame, ind ~ character, ...) %m% {
 
 #' @export
 #' @rdname extract
-extract2(x, ind, ...) %g% standardGeneric("extract2")
+extract2(x, ind, ...) %g% x[[ind]]
 
 #' @export
 #' @rdname extract
 extract2(x ~ atomic | list, ind ~ numeric | integer, ...) %m% {
-  stopifnot(length(ind) == 1)
   x[[ind]]
 }
 

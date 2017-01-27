@@ -28,7 +28,7 @@
 #' replace(list(x = 1, y = 2), "x", 0)
 #' replace(list(x = 1, y = 2), "^x$", 0)
 #' replace(list(x = 1, y = "a"), is.character, NULL)
-replace(x, ind, values, ...) %g% standardGeneric("replace")
+replace(x, ind, values, ...) %g% base::replace(x, ind, values)
 
 #' @export
 #' @rdname replace

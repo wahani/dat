@@ -30,3 +30,6 @@ data.frame(x = 1:10, y = 2) %>%
 ll <- list(n = a)
 data.frame(x = 1:10, y = 2) %>%
   mutar(n ~ mean(n) | ll, sby = "y")
+
+extract(table(letters[1:2]), "a")
+replace(table(letters[1:2]), .~.==1, 2)
