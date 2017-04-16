@@ -1,7 +1,7 @@
 Package: dat
 Type: Package
 Title: Tools for Data Manipulation
-Version: 0.1.1
+Version: 0.1.2
 Authors@R: person("Sebastian", "Warnholz", role = c("aut", "cre"),
                   email = "wahani@gmail.com")
 BugReports: https://github.com/wahani/dat/issues
@@ -30,7 +30,7 @@ Suggests:
 VignetteBuilder: knitr
 Encoding: UTF-8
 ByteCompile: TRUE
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1
 Collate:
     'NAMESPACE.R'
     'FormulaList.R'

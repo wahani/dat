@@ -36,4 +36,3 @@ as(makeFormulas(.n ~ mean(.n), .n = "variable"), "FormulaList")
 \seealso{
 \link{mutar}
 }
-

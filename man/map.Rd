@@ -2,18 +2,18 @@
 % Please edit documentation in R/map.R
 \docType{methods}
 \name{map}
-\alias{flatmap}
-\alias{flatmap,ANY,formula-method}
 \alias{map}
 \alias{map,ANY,formula-method}
-\alias{map,MList,function-method}
 \alias{map,atomic,function-method}
-\alias{map,formula,function-method}
 \alias{map,list,function-method}
 \alias{map,list,numericORcharacterORlogical-method}
+\alias{map,MList,function-method}
+\alias{map,formula,function-method}
+\alias{flatmap}
+\alias{flatmap,ANY,formula-method}
 \alias{sac}
-\alias{sac,ANY,formula-method}
 \alias{sac,data.frame,function-method}
+\alias{sac,ANY,formula-method}
 \alias{vmap}
 \title{An implementation of map}
 \usage{
@@ -122,4 +122,3 @@ map(as.numeric(1:2), numeric : x ~ x)
 map(1:2, integer(1) : x ~ x)
 map(1:2, numeric(1) : x ~ x + 0.5)
 }
-

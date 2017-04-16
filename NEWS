@@ -1,3 +1,6 @@
+* Version 0.1.2
+- Fix for S4 when package not attached.
+
 * Version 0.1.1
 - Default methods for replace, extract, extract2
 

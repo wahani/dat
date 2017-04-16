@@ -20,4 +20,3 @@ that first eleent.
 \description{
 This is a wrapper around \link[dplyr]{bind_rows} to preserve the input class.
 }
-

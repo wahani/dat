@@ -25,4 +25,3 @@ as.function(f(x, y) ~ c(x, y))(1, 2)
 as.function(numeric : x ~ x)(1) # check for class
 as.function(numeric(1) : x ~ x)(1) # check for class + length
 }
-

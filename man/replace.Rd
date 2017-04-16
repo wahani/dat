@@ -3,11 +3,11 @@
 \docType{methods}
 \name{replace}
 \alias{replace}
-\alias{replace,ANY,character-method}
-\alias{replace,ANY,formula-method}
+\alias{replace,list,function-method}
 \alias{replace,atomic,function-method}
 \alias{replace,atomicORlist,integerORnumericORlogical-method}
-\alias{replace,list,function-method}
+\alias{replace,ANY,formula-method}
+\alias{replace,ANY,character-method}
 \title{Replace elements in a vector}
 \usage{
 replace(x, ind, values, ...)
@@ -54,4 +54,3 @@ replace(list(x = 1, y = 2), "x", 0)
 replace(list(x = 1, y = 2), "^x$", 0)
 replace(list(x = 1, y = "a"), is.character, NULL)
 }
-

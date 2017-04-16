@@ -2,10 +2,11 @@
 % Please edit documentation in R/DataFrame.R
 \name{DataFrame}
 \alias{DataFrame}
-\alias{[.DataFrame}
+\alias{DataFrame}
 \alias{as.DataFrame}
-\alias{as.DataFrame.data.frame}
 \alias{as.DataFrame.default}
+\alias{as.DataFrame.data.frame}
+\alias{[.DataFrame}
 \title{DataFrame and methods}
 \usage{
 DataFrame(...)
@@ -56,4 +57,3 @@ dat[FL(.n ~ mean(.n), .n = c("Wind", "Temp")), sby = "Month"]
 \seealso{
 \link{mutar}, \link{FL}
 }
-

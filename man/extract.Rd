@@ -3,17 +3,17 @@
 \docType{methods}
 \name{extract}
 \alias{extract}
-\alias{extract,ANY,character-method}
-\alias{extract,ANY,formula-method}
-\alias{extract,atomic,function-method}
-\alias{extract,atomicORlist,numericORintegerORlogical-method}
-\alias{extract,data.frame,character-method}
 \alias{extract,list,function-method}
+\alias{extract,atomic,function-method}
+\alias{extract,ANY,formula-method}
+\alias{extract,atomicORlist,numericORintegerORlogical-method}
+\alias{extract,ANY,character-method}
+\alias{extract,data.frame,character-method}
 \alias{extract2}
-\alias{extract2,ANY,character-method}
+\alias{extract2,atomicORlist,numericORinteger-method}
 \alias{extract2,ANY,formula-method}
 \alias{extract2,atomicORlist,function-method}
-\alias{extract2,atomicORlist,numericORinteger-method}
+\alias{extract2,ANY,character-method}
 \title{Extract elements from a vector}
 \usage{
 extract(x, ind, ...)
@@ -96,4 +96,3 @@ isPrime <- function(n) {
 
 extract(1:10, isPrime)
 }
-
