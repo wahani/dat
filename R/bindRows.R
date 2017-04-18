@@ -1,22 +1,25 @@
 #' Bind rows
 #'
-#' This is a wrapper around \link[dplyr]{bind_rows} to preserve the input class.
+#' This is a wrapper around \link[data.table]{rbindlist} to preserve the input
+#' class.
 #'
-#' @param x (list)
-#' @param id passed to \link[dplyr]{bind_rows} as \code{.id}
-#'
+#' @param x (list) a list of data frames
+#' @param id,useNames,fill passed to \link[data.table]{rbindlist}
+#' 
 #' @return
 #' If the first element of \code{x} inherits from \code{data.frame} the type
-#' that first eleent.
+#' that first element. 
 #'
 #' \code{x} else.
 #'
 #' @export
-bindRows <- function(x, id = NULL) {
+bindRows <- function(x, id = NULL, useNames = TRUE, fill = TRUE) {
   if (inherits(x[[1]], "data.frame")) {
     memClassHandler <- MemClassHandler()
     memClassHandler$memClass(x[[1]])
-    dplyr::bind_rows(x, .id = id) %>% memClassHandler$wrapClass()
+    ret <- data.table::rbindlist(x, idcol = id, use.names = useNames, fill = fill)
+    ret <- as.data.frame(ret)
+    memClassHandler$wrapClass(ret)
   } else {
     x
   }

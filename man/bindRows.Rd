@@ -4,19 +4,20 @@
 \alias{bindRows}
 \title{Bind rows}
 \usage{
-bindRows(x, id = NULL)
+bindRows(x, id = NULL, useNames = TRUE, fill = TRUE)
 }
 \arguments{
-\item{x}{(list)}
+\item{x}{(list) a list of data frames}
 
-\item{id}{passed to \link[dplyr]{bind_rows} as \code{.id}}
+\item{id, useNames, fill}{passed to \link[data.table]{rbindlist}}
 }
 \value{
 If the first element of \code{x} inherits from \code{data.frame} the type
-that first eleent.
+that first element. 
 
 \code{x} else.
 }
 \description{
-This is a wrapper around \link[dplyr]{bind_rows} to preserve the input class.
+This is a wrapper around \link[data.table]{rbindlist} to preserve the input
+class.
 }

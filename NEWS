@@ -1,3 +1,7 @@
+* Version 0.1.3
+- Fix for change in dplyr: mutate changes class of input (mutar does not)
+- Fix for change in dplyr: bind_rows cannot handle S4 dfs. switched to rbindlist
+
 * Version 0.1.2
 - Fix for S4 when package not attached.
 
