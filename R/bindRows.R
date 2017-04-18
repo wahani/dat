@@ -18,7 +18,6 @@ bindRows <- function(x, id = NULL, useNames = TRUE, fill = TRUE) {
     memClassHandler <- MemClassHandler()
     memClassHandler$memClass(x[[1]])
     ret <- data.table::rbindlist(x, idcol = id, use.names = useNames, fill = fill)
-    ret <- as.data.frame(ret)
     memClassHandler$wrapClass(ret)
   } else {
     x

@@ -63,6 +63,7 @@ test_that("split-apply-combine", {
   setClass("Dat", "DataFrame")
   dat <- new("Dat", dat)
   sac(dat, mutar, "id", count ~ n()) %>% isA("Dat")
+  removeClass("Dat")
 
 })
 

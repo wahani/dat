@@ -7,7 +7,7 @@ ML <- function(...) new("MList", list(...))
 MList <- function(...) new("MList", list(...))
 
 
-MemClassHandler <- function() {
+MemClassHandler <- function(x) {
   # An instance can be used to memorize the class of an object. And then to add
   # that class, or wrap that S4 instance to an object.
 
@@ -31,13 +31,16 @@ MemClassHandler <- function() {
   }
 
   wrapClass <- function(x) {
+    # dplyr and data.table are sometimes eager to add their own classes. To
+    # avoid conflicts, especially with S4, they are removed first:
+    x <- if (inherits(x, "data.frame")) as.data.frame(x) else x
     if (!is.null(s4Object)) {
       out <- s4Object
-      S3Part(out) <- addClass(x, classOfX)
+      S3Part(out) <- class(x, classOfX)
       out
     }
     else if (!is.null(classOfX)) {
-      addClass(x, classOfX)
+      class(x, classOfX)
     }
     else {
       stop("Don't know what this is.")
@@ -110,6 +113,15 @@ addReturnType(f, type ~ ReturnType) %m% {
 addClass <- function(x, class) {
   class(x) <- unique(c(class, class(x)))
   x
+}
+
+class <- function(x, class) {
+  if (missing(class)) {
+    base::class(x)
+  } else {
+    class(x) <- class
+    x
+  }
 }
 
 constructArgs <- function(i, j, ..., dat) {

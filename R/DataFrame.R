@@ -81,7 +81,6 @@ as.DataFrame.data.frame <- function(x, ...) {
     memClassHandler$memClass() %>%
     handleRows(dispatcher(i)) %>%
     handleCols(dispatcher(i), dispatcher(j), ..., by = by, sby = sby) %>%
-    as.data.frame() %>%
     memClassHandler$wrapClass()
 
 }
