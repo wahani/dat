@@ -4,3 +4,4 @@
 ^prepareRepo.R$
 ^cran-comments\.md$
 ^README\.md$
+^_config\.yml$
