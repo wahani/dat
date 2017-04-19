@@ -81,3 +81,40 @@ test_that("Scoping", {
   expectEqual(fun(1), DataFrame(x = 1, y = 1))
 
 })
+
+test_that("Parameterized formulas", {
+
+  dat <- data.frame(x = 1, y = "", stringsAsFactors = FALSE)
+  dat1 <- data.frame(x = 2, y = NA)
+
+  someCol <- "x"
+
+  dat <- mutar(
+    dat,
+    .n  ~ .n + 1 | someCol,
+    .n  ~ .n | someCol,
+    .n  ~ NA | is.character
+  )
+
+  testthat::expect_identical(dat, dat1)
+  
+})
+
+test_that("Parameterized formulas with lists", {
+
+  dat  <- data.frame(x = "", stringsAsFactors = FALSE)
+  expectedResult <- data.frame(
+    x = "1", y = "11", z = TRUE,
+    stringsAsFactors = FALSE
+  )
+
+  dat <- mutar(
+    dat,
+    var ~ paste0(var, "1") | list(var = "x"),
+    lhs ~ paste0(rhs, "1") | list(lhs = "y", rhs = "x"),
+    var ~ (TRUE | FALSE) | list(var = "z")
+  )
+
+  testthat::expect_identical(dat, expectedResult)
+  
+})

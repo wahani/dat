@@ -15,8 +15,7 @@ NULL
 
 setClassUnion(
   "atomic",
-  c("logical", "integer", "numeric", "complex", "character", "raw"),
-  topenv(environment())
+  c("logical", "integer", "numeric", "complex", "character", "raw")
 )
 
 # This package uses S4. If we use the package without attaching it (using `::`
