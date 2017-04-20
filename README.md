@@ -3,14 +3,24 @@
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/dat)](http://cran.r-project.org/package=dat)
 [![Downloads](http://cranlogs.r-pkg.org/badges/dat?color=brightgreen)](http://www.r-pkg.org/pkg/dat)
 
-An implementation of common higher order functions with syntactic sugar for anonymous function. Provides also a link to dplyr for common transformations on data frames to work around non standard evaluation by default.
+An implementation of common higher order functions with syntactic sugar for anonymous function. Provides also a link to 'dplyr' for common transformations on data frames to work around non standard evaluation by default.
 
 ## Installation
+
+### From GitHub
 
 
 ```r
 devtools::install_github("wahani/dat")
 ```
+
+### From CRAN
+
+
+```r
+install.packages("dat")
+```
+
 
 ## Why should you care?
 
