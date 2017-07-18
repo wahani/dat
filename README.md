@@ -3,7 +3,10 @@
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/dat)](http://cran.r-project.org/package=dat)
 [![Downloads](http://cranlogs.r-pkg.org/badges/dat?color=brightgreen)](http://www.r-pkg.org/pkg/dat)
 
-An implementation of common higher order functions with syntactic sugar for anonymous function. Provides also a link to 'dplyr' for common transformations on data frames to work around non standard evaluation by default.
+An implementation of common higher order functions with syntactic
+sugar for anonymous function. Provides also a link to 'dplyr' for common
+transformations on data frames to work around non standard evaluation by
+default.
 
 ## Installation
 
@@ -58,7 +61,7 @@ sided formula.
 
 
 ```r
-filtar(flights, ~ month == 1 & day == 1)  
+filtar(flights, ~ month == 1 & day == 1)
 filtar(flights, 1:10)
 ```
 
@@ -70,18 +73,18 @@ filtar(flights, ~ order(year, month, day))
 ```
 
 ```
-## # A tibble: 336,776 × 19
+## # A tibble: 336,776 x 19
 ##     year month   day dep_time sched_dep_time dep_delay arr_time
 ##    <int> <int> <int>    <int>          <int>     <dbl>    <int>
-## 1   2013     1     1      517            515         2      830
-## 2   2013     1     1      533            529         4      850
-## 3   2013     1     1      542            540         2      923
-## 4   2013     1     1      544            545        -1     1004
-## 5   2013     1     1      554            600        -6      812
-## 6   2013     1     1      554            558        -4      740
-## 7   2013     1     1      555            600        -5      913
-## 8   2013     1     1      557            600        -3      709
-## 9   2013     1     1      557            600        -3      838
+##  1  2013     1     1      517            515         2      830
+##  2  2013     1     1      533            529         4      850
+##  3  2013     1     1      542            540         2      923
+##  4  2013     1     1      544            545        -1     1004
+##  5  2013     1     1      554            600        -6      812
+##  6  2013     1     1      554            558        -4      740
+##  7  2013     1     1      555            600        -5      913
+##  8  2013     1     1      557            600        -3      709
+##  9  2013     1     1      557            600        -3      838
 ## 10  2013     1     1      558            600        -2      753
 ## # ... with 336,766 more rows, and 12 more variables: sched_arr_time <int>,
 ## #   arr_delay <dbl>, carrier <chr>, flight <int>, tailnum <chr>,
@@ -149,18 +152,18 @@ sumar(
 ```
 
 ```
-## # A tibble: 12 × 4
+## # A tibble: 12 x 4
 ##    month dep_delay  arr_delay arr_time
 ##    <int>     <dbl>      <dbl>    <dbl>
-## 1      1 10.036665  6.1299720 1523.155
-## 2      2 10.816843  5.6130194 1522.207
-## 3      3 13.227076  5.8075765 1509.743
-## 4      4 13.938038 11.1760630 1500.704
-## 5      5 12.986859  3.5215088 1502.685
-## 6      6 20.846332 16.4813296 1467.994
-## 7      7 21.727787 16.7113067 1455.944
-## 8      8 12.611040  6.0406524 1495.368
-## 9      9  6.722476 -4.0183636 1503.549
+##  1     1 10.036665  6.1299720 1523.155
+##  2     2 10.816843  5.6130194 1522.207
+##  3     3 13.227076  5.8075765 1509.743
+##  4     4 13.938038 11.1760630 1500.704
+##  5     5 12.986859  3.5215088 1502.685
+##  6     6 20.846332 16.4813296 1467.994
+##  7     7 21.727787 16.7113067 1455.944
+##  8     8 12.611040  6.0406524 1495.368
+##  9     9  6.722476 -4.0183636 1503.549
 ## 10    10  6.243988 -0.1670627 1519.899
 ## 11    11  5.435362  0.4613474 1522.722
 ## 12    12 16.576688 14.8703553 1505.252

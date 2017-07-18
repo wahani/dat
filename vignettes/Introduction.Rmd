@@ -61,7 +61,7 @@ reference a variable in the data itself, you can indicate this by using a one
 sided formula.
 
 ```{r results='hide'}
-filtar(flights, ~ month == 1 & day == 1)  
+filtar(flights, ~ month == 1 & day == 1)
 filtar(flights, 1:10)
 ```
 
