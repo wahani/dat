@@ -1,4 +1,3 @@
-library(testthat)
-library(dat)
+library("dat")
 
-test_check("dat")
+if (requireNamespace("testthat", quietly = TRUE)) testthat::test_check("dat")

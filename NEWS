@@ -1,3 +1,7 @@
+* Version 0.3.0
+- CRAN release
+- Maintenance release: fix for conditionally using packages in suggesgts
+
 * Version 0.2.0
 - CRAN release
 
