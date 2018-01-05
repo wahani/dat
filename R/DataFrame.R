@@ -75,7 +75,7 @@ as.DataFrame.data.frame <- function(x, ...) {
   i <- if (missing(i) || nargs() == 2) NULL else i
   by <- if (missing(by)) NULL else by
   sby <- if (missing(sby)) NULL else sby
-  
+
   memClassHandler <- MemClassHandler()
   x %>%
     memClassHandler$memClass() %>%
@@ -89,14 +89,9 @@ data.frame : handleRows(x, i) %g% standardGeneric("handleRows")
 
 handleRows(x ~ data.frame, i ~ NULL) %m% x
 
-handleRows(x ~ data.frame, i ~ logical) %m% {
+handleRows(x ~ data.frame, i ~ character | logical | numeric | integer) %m% {
   .__i__ <- i
-  dplyr::filter(x, .__i__)
-}
-
-handleRows(x ~ data.frame, i ~ numeric | integer) %m% {
-  ".__i__" <- i
-  dplyr::slice(x, .__i__)
+  data.table:::`[.data.table`(as.data.table(x), .__i__, )
 }
 
 handleRows(x ~ data.frame, i ~ OneSidedFormula) %m% {
@@ -117,7 +112,7 @@ data.frame : handleCols(x, i, j, ..., by, sby) %g% standardGeneric("handleCols")
 handleCols(x ~ data.frame, i ~ NULL, j ~ NULL, ..., by ~ NULL, sby ~ NULL) %m% x
 
 handleCols(x ~ data.frame, i ~ NULL, j ~ character, ..., by ~ NULL, sby ~ NULL) %m% {
-  dplyr::select_(x, .dots = j)
+  data.table:::`[.data.table`(as.data.table(x), , j, with = FALSE)
 }
 
 handleCols(x ~ data.frame, i ~ NULL, j ~ RegEx, ..., by ~ NULL, sby ~ NULL) %m% {
@@ -139,15 +134,15 @@ handleCols(x ~ data.frame, i ~ NULL, j ~ OneSidedFormula, ..., by ~ NULL, sby ~ 
 handleCols(x ~ data.frame,
            i ~ NULL | FormulaList, j ~ NULL | FormulaList, ...,
            by ~ ANY, sby ~ ANY) %m% {
-             
+
              i <- update(i, x)
              j <- update(j, x)
-             
+
              do.call(
                mutar,
                c(list(x = x, i = NULL, by = by, sby = sby), i, j, list(...))
              )
-             
+
            }
 
 handleCols(x ~ data.frame,
