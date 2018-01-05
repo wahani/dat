@@ -1,5 +1,5 @@
 ## Test environments
-* local ubuntu 17.04 install, R 3.3.3
+* local ubuntu 17.04 install, R 3.4.0
 * ubuntu 12.04 (on travis-ci), R 3.3.2
 * win-builder (devel)
 
@@ -7,7 +7,8 @@
 
 0 errors | 0 warnings | 0 note
 
-* This is mostly a maintenance release for the upcoming dplyr version.
+* This is a maintenance release to address the demand to use packages in
+  suggests conditionally.
 
 ## Reverse dependencies
 
