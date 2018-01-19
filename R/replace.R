@@ -9,7 +9,7 @@
 #' @param ... arguments passed to \code{ind} if it can be interpreted as
 #'   function. For a regex arguments are passed to \link{grep}.
 #'
-#' @details The idea is to provide a more felxible interface for the
+#' @details The idea is to provide a more flexible interface for the
 #'   specification of the index. It can be a character, numeric, integer or
 #'   logical which is then simply used in \code{base::replace}. It can be a
 #'   regular expression in which case \code{x} should be named -- a character of

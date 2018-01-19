@@ -31,7 +31,7 @@ This function replaces elements in a vector. It is a link to
 \link[base]{replace} as a generic function.
 }
 \details{
-The idea is to provide a more felxible interface for the
+The idea is to provide a more flexible interface for the
   specification of the index. It can be a character, numeric, integer or
   logical which is then simply used in \code{base::replace}. It can be a
   regular expression in which case \code{x} should be named -- a character of
