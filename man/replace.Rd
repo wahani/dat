@@ -3,20 +3,14 @@
 \docType{methods}
 \name{replace}
 \alias{replace}
-\alias{replace,list,function-method}
-\alias{replace,atomic,function-method}
-\alias{replace,atomicORlist,integerORnumericORlogical-method}
+\alias{replace,ANY,function-method}
 \alias{replace,ANY,formula-method}
 \alias{replace,ANY,character-method}
 \title{Replace elements in a vector}
 \usage{
 replace(x, ind, values, ...)
 
-\S4method{replace}{list,`function`}(x, ind, values, ...)
-
-\S4method{replace}{atomic,`function`}(x, ind, values, ...)
-
-\S4method{replace}{atomicORlist,integerORnumericORlogical}(x, ind, values, ...)
+\S4method{replace}{ANY,`function`}(x, ind, values, ...)
 
 \S4method{replace}{ANY,formula}(x, ind, values, ...)
 
