@@ -1,3 +1,8 @@
+* Version 0.4.0
+- CRAN release
+- Maintenance release for upcomming R-version
+- More generic version of 'replace' handling atomics and lists
+
 * Version 0.3.0
 - CRAN release
 - Maintenance release: fix for conditionally using packages in suggesgts

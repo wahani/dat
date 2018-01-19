@@ -9,7 +9,7 @@
 #' @param ... arguments passed to \code{ind} if it can be interpreted as
 #'   function. For a regex arguments are passed to \link{grep}.
 #'
-#' @details The idea is to provide a more felxible interface for the
+#' @details The idea is to provide a more flexible interface for the
 #'   specification of the index. It can be a character, numeric, integer or
 #'   logical which is then simply used in \code{base::replace}. It can be a
 #'   regular expression in which case \code{x} should be named -- a character of
@@ -32,20 +32,9 @@ replace(x, ind, values, ...) %g% base::replace(x, ind, values)
 
 #' @export
 #' @rdname replace
-replace(x ~ list, ind ~ "function", values, ...) %m% {
-  replace(x, vapply(x, ind, logical(1), ...), values)
-}
-
-#' @export
-#' @rdname replace
-replace(x ~ atomic, ind ~ "function", values, ...) %m% {
-  replace(x, ind(x, ...), values)
-}
-
-#' @export
-#' @rdname replace
-replace(x ~ atomic | list, ind ~ integer | numeric | logical, values, ...) %m% {
-  base::replace(x, ind, values)
+replace(x ~ ANY, ind ~ "function", values, ...) %m% {
+  if (is.atomic(x)) replace(x, ind(x, ...), values)
+  else replace(x, vapply(x, ind, logical(1), ...), values)
 }
 
 #' @export
@@ -60,6 +49,7 @@ replace(x ~ ANY, ind ~ character, values, ...) %m% {
   ind <- if (length(ind) == 1 && grepl("^\\^", ind)) {
     grep(ind, names(x), ...)
   } else {
+    stopifnot(all(ind %in% names(x)))
     names(x) %in% ind
   }
   replace(x, ind, values, ...)

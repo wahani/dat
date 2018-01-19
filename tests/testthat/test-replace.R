@@ -36,4 +36,9 @@ test_that("replace", {
     list(x = 0, y = 2)
   )
 
+  expectEqual(
+    replace(table(letters[1:2]), ~ . == 1, 2),
+    table(rep(letters[1:2], 2))
+  )
+
 })

@@ -1,7 +1,7 @@
 Package: dat
 Type: Package
 Title: Tools for Data Manipulation
-Version: 0.3.0
+Version: 0.4.0
 Authors@R: person("Sebastian", "Warnholz", role = c("aut", "cre"),
                   email = "wahani@gmail.com")
 BugReports: https://github.com/wahani/dat/issues
@@ -31,13 +31,14 @@ VignetteBuilder: knitr
 Encoding: UTF-8
 ByteCompile: TRUE
 RoxygenNote: 6.0.1
-Collate:
+Collate: 
     'NAMESPACE.R'
     'FormulaList.R'
     'helper.R'
     'DataFrame.R'
     'as.function.R'
     'bindRows.R'
+    'deparse.R'
     'extract.R'
     'map.R'
     'mutar.R'

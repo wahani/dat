@@ -3,20 +3,14 @@
 \docType{methods}
 \name{replace}
 \alias{replace}
-\alias{replace,list,function-method}
-\alias{replace,atomic,function-method}
-\alias{replace,atomicORlist,integerORnumericORlogical-method}
+\alias{replace,ANY,function-method}
 \alias{replace,ANY,formula-method}
 \alias{replace,ANY,character-method}
 \title{Replace elements in a vector}
 \usage{
 replace(x, ind, values, ...)
 
-\S4method{replace}{list,`function`}(x, ind, values, ...)
-
-\S4method{replace}{atomic,`function`}(x, ind, values, ...)
-
-\S4method{replace}{atomicORlist,integerORnumericORlogical}(x, ind, values, ...)
+\S4method{replace}{ANY,`function`}(x, ind, values, ...)
 
 \S4method{replace}{ANY,formula}(x, ind, values, ...)
 
@@ -37,7 +31,7 @@ This function replaces elements in a vector. It is a link to
 \link[base]{replace} as a generic function.
 }
 \details{
-The idea is to provide a more felxible interface for the
+The idea is to provide a more flexible interface for the
   specification of the index. It can be a character, numeric, integer or
   logical which is then simply used in \code{base::replace}. It can be a
   regular expression in which case \code{x} should be named -- a character of
