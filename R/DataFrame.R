@@ -77,11 +77,12 @@ as.DataFrame.data.frame <- function(x, ...) {
   sby <- if (missing(sby)) NULL else sby
 
   memClassHandler <- MemClassHandler()
-  x %>%
-    memClassHandler$memClass() %>%
-    handleRows(dispatcher(i)) %>%
-    handleCols(dispatcher(i), dispatcher(j), ..., by = by, sby = sby) %>%
-    memClassHandler$wrapClass()
+  x <- memClassHandler$memClass(x)
+  x <- if (NROW(x) > 1e5) as.data.table(x) else as.data.frame(x)
+  x <- handleRows(x, dispatcher(i))
+  x <- handleCols(x, dispatcher(i), dispatcher(j), ..., by = by, sby = sby)
+
+  memClassHandler$wrapClass(x)
 
 }
 
@@ -89,9 +90,9 @@ data.frame : handleRows(x, i) %g% standardGeneric("handleRows")
 
 handleRows(x ~ data.frame, i ~ NULL) %m% x
 
-handleRows(x ~ data.frame, i ~ character | logical | numeric | integer) %m% {
+handleRows(x ~ data.frame, i ~ logical | numeric | integer) %m% {
   .__i__ <- i
-  data.table:::`[.data.table`(as.data.table(x), .__i__, )
+  x[.__i__, , drop = FALSE]
 }
 
 handleRows(x ~ data.frame, i ~ OneSidedFormula) %m% {
@@ -112,11 +113,16 @@ data.frame : handleCols(x, i, j, ..., by, sby) %g% standardGeneric("handleCols")
 handleCols(x ~ data.frame, i ~ NULL, j ~ NULL, ..., by ~ NULL, sby ~ NULL) %m% x
 
 handleCols(x ~ data.frame, i ~ NULL, j ~ character, ..., by ~ NULL, sby ~ NULL) %m% {
-  data.table:::`[.data.table`(as.data.table(x), , j, with = FALSE)
+  if (any(grepl("(^-)|:", "x"))) warning(paste0(
+    "If you are using the feature from dplyr::select to drop",
+    "columns using '-' or to select columns using ':' please note",
+    "that the link to dplyr is deprecated and will be removed from",
+    "this package in the next version."))
+  dplyr::select_(x, .dots = j)
 }
 
 handleCols(x ~ data.frame, i ~ NULL, j ~ RegEx, ..., by ~ NULL, sby ~ NULL) %m% {
-  dplyr::select(x, dplyr::matches(j))
+  x[grepl(j, names(x))]
 }
 
 handleCols(x ~ data.frame, i ~ NULL, j ~ logical, ..., by ~ NULL, sby ~ NULL) %m% {
