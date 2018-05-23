@@ -59,13 +59,8 @@ test_that("Basic syntax of a DataFrame", {
   )
 
   expectIdentical(
-    dat["-x"],
+    replace(dat, "x", NULL),
     datRef[!(names(datRef) %in% "x")]
-  )
-
-  expectIdentical(
-    dat["x:y"],
-    datRef[c("x", "y")]
   )
 
   expectIdentical(

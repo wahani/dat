@@ -113,12 +113,7 @@ data.frame : handleCols(x, i, j, ..., by, sby) %g% standardGeneric("handleCols")
 handleCols(x ~ data.frame, i ~ NULL, j ~ NULL, ..., by ~ NULL, sby ~ NULL) %m% x
 
 handleCols(x ~ data.frame, i ~ NULL, j ~ character, ..., by ~ NULL, sby ~ NULL) %m% {
-  if (any(grepl("(^-)|:", "x"))) warning(paste0(
-    "If you are using the feature from dplyr::select to drop",
-    "columns using '-' or to select columns using ':' please note",
-    "that the link to dplyr is deprecated and will be removed from",
-    "this package in the next version."))
-  dplyr::select_(x, .dots = j)
+  `[.data.frame`(x, j)
 }
 
 handleCols(x ~ data.frame, i ~ NULL, j ~ RegEx, ..., by ~ NULL, sby ~ NULL) %m% {

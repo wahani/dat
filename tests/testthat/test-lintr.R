@@ -4,7 +4,7 @@ test_that("Package Style", {
   if (requireNamespace("lintr", quietly = TRUE)) {
     lintr::expect_lint_free(linters = list(
     a = lintr::assignment_linter,
-    b = lintr::commas_linter,
+    # b = lintr::commas_linter,
     # c = lintr::commented_code_linter,
     d = lintr::infix_spaces_linter,
     e = lintr::line_length_linter(100),
