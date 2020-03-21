@@ -35,14 +35,14 @@
 #' @rdname DataFrame
 #' @export
 DataFrame <- function(...) {
-  dat <- tibble::data_frame(...)
+  dat <- tibble::tibble(...)
   addClass(dat, "DataFrame")
 }
 
 #' @name DataFrame
 #' @export
 #' @rdname DataFrame
-setOldClass(c("DataFrame", "data.frame"))
+setOldClass(c("DataFrame", "tbl_df", "tbl", "data.frame"))
 
 #' @rdname DataFrame
 #' @export
@@ -75,13 +75,13 @@ as.DataFrame.data.frame <- function(x, ...) {
   i <- if (missing(i) || nargs() == 2) NULL else i
   by <- if (missing(by)) NULL else by
   sby <- if (missing(sby)) NULL else sby
-  
+
   memClassHandler <- MemClassHandler()
-  x %>%
-    memClassHandler$memClass() %>%
-    handleRows(dispatcher(i)) %>%
-    handleCols(dispatcher(i), dispatcher(j), ..., by = by, sby = sby) %>%
-    memClassHandler$wrapClass()
+  x <- memClassHandler$memClass(x)
+  x <- memClassHandler$stripClass(x)
+  x <- handleRows(x, dispatcher(i))
+  x <- handleCols(x, dispatcher(i), dispatcher(j), ..., by = by, sby = sby)
+  memClassHandler$wrapClass(x)
 
 }
 

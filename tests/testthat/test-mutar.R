@@ -19,10 +19,10 @@ test_that("mutars by and sby", {
   dat <- DataFrame(x = 1:10, y = 11:20, yx = 1)
 
   expectIdentical(
-    dat[id ~ x > 4][count ~ n(), by = "id"],
+    dat[id ~ x > 4][count ~ dplyr::n(), by = "id"],
     dat %>%
       mutar(id ~ x > 4) %>%
-      mutar(count ~ n(), by = "id")
+      mutar(count ~ dplyr::n(), by = "id")
   )
 
   expectIdentical(

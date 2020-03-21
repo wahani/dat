@@ -125,7 +125,7 @@ test_that("Basic syntax of a DataFrame", {
   )
 
   expectIdentical(
-    dat[id ~ x > 4][count ~ n(), sby = "id"],
+    dat[id ~ x > 4][count ~ dplyr::n(), sby = "id"],
     local({
       datRef$id <- datRef$x > 4
       datRef <- aggregate(x ~ id, datRef, length)
