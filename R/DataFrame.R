@@ -173,8 +173,12 @@ handleCols(x ~ data.frame,
            j ~ TwoSidedFormula | NULL,
            ..., by ~ NULL, sby ~ character) %m% {
              args <- constructArgs(i, j, ..., dat = x)
-             dplyr::group_by_(x, .dots = sby) %>%
-               dplyr::summarise_(.dots = args)
+             if (useDplyr()) {
+               x <- dplyr::group_by_(x, .dots = sby)
+               dplyr::summarise_(x, .dots = args)
+             } else {
+               dataTableSummariseBy(x, args, sby)
+             }
            }
 
 handleCols(x ~ data.frame,
@@ -182,6 +186,10 @@ handleCols(x ~ data.frame,
            j ~ TwoSidedFormula | NULL,
            ..., by ~ character, sby ~ NULL) %m% {
              args <- constructArgs(i, j, ..., dat = x)
-             dplyr::group_by_(x, .dots = by) %>%
-               dplyr::mutate_(.dots = args)
+             if (useDplyr()) {
+               dplyr::group_by_(x, .dots = by) %>%
+                 dplyr::mutate_(.dots = args)
+             } else {
+               dataTableMutateBy(x, args, by)
+             }
            }
