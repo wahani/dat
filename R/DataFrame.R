@@ -112,7 +112,11 @@ data.frame : handleCols(x, i, j, ..., by, sby) %g% standardGeneric("handleCols")
 handleCols(x ~ data.frame, i ~ NULL, j ~ NULL, ..., by ~ NULL, sby ~ NULL) %m% x
 
 handleCols(x ~ data.frame, i ~ NULL, j ~ character, ..., by ~ NULL, sby ~ NULL) %m% {
-  `[.data.frame`(x, j)
+  if (useDplyr()) {
+    dplyr::select_(x, .dots = j)
+  } else {
+    `[.data.frame`(x, j)
+  }
 }
 
 handleCols(x ~ data.frame, i ~ NULL, j ~ RegEx, ..., by ~ NULL, sby ~ NULL) %m% {
@@ -156,8 +160,13 @@ handleCols(x ~ data.frame,
            j ~ TwoSidedFormula | NULL,
            ..., by ~ NULL, sby ~ NULL) %m% {
              args <- constructArgs(i, j, ..., dat = x)
-             dplyr::mutate_(x, .dots = args)
+             if (useDplyr()) {
+               dplyr::mutate_(x, .dots = args)
+             } else {
+               dataTableMutate(x, args)
+             }
            }
+
 
 handleCols(x ~ data.frame,
            i ~ TwoSidedFormula | NULL,

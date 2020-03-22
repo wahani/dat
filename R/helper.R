@@ -51,7 +51,10 @@ MemClassHandler <- function(x) {
     # Check if DataFrame is in class(x), if so we need to remove it: otherwise
     # we will have a recursive call from dplyr::slice due to calling `[` on the
     # x.
-    class(x) <- class(x)[class(x) != "DataFrame"]
+    if (useDplyr())
+      class(x) <- class(x)[class(x) != "DataFrame"]
+    else
+      x <- data.table::as.data.table(x)
     x
   }
 

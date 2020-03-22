@@ -32,7 +32,7 @@ test_that("subset with extract2", {
   isEqual(extract2(3:4, is.even), 4)
   isEqual(extract2(as.list(1:10), ~ . %% 2 == 0), 2)
   isEqual(extract2(1:10, 1), 1)
-  
+
   isEqual(extract2(data.frame(x = 1, y = ""), is.numeric), 1)
   isEqual(extract2(list(x = 1, y = ""), is.numeric), 1)
   isEqual(extract2(list(x = 1, y = ""), "y"), "")
