@@ -2,7 +2,6 @@
 % Please edit documentation in R/DataFrame.R
 \name{DataFrame}
 \alias{DataFrame}
-\alias{DataFrame}
 \alias{as.DataFrame}
 \alias{as.DataFrame.default}
 \alias{as.DataFrame.data.frame}

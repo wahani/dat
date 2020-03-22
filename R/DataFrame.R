@@ -35,14 +35,14 @@
 #' @rdname DataFrame
 #' @export
 DataFrame <- function(...) {
-  dat <- tibble::data_frame(...)
+  dat <- tibble::tibble(...)
   addClass(dat, "DataFrame")
 }
 
 #' @name DataFrame
 #' @export
 #' @rdname DataFrame
-setOldClass(c("DataFrame", "data.frame"))
+setOldClass(c("DataFrame", "tbl_df", "tbl", "data.frame"))
 
 #' @rdname DataFrame
 #' @export
@@ -78,10 +78,9 @@ as.DataFrame.data.frame <- function(x, ...) {
 
   memClassHandler <- MemClassHandler()
   x <- memClassHandler$memClass(x)
-  x <- if (NROW(x) > 1e5) as.data.table(x) else as.data.frame(x)
+  x <- memClassHandler$stripClass(x)
   x <- handleRows(x, dispatcher(i))
   x <- handleCols(x, dispatcher(i), dispatcher(j), ..., by = by, sby = sby)
-
   memClassHandler$wrapClass(x)
 
 }

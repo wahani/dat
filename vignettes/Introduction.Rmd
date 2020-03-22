@@ -103,7 +103,7 @@ mutar(
 Grouping data is handled within `mutar`:
 
 ```{r results = 'hide'}
-mutar(flights, n ~ n(), by = "month")
+mutar(flights, n ~ dplyr::n(), by = "month")
 ```
 
 ```{r results='hide'}
@@ -149,13 +149,13 @@ setMethod("[", "DataTable", mutar)
 dtflights <- do.call(DataTable, nycflights13::flights)
 
 dtflights[1:10, "year:day"]
-dtflights[n ~ n(), by = "month"]
-dtflights[n ~ n(), sby = "month"]
+dtflights[n ~ dplyr::n(), by = "month"]
+dtflights[n ~ dplyr::n(), sby = "month"]
 
 dtflights %>%
   filtar(~month > 6) %>%
-  mutar(n ~ n(), by = "month") %>%
-  sumar(n ~ first(n), by = "month")
+  mutar(n ~ dplyr::n(), by = "month") %>%
+  sumar(n ~ dplyr::first(n), by = "month")
 ```
 
 

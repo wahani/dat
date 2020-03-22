@@ -55,14 +55,14 @@ test_that("split-apply-combine", {
   dat <- DataFrame(y = 1:10, z = 2, id = rep(letters[1:2], 5))
 
   sac(dat, df ~ 1, "id") %>% expectEqual(list(a = 1, b = 1))
-  tmp <- sac(dat, mutar, "id", count ~ n())
+  tmp <- sac(dat, mutar, "id", count ~ dplyr::n())
   expectEqual(tmp$count, rep(5, 10))
   expectEqual(NROW(tmp), 10)
   expectEqual(NCOL(tmp), 4)
 
   setClass("Dat", "DataFrame")
   dat <- new("Dat", dat)
-  sac(dat, mutar, "id", count ~ n()) %>% isA("Dat")
+  sac(dat, mutar, "id", count ~ dplyr::n()) %>% isA("Dat")
   removeClass("Dat")
 
 })
