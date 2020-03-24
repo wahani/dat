@@ -5,3 +5,5 @@ inst/doc
 vignettes/*.R
 vignettes/*.html
 .build.timestamp
+doc
+Meta

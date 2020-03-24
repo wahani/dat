@@ -4,9 +4,9 @@
 [![Downloads](http://cranlogs.r-pkg.org/badges/dat?color=brightgreen)](http://www.r-pkg.org/pkg/dat)
 
 An implementation of common higher order functions with syntactic
-sugar for anonymous function. Provides also a link to 'dplyr' for common
-transformations on data frames to work around non standard evaluation by
-default.
+sugar for anonymous function. Provides also a link to 'dplyr' and
+'data.table' for common transformations on data frames to work around non
+standard evaluation by default.
 
 ## Installation
 
@@ -14,7 +14,7 @@ default.
 
 
 ```r
-devtools::install_github("wahani/dat")
+remotes::install_github("wahani/dat")
 ```
 
 ### From CRAN
@@ -37,15 +37,10 @@ really want a S4 *data.table* or *tbl_df*.
 - You like currying as in `rlist` and `purrr`.
 
 
-## A link to `dplyr`
+## Tools for data manipulation
 
 The examples are from the introductory vignette of `dplyr`. You still work with
-data frames: so you can simply mix in dplyr features whenever you need them. The
-functions `filtar`, `mutar` and `sumar` are `R CMD check` friendly replacements
-for the corresponding versions in `dplyr`. For `select` you can use
-`extract`. The function names are chosen so that they are similar but do not
-conflict with `dplyr`s function names - so `dplyr` can be savely attached to the
-search path.
+data frames: so you can simply mix in dplyr features whenever you need them.
 
 
 ```r
@@ -55,21 +50,21 @@ library("dat")
 
 ### Select rows
 
-`filtar` can be used as a replacement for `filter` and `slice`. When you
-reference a variable in the data itself, you can indicate this by using a one
+We can use `mutar` to select rows. When you
+reference a variable in the data frame, you can indicate this by using a one
 sided formula.
 
 
 ```r
-filtar(flights, ~ month == 1 & day == 1)
-filtar(flights, 1:10)
+mutar(flights, ~ month == 1 & day == 1)
+mutar(flights, ~ 1:10)
 ```
 
 And for sorting:
 
 
 ```r
-filtar(flights, ~ order(year, month, day))
+mutar(flights, ~ order(year, month, day))
 ```
 
 ```
@@ -86,7 +81,7 @@ filtar(flights, ~ order(year, month, day))
 ##  8  2013     1     1      557            600        -3      709
 ##  9  2013     1     1      557            600        -3      838
 ## 10  2013     1     1      558            600        -2      753
-## # ... with 336,766 more rows, and 12 more variables: sched_arr_time <int>,
+## # … with 336,766 more rows, and 12 more variables: sched_arr_time <int>,
 ## #   arr_delay <dbl>, carrier <chr>, flight <int>, tailnum <chr>,
 ## #   origin <chr>, dest <chr>, air_time <dbl>, distance <dbl>, hour <dbl>,
 ## #   minute <dbl>, time_hour <dttm>
@@ -96,14 +91,12 @@ filtar(flights, ~ order(year, month, day))
 ### Select cols
 
 You can use characters, logicals, regular expressions and functions to select
-columns. Regular expressions are indicated by a leading "^". Character are
-simply passed to `dplyr::select_`.
+columns. Regular expressions are indicated by a leading "^".
 
 
 ```r
 flights %>%
   extract(c("year", "month", "day")) %>%
-  extract("year:day") %>%
   extract("^day$") %>%
   extract(is.numeric)
 ```
@@ -111,7 +104,7 @@ flights %>%
 
 ### Operations on columns
 
-The main difference between `mutate` and `mutar` is that you use a `~`
+The main difference between `dplyr::mutate` and `mutar` is that you use a `~`
 instead of `=`.
     
 
@@ -127,12 +120,12 @@ Grouping data is handled within `mutar`:
 
 
 ```r
-mutar(flights, n ~ n(), by = "month")
+mutar(flights, n ~ .N, by = "month")
 ```
 
 
 ```r
-sumar(flights, delay ~ mean(dep_delay, na.rm = TRUE), by = "month")
+mutar(flights, delay ~ mean(dep_delay, na.rm = TRUE), by = "month")
 ```
 
 You can also provide additional arguments to a formula. This is especially
@@ -143,30 +136,32 @@ a character.
     
 
 ```r
-sumar(
+mutar(
   flights,
   .n ~ mean(.n, na.rm = TRUE) | "^.*delay$",
-  x ~ mean(x, na.rm = TRUE) | list(x = "arr_time"),
+  .x ~ mean(.x, na.rm = TRUE) | list(.x = "arr_time"),
   by = "month"
 )
 ```
 
 ```
-## # A tibble: 12 x 4
-##    month dep_delay  arr_delay arr_time
-##    <int>     <dbl>      <dbl>    <dbl>
-##  1     1 10.036665  6.1299720 1523.155
-##  2     2 10.816843  5.6130194 1522.207
-##  3     3 13.227076  5.8075765 1509.743
-##  4     4 13.938038 11.1760630 1500.704
-##  5     5 12.986859  3.5215088 1502.685
-##  6     6 20.846332 16.4813296 1467.994
-##  7     7 21.727787 16.7113067 1455.944
-##  8     8 12.611040  6.0406524 1495.368
-##  9     9  6.722476 -4.0183636 1503.549
-## 10    10  6.243988 -0.1670627 1519.899
-## 11    11  5.435362  0.4613474 1522.722
-## 12    12 16.576688 14.8703553 1505.252
+## # A tibble: 336,776 x 19
+##     year month   day dep_time sched_dep_time sched_arr_time carrier flight
+##    <int> <int> <int>    <int>          <int>          <int> <chr>    <int>
+##  1  2013     1     1      517            515            819 UA        1545
+##  2  2013     1     1      533            529            830 UA        1714
+##  3  2013     1     1      542            540            850 AA        1141
+##  4  2013     1     1      544            545           1022 B6         725
+##  5  2013     1     1      554            600            837 DL         461
+##  6  2013     1     1      554            558            728 UA        1696
+##  7  2013     1     1      555            600            854 B6         507
+##  8  2013     1     1      557            600            723 EV        5708
+##  9  2013     1     1      557            600            846 B6          79
+## 10  2013     1     1      558            600            745 AA         301
+## # … with 336,766 more rows, and 11 more variables: tailnum <chr>,
+## #   origin <chr>, dest <chr>, air_time <dbl>, distance <dbl>, hour <dbl>,
+## #   minute <dbl>, time_hour <dttm>, dep_delay <dbl>, arr_delay <dbl>,
+## #   arr_time <dbl>
 ```
 
 
@@ -193,14 +188,14 @@ setMethod("[", "DataTable", mutar)
 
 dtflights <- do.call(DataTable, nycflights13::flights)
 
-dtflights[1:10, "year:day"]
-dtflights[n ~ n(), by = "month"]
-dtflights[n ~ n(), sby = "month"]
+dtflights[1:10, c("year", "month", "day")]
+dtflights[n ~ .N, by = "month"]
+dtflights[n ~ .N, sby = "month"]
 
 dtflights %>%
   filtar(~month > 6) %>%
-  mutar(n ~ n(), by = "month") %>%
-  sumar(n ~ first(n), by = "month")
+  mutar(n ~ .N, by = "month") %>%
+  sumar(n ~ data.table::first(n), by = "month")
 ```
 
 

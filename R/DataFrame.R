@@ -1,7 +1,8 @@
 #' DataFrame and methods
 #'
-#' This is a 'data.table' like implementation of a data.frame. dplyr is used as
-#' backend. The only purpose is to have \code{R CMD check} friendly syntax.
+#' This is a 'data.table' like implementation of a data.frame. Either dplyr or
+#' data.table is used as backend. The only purpose is to have \code{R CMD check}
+#' friendly syntax.
 #'
 #' @include helper.R
 #' @include FormulaList.R
@@ -13,9 +14,9 @@
 #'   character beginning with '^' are interpreted as regular expression
 #' @param ... arbitrary number of args
 #'    \cr in \code{[} (TwoSidedFormulas)
-#'    \cr in constructor see \link[tibble]{data_frame}
-#' @param by,sby (character) variable names used in \link{group_by}. Using `sby`
-#'   triggers a summarise.
+#'    \cr in constructor see \link[tibble]{tibble}
+#' @param by,sby (character) variables to group by. by will be used to do
+#'   transformations within groups. sby will collapse each group to one row.
 #' @param drop (ignored) never drops the class.
 #'
 #' @details
@@ -35,6 +36,10 @@
 #' @rdname DataFrame
 #' @export
 DataFrame <- function(...) {
+  if (!requireNamespace("tibble", quietly = TRUE)) {
+    stop("The DataFrame class is based on a tibble. Please install 'tibble'",
+         "using 'install.packages(tibble)' for this to work.")
+  }
   dat <- tibble::tibble(...)
   addClass(dat, "DataFrame")
 }
@@ -90,8 +95,7 @@ data.frame : handleRows(x, i) %g% standardGeneric("handleRows")
 handleRows(x ~ data.frame, i ~ NULL) %m% x
 
 handleRows(x ~ data.frame, i ~ logical | numeric | integer) %m% {
-  .__i__ <- i
-  x[.__i__, , drop = FALSE]
+  x[i, , drop = FALSE]
 }
 
 handleRows(x ~ data.frame, i ~ OneSidedFormula) %m% {
@@ -115,16 +119,17 @@ handleCols(x ~ data.frame, i ~ NULL, j ~ character, ..., by ~ NULL, sby ~ NULL) 
   if (useDplyr()) {
     dplyr::select_(x, .dots = j)
   } else {
-    `[.data.frame`(x, j)
+    .SD <- NULL # to apeace R CMD check
+    x[, .SD, .SDcols = j]
   }
 }
 
 handleCols(x ~ data.frame, i ~ NULL, j ~ RegEx, ..., by ~ NULL, sby ~ NULL) %m% {
-  x[grepl(j, names(x))]
+  handleCols(x, NULL, names(x)[grepl(j, names(x))], ..., by = NULL, sby = NULL)
 }
 
 handleCols(x ~ data.frame, i ~ NULL, j ~ logical, ..., by ~ NULL, sby ~ NULL) %m% {
-  `[.data.frame`(x, j)
+  handleCols(x, NULL, names(x)[j], ..., by = NULL, sby = NULL)
 }
 
 handleCols(x ~ data.frame, i ~ NULL, j ~ "function", ..., by ~ NULL, sby ~ NULL) %m% {

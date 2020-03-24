@@ -46,6 +46,24 @@ test_that("mutar without [s]by", {
       DataFrame(x = 1:10, y = 11:20, yx = 1)
     )
 
+    ## not so easy to override existing columns with data.table
+    dat <- data.table::as.data.table(DataFrame(x = 1:10))
+    dat <- mutar(dat, x ~ x + 1)
+    expectIdentical(
+      dat,
+      DataFrame(x = 1:10 + 1)
+    )
+
+    ## but we can disable it:
+    withReference({
+      dat <- data.table::as.data.table(DataFrame(x = 1:2, y = 2))
+      mutar(dat, x ~ as.integer(x + 1), y ~ 2 + 2)
+      expectIdentical(
+        dat,
+        DataFrame(x = 2:3, y = 4)
+      )
+    })
+
     ## Referenced variables can be found
     dat <- DataFrame(x = 1:2)
     res <- local({
@@ -84,6 +102,22 @@ test_that("mutar with by", {
       dat[a ~ mean(x), by = c("group2", "group1")][~ order(x)],
       cbind(dat, list(a = as.numeric(rep(c(3, 8), each = 5))))[order(dat$x), ]
     )
+
+    dat <- data.table::as.data.table(DataFrame(x = 1:2, group = c("a", "b")))
+    dat <- mutar(dat, x ~ x + 1, by = "group")
+    expectIdentical(
+      dat,
+      DataFrame(group = c("a", "b"), x = as.numeric(2:3))
+    )
+
+    withReference({
+      dat <- data.table::as.data.table(DataFrame(x = 1:2, group = c("a", "b")))
+      mutar(dat, x ~ as.integer(x + 1), by = "group")
+      expectIdentical(
+        dat,
+        DataFrame(group = c("a", "b"), x = 2:3)
+      )
+    })
 
     dat <- DataFrame(x = 1:2, group = letters[1:2])
     res <- local({

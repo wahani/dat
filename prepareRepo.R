@@ -1,5 +1,5 @@
 devtools::build_vignettes()
-knitr::knit("inst/doc/Introduction.Rmd", "README.md")
+knitr::knit("vignettes/Introduction.Rmd", "README.md")
 
 batches <- c(
   "[![Travis-CI Build Status](https://travis-ci.org/wahani/dat.svg?branch=master)](https://travis-ci.org/wahani/dat)",
