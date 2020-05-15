@@ -69,22 +69,21 @@ mutar(flights, ~ order(year, month, day))
 
 ```
 ## # A tibble: 336,776 x 19
-##     year month   day dep_time sched_dep_time dep_delay arr_time
-##    <int> <int> <int>    <int>          <int>     <dbl>    <int>
-##  1  2013     1     1      517            515         2      830
-##  2  2013     1     1      533            529         4      850
-##  3  2013     1     1      542            540         2      923
-##  4  2013     1     1      544            545        -1     1004
-##  5  2013     1     1      554            600        -6      812
-##  6  2013     1     1      554            558        -4      740
-##  7  2013     1     1      555            600        -5      913
-##  8  2013     1     1      557            600        -3      709
-##  9  2013     1     1      557            600        -3      838
-## 10  2013     1     1      558            600        -2      753
-## # … with 336,766 more rows, and 12 more variables: sched_arr_time <int>,
-## #   arr_delay <dbl>, carrier <chr>, flight <int>, tailnum <chr>,
-## #   origin <chr>, dest <chr>, air_time <dbl>, distance <dbl>, hour <dbl>,
-## #   minute <dbl>, time_hour <dttm>
+##     year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time
+##    <int> <int> <int>    <int>          <int>     <dbl>    <int>          <int>
+##  1  2013     1     1      517            515         2      830            819
+##  2  2013     1     1      533            529         4      850            830
+##  3  2013     1     1      542            540         2      923            850
+##  4  2013     1     1      544            545        -1     1004           1022
+##  5  2013     1     1      554            600        -6      812            837
+##  6  2013     1     1      554            558        -4      740            728
+##  7  2013     1     1      555            600        -5      913            854
+##  8  2013     1     1      557            600        -3      709            723
+##  9  2013     1     1      557            600        -3      838            846
+## 10  2013     1     1      558            600        -2      753            745
+## # … with 336,766 more rows, and 11 more variables: arr_delay <dbl>,
+## #   carrier <chr>, flight <int>, tailnum <chr>, origin <chr>, dest <chr>,
+## #   air_time <dbl>, distance <dbl>, hour <dbl>, minute <dbl>, time_hour <dttm>
 ```
 
 
@@ -146,22 +145,21 @@ mutar(
 
 ```
 ## # A tibble: 336,776 x 19
-##     year month   day dep_time sched_dep_time sched_arr_time carrier flight
-##    <int> <int> <int>    <int>          <int>          <int> <chr>    <int>
-##  1  2013     1     1      517            515            819 UA        1545
-##  2  2013     1     1      533            529            830 UA        1714
-##  3  2013     1     1      542            540            850 AA        1141
-##  4  2013     1     1      544            545           1022 B6         725
-##  5  2013     1     1      554            600            837 DL         461
-##  6  2013     1     1      554            558            728 UA        1696
-##  7  2013     1     1      555            600            854 B6         507
-##  8  2013     1     1      557            600            723 EV        5708
-##  9  2013     1     1      557            600            846 B6          79
-## 10  2013     1     1      558            600            745 AA         301
-## # … with 336,766 more rows, and 11 more variables: tailnum <chr>,
-## #   origin <chr>, dest <chr>, air_time <dbl>, distance <dbl>, hour <dbl>,
-## #   minute <dbl>, time_hour <dttm>, dep_delay <dbl>, arr_delay <dbl>,
-## #   arr_time <dbl>
+##     year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time
+##    <int> <int> <int>    <int>          <int>     <dbl>    <dbl>          <int>
+##  1  2013     1     1      517            515      10.0    1523.            819
+##  2  2013     1     1      533            529      10.0    1523.            830
+##  3  2013     1     1      542            540      10.0    1523.            850
+##  4  2013     1     1      544            545      10.0    1523.           1022
+##  5  2013     1     1      554            600      10.0    1523.            837
+##  6  2013     1     1      554            558      10.0    1523.            728
+##  7  2013     1     1      555            600      10.0    1523.            854
+##  8  2013     1     1      557            600      10.0    1523.            723
+##  9  2013     1     1      557            600      10.0    1523.            846
+## 10  2013     1     1      558            600      10.0    1523.            745
+## # … with 336,766 more rows, and 11 more variables: arr_delay <dbl>,
+## #   carrier <chr>, flight <int>, tailnum <chr>, origin <chr>, dest <chr>,
+## #   air_time <dbl>, distance <dbl>, hour <dbl>, minute <dbl>, time_hour <dttm>
 ```
 
 
