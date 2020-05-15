@@ -54,35 +54,38 @@
 #' }
 #'
 #' extract(1:10, isPrime)
-extract(x, ind, ...) %g% x[ind, ...]
+setGeneric("extract", function(x, ind, ...) x[ind, ...])
 
 #' @export
 #' @rdname extract
-extract(x ~ list, ind ~ "function", ...) %m% {
+setMethod("extract", c("list", "function"), function(x, ind, ...) {
   x[vapply(x, ind, logical(1), ...)]
-}
+})
 
 #' @export
 #' @rdname extract
-extract(x ~ atomic, ind ~ "function", ...) %m% {
+setMethod("extract", c("atomic", "function"), function(x, ind, ...) {
   x[ind(x, ...)]
-}
+})
 
 #' @export
 #' @rdname extract
-extract(x ~ ANY, ind ~ formula, ...) %m% {
+setMethod("extract", c("ANY", "formula"), function(x, ind, ...) {
   extract(x, as.function(ind), ...)
-}
+})
+
+setClassUnion("atomicORlist", c("atomic", "list"))
+setClassUnion("numericORintegerORlogical", c("numeric", "integer", "logical"))
 
 #' @export
 #' @rdname extract
-extract(x ~ atomic | list, ind ~ numeric | integer | logical, ...) %m% {
+setMethod("extract", c("atomicORlist", "numericORintegerORlogical"), function(x, ind, ...) {
   x[ind]
-}
+})
 
 #' @export
 #' @rdname extract
-extract(x ~ ANY, ind ~ character, ...) %m% {
+setMethod("extract", c("ANY", "character"), function(x, ind, ...) {
   stopifnot(!is.null(names(x)))
   ind <- if (length(ind) == 1 && grepl("^\\^", ind)) {
     grepl(ind, names(x), ...)
@@ -90,39 +93,42 @@ extract(x ~ ANY, ind ~ character, ...) %m% {
     names(x) %in% ind
   }
   extract(x, ind)
-}
+})
 
 #' @export
 #' @rdname extract
-extract(x ~ data.frame, ind ~ character, ...) %m% {
+setMethod("extract", c("data.frame", "character"), function(x, ind, ...) {
   mutar(x, i = TRUE, j = ind)
-}
+})
 
 #' @export
 #' @rdname extract
-extract2(x, ind, ...) %g% x[[ind]]
+setGeneric("extract2", function(x, ind, ...) x[[ind]])
+
+
+setClassUnion("numericORinteger", c("numeric", "integer"))
 
 #' @export
 #' @rdname extract
-extract2(x ~ atomic | list, ind ~ numeric | integer, ...) %m% {
+setMethod("extract2", c("atomicORlist", "numericORinteger"), function(x, ind, ...) {
   x[[ind]]
-}
+})
 
 #' @export
 #' @rdname extract
-extract2(x ~ ANY, ind ~ formula, ...) %m% {
+setMethod("extract2", c("ANY", "formula"), function(x, ind, ...) {
   extract2(x, as.function(ind), ...)
-}
+})
 
 #' @export
 #' @rdname extract
-extract2(x ~ atomic | list, ind ~ "function", ...) %m% {
+setMethod("extract2", c("atomicORlist", "function"), function(x, ind, ...) {
   Find(addLengthCheck(addTypeCheck(ind, "logical"), 1), as.list(x), ...)
-}
+})
 
 #' @export
 #' @rdname extract
-extract2(x ~ ANY, ind ~ character, ...) %m% {
+setMethod("extract2", c("ANY", "character"), function(x, ind, ...) {
   stopifnot(length(ind) == 1)
   stopifnot(!is.null(names(x)))
   ind <- if (grepl("^\\^", ind)) {
@@ -131,4 +137,4 @@ extract2(x ~ ANY, ind ~ character, ...) %m% {
     which(names(x) == ind)[1]
   }
   extract2(x, ind)
-}
+})

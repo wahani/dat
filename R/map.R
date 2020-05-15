@@ -1,7 +1,7 @@
 #' An implementation of map
 #'
 #' An implementation of map and flatmap. They support the use of formulas as
-#' syntactic sugar for anonymous functions. 
+#' syntactic sugar for anonymous functions.
 #'
 #' @param x (\link{vector} | \link{data.frame} | formula) if x inherits from
 #'   data.frame, a data.frame is returned. Use \link{as.list} if this is not
@@ -56,7 +56,7 @@
 #' map(data.frame(y = 1:10, z = 2), x ~ x + 1, is.numeric)
 #' map(data.frame(y = 1:10, z = 2), x ~ x + 1, x ~ all(x == 2))
 #' sac(data.frame(y = 1:10, z = 1:2), df ~ data.frame(my = mean(df$y)), "z")
-#' 
+#'
 #' # Trigger a multivariate map with a formula
 #' map(1:2 ~ 3:4, f(x, y) ~ x + y)
 #' map(1:2 ~ 3:4, f(x, y) ~ x + y, simplify = TRUE)
@@ -71,27 +71,27 @@
 #' map(as.numeric(1:2), numeric : x ~ x)
 #' map(1:2, integer(1) : x ~ x)
 #' map(1:2, numeric(1) : x ~ x + 0.5)
-map(x, f, ...) %g% {
+setGeneric("map", function(x, f, ...) {
   lapply(x, f, ...)
-}
+})
 
 #' @export
 #' @rdname map
-map(x ~ ANY, f ~ formula, ...) %m% {
+setMethod("map", c("ANY", "formula"), function(x, f, ...) {
   map(x, as.function(f), ...)
-}
+})
 
 #' @export
 #' @rdname map
-map(x ~ atomic, f ~ "function", ...) %m% {
+setMethod("map", c("atomic","function"), function(x, f, ...) {
   map(as.list(x), f, ...)
-}
+})
 
 #' @export
 #' @rdname map
-map(x ~ list, f ~ "function", p = function(x) TRUE, ...) %m% {
+setMethod("map", c("list", "function"), function(x, f, p = function(x) TRUE, ...) {
   mapList(x, f, p, ...)
-}
+})
 
 # This generic exists to dipatch on p
 mapList(x, f, p, ...) %g% {
@@ -121,63 +121,65 @@ mapListOnIndex <- function(x, f, ind, ...) {
   memClassHandler$wrapClass(x)
 }
 
-#' @export
-#' @rdname map
-map(x ~ list, f ~ numeric | character | logical, ...) %m% {
-  force(f)  
-  map(x, . ~ .[f], ...)
-}
+setClassUnion("numericORcharacteORlogical", c("numeric", "character", "logical"))
 
 #' @export
 #' @rdname map
-map(x ~ MList, f ~ "function", ..., simplify = FALSE) %m% {
+setMethod("map", c("list", "numericORcharacteORlogical"), function(x, f, ...) {
+  force(f)
+  map(x, . ~ .[f], ...)
+})
+
+#' @export
+#' @rdname map
+setMethod("map", c("MList", "function"), function(x, f, ..., simplify = FALSE) {
 
   localmc <- function(x, f, ...) {
     do.call(mcmapply, c(list(FUN = f), x, SIMPLIFY = simplify, ...))
   }
 
   verboseApply(x, f, ..., .mapper = localmc)
-  
-}
+
+})
 
 #' @export
 #' @rdname map
-map(x ~ formula, f ~ "function", ...) %m% {
+setMethod("map", c("formula", "function"), function(x, f, ...) {
   mlist <- eval(
     parse(text = paste0("list(", gsub("~", ",", deparse(x)), ")")),
     envir = environment(x)
   )
   map(do.call(MList, mlist), f, ...)
-}
+})
 
 #' @export
 #' @rdname map
-flatmap(x, f, ..., flatten = unlist) %g% {
+setGeneric("flatmap", function(x, f, ..., flatten = unlist) {
   as.function(flatten)(map(x, f, ...))
-}
+})
 
 #' @export
 #' @rdname map
-flatmap(x ~ ANY, f ~ formula, ..., flatten) %m% {
+setMethod("flatmap", c("ANY", "formula"), function(x, f, ..., flatten) {
   flatmap(x, as.function(f), ..., flatten = flatten)
-}
+})
 
 #' @export
 #' @rdname map
-sac(x, f, by, ..., combine = bindRows) %g% standardGeneric("sac")
+setGeneric("sac", function(x, f, by, ..., combine = bindRows) standardGeneric("sac"))
 
 #' @export
 #' @rdname map
-sac(x ~ data.frame, f ~ "function", by, ..., combine) %m% {
+setMethod("sac", c("data.frame", "function"), function(x, f, by, ..., combine) {
   indList <- split(seq_len(nrow(x)), extract(x, by))
   flatmap(indList, ind ~ f(x[ind, TRUE, drop = FALSE], ...), flatten = combine)
-}
+})
 
 #' @export
 #' @rdname map
-sac(x, f ~ formula, by, ..., combine) %m% {
+setMethod("sac", c("ANY", "formula"), function(x, f, by, ..., combine) {
   sac(x, as.function(f), by, ..., combine = combine)
-}
+})
 
 #' @export
 #' @rdname map

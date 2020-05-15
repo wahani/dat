@@ -1,10 +1,10 @@
 #' Tools for Data Frames
 #'
 #' \code{mutar} is literally the same function as \code{[.DataFrame} and can be
-#' used as a generic interface to dplyr. Other functions here listed are a
+#' used as interface to dplyr or data.table. Other functions here listed are a
 #' convenience to mimic dplyr's syntax in a \code{R CMD check} friendly way.
 #' These functions can also be used with S4 data.frame(s) / data_frame(s) /
-#' data.table(s). They will always preserve the input class.
+#' data.table(s). They will always try to preserve the input class.
 #'
 #' @inheritParams [.DataFrame
 #'
@@ -14,11 +14,11 @@
 #'
 #' \code{OneSidedFormula} is always used for subsetting rows.
 #'
-#' \code{TwoSidedFormula} is used instead of name-value expressions in
-#' \link[dplyr]{summarise} and \link[dplyr]{mutate}.
+#' \code{TwoSidedFormula} is used instead of name-value expressions. Instead of
+#'   writing \code{x = 1} you simply write \code{x ~ 1}.
 #'
 #' \code{FormulaList} can be used to repeat the same operation on different
-#' columns.
+#'   columns. See more details in \link{FL}.
 #'
 #' @rdname mutar
 #' @export
@@ -35,7 +35,7 @@
 #'
 #' airquality %>%
 #'   sumar(
-#'     FL(.n ~ mean(.n), .n = c("Wind", "Temp")),
+#'     .n ~ mean(.n) | c("Wind", "Temp"),
 #'     by = "Month"
 #'   )
 mutar <- `[.DataFrame`
@@ -50,4 +50,14 @@ filtar <- function(x, i) {
 #' @export
 sumar <- function(x, ..., by) {
   mutar(x, ..., sby = by)
+}
+
+#' @param expr (expression) any R expression that should be evaluated using data
+#'   tables reference semantics on data transformations.
+#' @rdname mutar
+#' @export
+withReference <- function(expr) {
+  old <- options(dat.use.reference.semantics = TRUE)
+  on.exit(options(old))
+  expr
 }

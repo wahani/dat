@@ -1,7 +1,8 @@
 #' DataFrame and methods
 #'
-#' This is a 'data.table' like implementation of a data.frame. dplyr is used as
-#' backend. The only purpose is to have \code{R CMD check} friendly syntax.
+#' This is a 'data.table' like implementation of a data.frame. Either dplyr or
+#' data.table is used as backend. The only purpose is to have \code{R CMD check}
+#' friendly syntax.
 #'
 #' @include helper.R
 #' @include FormulaList.R
@@ -13,9 +14,9 @@
 #'   character beginning with '^' are interpreted as regular expression
 #' @param ... arbitrary number of args
 #'    \cr in \code{[} (TwoSidedFormulas)
-#'    \cr in constructor see \link[tibble]{data_frame}
-#' @param by,sby (character) variable names used in \link{group_by}. Using `sby`
-#'   triggers a summarise.
+#'    \cr in constructor see \link[tibble]{tibble}
+#' @param by,sby (character) variables to group by. by will be used to do
+#'   transformations within groups. sby will collapse each group to one row.
 #' @param drop (ignored) never drops the class.
 #'
 #' @details
@@ -35,6 +36,10 @@
 #' @rdname DataFrame
 #' @export
 DataFrame <- function(...) {
+  if (!requireNamespace("tibble", quietly = TRUE)) {
+    stop("The DataFrame class is based on a tibble. Please install 'tibble'",
+         "using 'install.packages(tibble)' for this to work.")
+  }
   dat <- tibble::tibble(...)
   addClass(dat, "DataFrame")
 }
@@ -89,14 +94,8 @@ data.frame : handleRows(x, i) %g% standardGeneric("handleRows")
 
 handleRows(x ~ data.frame, i ~ NULL) %m% x
 
-handleRows(x ~ data.frame, i ~ logical) %m% {
-  .__i__ <- i
-  dplyr::filter(x, .__i__)
-}
-
-handleRows(x ~ data.frame, i ~ numeric | integer) %m% {
-  ".__i__" <- i
-  dplyr::slice(x, .__i__)
+handleRows(x ~ data.frame, i ~ logical | numeric | integer) %m% {
+  x[i, , drop = FALSE]
 }
 
 handleRows(x ~ data.frame, i ~ OneSidedFormula) %m% {
@@ -117,15 +116,20 @@ data.frame : handleCols(x, i, j, ..., by, sby) %g% standardGeneric("handleCols")
 handleCols(x ~ data.frame, i ~ NULL, j ~ NULL, ..., by ~ NULL, sby ~ NULL) %m% x
 
 handleCols(x ~ data.frame, i ~ NULL, j ~ character, ..., by ~ NULL, sby ~ NULL) %m% {
-  dplyr::select_(x, .dots = j)
+  if (useDplyr()) {
+    dplyr::select_(x, .dots = j)
+  } else {
+    .SD <- NULL # to apeace R CMD check
+    x[, .SD, .SDcols = j]
+  }
 }
 
 handleCols(x ~ data.frame, i ~ NULL, j ~ RegEx, ..., by ~ NULL, sby ~ NULL) %m% {
-  dplyr::select(x, dplyr::matches(j))
+  handleCols(x, NULL, names(x)[grepl(j, names(x))], ..., by = NULL, sby = NULL)
 }
 
 handleCols(x ~ data.frame, i ~ NULL, j ~ logical, ..., by ~ NULL, sby ~ NULL) %m% {
-  `[.data.frame`(x, j)
+  handleCols(x, NULL, names(x)[j], ..., by = NULL, sby = NULL)
 }
 
 handleCols(x ~ data.frame, i ~ NULL, j ~ "function", ..., by ~ NULL, sby ~ NULL) %m% {
@@ -139,15 +143,15 @@ handleCols(x ~ data.frame, i ~ NULL, j ~ OneSidedFormula, ..., by ~ NULL, sby ~ 
 handleCols(x ~ data.frame,
            i ~ NULL | FormulaList, j ~ NULL | FormulaList, ...,
            by ~ ANY, sby ~ ANY) %m% {
-             
+
              i <- update(i, x)
              j <- update(j, x)
-             
+
              do.call(
                mutar,
                c(list(x = x, i = NULL, by = by, sby = sby), i, j, list(...))
              )
-             
+
            }
 
 handleCols(x ~ data.frame,
@@ -161,16 +165,25 @@ handleCols(x ~ data.frame,
            j ~ TwoSidedFormula | NULL,
            ..., by ~ NULL, sby ~ NULL) %m% {
              args <- constructArgs(i, j, ..., dat = x)
-             dplyr::mutate_(x, .dots = args)
+             if (useDplyr()) {
+               dplyr::mutate_(x, .dots = args)
+             } else {
+               dataTableMutate(x, args)
+             }
            }
+
 
 handleCols(x ~ data.frame,
            i ~ TwoSidedFormula | NULL,
            j ~ TwoSidedFormula | NULL,
            ..., by ~ NULL, sby ~ character) %m% {
              args <- constructArgs(i, j, ..., dat = x)
-             dplyr::group_by_(x, .dots = sby) %>%
-               dplyr::summarise_(.dots = args)
+             if (useDplyr()) {
+               x <- dplyr::group_by_(x, .dots = sby)
+               dplyr::summarise_(x, .dots = args)
+             } else {
+               dataTableSummariseBy(x, args, sby)
+             }
            }
 
 handleCols(x ~ data.frame,
@@ -178,6 +191,10 @@ handleCols(x ~ data.frame,
            j ~ TwoSidedFormula | NULL,
            ..., by ~ character, sby ~ NULL) %m% {
              args <- constructArgs(i, j, ..., dat = x)
-             dplyr::group_by_(x, .dots = by) %>%
-               dplyr::mutate_(.dots = args)
+             if (useDplyr()) {
+               dplyr::group_by_(x, .dots = by) %>%
+                 dplyr::mutate_(.dots = args)
+             } else {
+               dataTableMutateBy(x, args, by)
+             }
            }

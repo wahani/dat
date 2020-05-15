@@ -21,7 +21,7 @@ as.DataFrame(x, ...)
 \arguments{
 \item{...}{arbitrary number of args
 \cr in \code{[} (TwoSidedFormulas)
-\cr in constructor see \link[tibble]{data_frame}}
+\cr in constructor see \link[tibble]{tibble}}
 
 \item{x}{(DataFrame | data.frame)}
 
@@ -31,14 +31,15 @@ FormulaList) see the examples.}
 \item{j}{(logical | character | TwoSidedFormula | FormulaList | function)
 character beginning with '^' are interpreted as regular expression}
 
-\item{by, sby}{(character) variable names used in \link{group_by}. Using `sby`
-triggers a summarise.}
+\item{by, sby}{(character) variables to group by. by will be used to do
+transformations within groups. sby will collapse each group to one row.}
 
 \item{drop}{(ignored) never drops the class.}
 }
 \description{
-This is a 'data.table' like implementation of a data.frame. dplyr is used as
-backend. The only purpose is to have \code{R CMD check} friendly syntax.
+This is a 'data.table' like implementation of a data.frame. Either dplyr or
+data.table is used as backend. The only purpose is to have \code{R CMD check}
+friendly syntax.
 }
 \details{
 \code{OneSidedFormula} is always used for subsetting rows.

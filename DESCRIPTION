@@ -6,31 +6,31 @@ Authors@R: person("Sebastian", "Warnholz", role = c("aut", "cre"),
                   email = "wahani@gmail.com")
 BugReports: https://github.com/wahani/dat/issues
 Description: An implementation of common higher order functions with syntactic
-    sugar for anonymous function. Provides also a link to 'dplyr' for common
-    transformations on data frames to work around non standard evaluation by
-    default.
+    sugar for anonymous function. Provides also a link to 'dplyr' and
+    'data.table' for common transformations on data frames to work around non
+    standard evaluation by default.
 License: MIT + file LICENSE
 Depends:
-    methods,
-    aoos
+    methods
 Imports:
     data.table,
-    dplyr,
     Formula,
     magrittr,
     progress,
-    tibble
+    aoos
 Suggests:
+    dplyr,
     lintr,
     knitr,
     rbenchmark,
     nycflights13,
     rmarkdown,
-    testthat
+    testthat,
+    tibble
 VignetteBuilder: knitr
 Encoding: UTF-8
 ByteCompile: TRUE
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.0
 Collate: 
     'NAMESPACE.R'
     'FormulaList.R'
@@ -38,10 +38,12 @@ Collate:
     'DataFrame.R'
     'as.function.R'
     'bindRows.R'
+    'dataTableBackend.R'
     'deparse.R'
     'extract.R'
     'map.R'
     'mutar.R'
     'pipeExport.R'
     'replace.R'
+    'useDplyr.R'
     'verboseApply.R'

@@ -48,10 +48,16 @@ MemClassHandler <- function(x) {
   }
 
   stripClass <- function(x) {
-    # Check if DataFrame is in class(x), if so we need to remove it: otherwise
-    # we will have a recursive call from dplyr::slice due to calling `[` on the
-    # x.
-    class(x) <- class(x)[class(x) != "DataFrame"]
+    if (useDplyr()) {
+      # Check if DataFrame is in class(x), if so we need to remove it: otherwise
+      # we will have a recursive call from dplyr::slice due to calling `[` on the
+      # x.
+      class(x) <- class(x)[class(x) != "DataFrame"]
+    } else if (!data.table::is.data.table(x)) {
+      # If we do not have a data.table, we need to coerce the input. Later we
+      # use data.table syntax.
+      x <- data.table::as.data.table(x)
+    }
     x
   }
 
@@ -162,11 +168,11 @@ dispatcher(x ~ formula) %m% {
 asFormula <- function(x) {
 
   tmp <- Formula(x)
-  
+
   if (all(length(tmp) == c(0, 1))) OneSidedFormula(x)
   else if (length(tmp)[2] == 1) TwoSidedFormula(x)
   else AugmentedTwoSidedFormula(x)
-  
+
 }
 
 # This type is used for dispatch
@@ -201,5 +207,5 @@ resolveFormula(x, ...) %g% x
 
 resolveFormula(x ~ AugmentedTwoSidedFormula, dat, ...) %m% {
   update(FL(S3Part(x, TRUE), .n = x@.n), data = dat)
-} 
+}
 

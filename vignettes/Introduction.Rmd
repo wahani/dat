@@ -17,7 +17,7 @@ cat(gsub("\\n   ", "", packageDescription("dat", fields = "Description")))
 ### From GitHub
 
 ```{r eval=FALSE}
-devtools::install_github("wahani/dat")
+remotes::install_github("wahani/dat")
 ```
 
 ### From CRAN
@@ -39,15 +39,10 @@ really want a S4 *data.table* or *tbl_df*.
 - You like currying as in `rlist` and `purrr`.
 
 
-## A link to `dplyr`
+## Tools for data manipulation
 
 The examples are from the introductory vignette of `dplyr`. You still work with
-data frames: so you can simply mix in dplyr features whenever you need them. The
-functions `filtar`, `mutar` and `sumar` are `R CMD check` friendly replacements
-for the corresponding versions in `dplyr`. For `select` you can use
-`extract`. The function names are chosen so that they are similar but do not
-conflict with `dplyr`s function names - so `dplyr` can be savely attached to the
-search path.
+data frames: so you can simply mix in dplyr features whenever you need them.
 
 ```{r}
 library("nycflights13")
@@ -56,32 +51,30 @@ library("dat")
 
 ### Select rows
 
-`filtar` can be used as a replacement for `filter` and `slice`. When you
-reference a variable in the data itself, you can indicate this by using a one
+We can use `mutar` to select rows. When you
+reference a variable in the data frame, you can indicate this by using a one
 sided formula.
 
 ```{r results='hide'}
-filtar(flights, ~ month == 1 & day == 1)
-filtar(flights, 1:10)
+mutar(flights, ~ month == 1 & day == 1)
+mutar(flights, ~ 1:10)
 ```
 
 And for sorting:
 
 ```{r}
-filtar(flights, ~ order(year, month, day))
+mutar(flights, ~ order(year, month, day))
 ```
 
 
 ### Select cols
 
 You can use characters, logicals, regular expressions and functions to select
-columns. Regular expressions are indicated by a leading "^". Character are
-simply passed to `dplyr::select_`.
+columns. Regular expressions are indicated by a leading "^".
 
 ```{r results='hide'}
 flights %>%
   extract(c("year", "month", "day")) %>%
-  extract("year:day") %>%
   extract("^day$") %>%
   extract(is.numeric)
 ```
@@ -89,7 +82,7 @@ flights %>%
 
 ### Operations on columns
 
-The main difference between `mutate` and `mutar` is that you use a `~`
+The main difference between `dplyr::mutate` and `mutar` is that you use a `~`
 instead of `=`.
     
 ```{r results='hide'}
@@ -103,11 +96,11 @@ mutar(
 Grouping data is handled within `mutar`:
 
 ```{r results = 'hide'}
-mutar(flights, n ~ dplyr::n(), by = "month")
+mutar(flights, n ~ .N, by = "month")
 ```
 
 ```{r results='hide'}
-sumar(flights, delay ~ mean(dep_delay, na.rm = TRUE), by = "month")
+mutar(flights, delay ~ mean(dep_delay, na.rm = TRUE), by = "month")
 ```
 
 You can also provide additional arguments to a formula. This is especially
@@ -117,10 +110,10 @@ additional augmentation can be anything which you can use to select columns
 a character.
     
 ```{r}
-sumar(
+mutar(
   flights,
   .n ~ mean(.n, na.rm = TRUE) | "^.*delay$",
-  x ~ mean(x, na.rm = TRUE) | list(x = "arr_time"),
+  .x ~ mean(.x, na.rm = TRUE) | list(.x = "arr_time"),
   by = "month"
 )
 ```
@@ -148,14 +141,14 @@ setMethod("[", "DataTable", mutar)
 
 dtflights <- do.call(DataTable, nycflights13::flights)
 
-dtflights[1:10, "year:day"]
-dtflights[n ~ dplyr::n(), by = "month"]
-dtflights[n ~ dplyr::n(), sby = "month"]
+dtflights[1:10, c("year", "month", "day")]
+dtflights[n ~ .N, by = "month"]
+dtflights[n ~ .N, sby = "month"]
 
 dtflights %>%
   filtar(~month > 6) %>%
-  mutar(n ~ dplyr::n(), by = "month") %>%
-  sumar(n ~ dplyr::first(n), by = "month")
+  mutar(n ~ .N, by = "month") %>%
+  sumar(n ~ data.table::first(n), by = "month")
 ```
 
 

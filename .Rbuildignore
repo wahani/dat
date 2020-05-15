@@ -5,3 +5,5 @@
 ^cran-comments\.md$
 ^README\.md$
 ^_config\.yml$
+^doc$
+^Meta$

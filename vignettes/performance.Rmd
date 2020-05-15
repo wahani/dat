@@ -52,6 +52,7 @@ price.
 ```{r eval = FALSE}
 library("data.table")
 library("dplyr")
+options("dat.use.dplyr" = FALSE)
 N <- 2e7 # more is not possible with small laptop
 K <- 100
 set.seed(1)

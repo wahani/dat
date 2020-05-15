@@ -10,8 +10,9 @@ test_that("map", {
 
   # data frames
   map(dat, x ~ x + 1) %>% equals(data.frame(y = 2:11, z = 3))
-  map(dat %>% mutar(x ~ "x"), x ~ x + 1, is.numeric) %>%
-    equals(data.frame(y = 2:11, z = 3, x = "x", stringsAsFactors = FALSE))
+  WITH_DPLYR(
+    map(dat %>% mutar(x ~ "x"), x ~ x + 1, is.numeric) %>%
+    equals(data.frame(y = 2:11, z = 3, x = "x", stringsAsFactors = FALSE)))
   map(dat, x ~ x + 1, x ~ all(x == 2)) %>% equals(data.frame(y = 1:10, z = 3))
   map(dat, x ~ x + 1, "z") %>% equals(data.frame(y = 1:10, z = 3))
   map(dat, x ~ x + 1, "^z$") %>% equals(data.frame(y = 1:10, z = 3))
@@ -43,28 +44,30 @@ test_that("map", {
 })
 
 test_that("split-apply-combine", {
+  WITH_DPLYR({
 
-  expectEqual <- function(x, y) {
-    testthat::expect_equal(x, y)
-  }
+    expectEqual <- function(x, y) {
+      testthat::expect_equal(x, y)
+    }
 
-  isA <- function(x, a) {
-    testthat::expect_is(x, a)
-  }
+    isA <- function(x, a) {
+      testthat::expect_is(x, a)
+    }
 
-  dat <- DataFrame(y = 1:10, z = 2, id = rep(letters[1:2], 5))
+    dat <- DataFrame(y = 1:10, z = 2, id = rep(letters[1:2], 5))
 
-  sac(dat, df ~ 1, "id") %>% expectEqual(list(a = 1, b = 1))
-  tmp <- sac(dat, mutar, "id", count ~ dplyr::n())
-  expectEqual(tmp$count, rep(5, 10))
-  expectEqual(NROW(tmp), 10)
-  expectEqual(NCOL(tmp), 4)
+    sac(dat, df ~ 1, "id") %>% expectEqual(list(a = 1, b = 1))
+    tmp <- sac(dat, mutar, "id", count ~ dplyr::n())
+    expectEqual(tmp$count, rep(5, 10))
+    expectEqual(NROW(tmp), 10)
+    expectEqual(NCOL(tmp), 4)
 
-  setClass("Dat", "DataFrame")
-  dat <- new("Dat", dat)
-  sac(dat, mutar, "id", count ~ dplyr::n()) %>% isA("Dat")
-  removeClass("Dat")
+    setClass("Dat", "DataFrame")
+    dat <- new("Dat", dat)
+    sac(dat, mutar, "id", count ~ dplyr::n()) %>% isA("Dat")
+    removeClass("Dat")
 
+  })
 })
 
 test_that("flatmap", {

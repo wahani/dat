@@ -4,6 +4,7 @@
 \alias{mutar}
 \alias{filtar}
 \alias{sumar}
+\alias{withReference}
 \title{Tools for Data Frames}
 \usage{
 mutar(x, i, j, ..., by, sby, drop)
@@ -11,6 +12,8 @@ mutar(x, i, j, ..., by, sby, drop)
 filtar(x, i)
 
 sumar(x, ..., by)
+
+withReference(expr)
 }
 \arguments{
 \item{x}{(DataFrame | data.frame)}
@@ -23,22 +26,25 @@ character beginning with '^' are interpreted as regular expression}
 
 \item{...}{arbitrary number of args
 \cr in \code{[} (TwoSidedFormulas)
-\cr in constructor see \link[tibble]{data_frame}}
+\cr in constructor see \link[tibble]{tibble}}
 
-\item{by}{(character) variable names used in \link{group_by}. Using `sby`
-triggers a summarise.}
+\item{by}{(character) variables to group by. by will be used to do
+transformations within groups. sby will collapse each group to one row.}
 
-\item{sby}{(character) variable names used in \link{group_by}. Using `sby`
-triggers a summarise.}
+\item{sby}{(character) variables to group by. by will be used to do
+transformations within groups. sby will collapse each group to one row.}
 
 \item{drop}{(ignored) never drops the class.}
+
+\item{expr}{(expression) any R expression that should be evaluated using data
+tables reference semantics on data transformations.}
 }
 \description{
 \code{mutar} is literally the same function as \code{[.DataFrame} and can be
-used as a generic interface to dplyr. Other functions here listed are a
+used as interface to dplyr or data.table. Other functions here listed are a
 convenience to mimic dplyr's syntax in a \code{R CMD check} friendly way.
 These functions can also be used with S4 data.frame(s) / data_frame(s) /
-data.table(s). They will always preserve the input class.
+data.table(s). They will always try to preserve the input class.
 }
 \details{
 The real workhorse of this interface is \code{mutar}. All other functions
@@ -46,11 +52,11 @@ exist to ease the transition from dplyr.
 
 \code{OneSidedFormula} is always used for subsetting rows.
 
-\code{TwoSidedFormula} is used instead of name-value expressions in
-\link[dplyr]{summarise} and \link[dplyr]{mutate}.
+\code{TwoSidedFormula} is used instead of name-value expressions. Instead of
+  writing \code{x = 1} you simply write \code{x ~ 1}.
 
 \code{FormulaList} can be used to repeat the same operation on different
-columns.
+  columns. See more details in \link{FL}.
 }
 \examples{
 data("airquality")
@@ -62,7 +68,7 @@ airquality \%>\%
 
 airquality \%>\%
   sumar(
-    FL(.n ~ mean(.n), .n = c("Wind", "Temp")),
+    .n ~ mean(.n) | c("Wind", "Temp"),
     by = "Month"
   )
 }
