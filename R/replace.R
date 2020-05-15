@@ -28,24 +28,24 @@
 #' replace(list(x = 1, y = 2), "x", 0)
 #' replace(list(x = 1, y = 2), "^x$", 0)
 #' replace(list(x = 1, y = "a"), is.character, NULL)
-replace(x, ind, values, ...) %g% base::replace(x, ind, values)
+setGeneric("replace", function(x, ind, values, ...) base::replace(x, ind, values))
 
 #' @export
 #' @rdname replace
-replace(x ~ ANY, ind ~ "function", values, ...) %m% {
+setMethod("replace", c("ANY", "function"), function(x, ind, values, ...) {
   if (is.atomic(x)) replace(x, ind(x, ...), values)
   else replace(x, vapply(x, ind, logical(1), ...), values)
-}
+})
 
 #' @export
 #' @rdname replace
-replace(x ~ ANY, ind ~ formula, values, ...) %m% {
+setMethod("replace", c("ANY", "formula"), function(x, ind, values, ...) {
   replace(x, as.function(ind), values, ...)
-}
+})
 
 #' @export
 #' @rdname replace
-replace(x ~ ANY, ind ~ character, values, ...) %m% {
+setMethod("replace", c("ANY", "character"), function(x, ind, values, ...) {
   ind <- if (length(ind) == 1 && grepl("^\\^", ind)) {
     grep(ind, names(x), ...)
   } else {
@@ -53,4 +53,4 @@ replace(x ~ ANY, ind ~ character, values, ...) %m% {
     names(x) %in% ind
   }
   replace(x, ind, values, ...)
-}
+})

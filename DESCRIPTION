@@ -30,7 +30,7 @@ Suggests:
 VignetteBuilder: knitr
 Encoding: UTF-8
 ByteCompile: TRUE
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.0
 Collate: 
     'NAMESPACE.R'
     'FormulaList.R'

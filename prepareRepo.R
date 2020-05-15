@@ -17,6 +17,11 @@ writeLines(readme, "README.md")
 ## - progress bar + verbose apply in rstudio + windows
 ##     - not working in either one myself
 ## - extract with a matches not
+library(dat)
+library(dplyr)
+options(dat.use.dplyr=TRUE)
+dat::mutar(data.frame(x=1:10), id ~ n())
+
 
 dat::vmap(1:10, ~ Sys.sleep(.))
 

@@ -11,6 +11,6 @@ useDplyr <- function() {
 
 .onAttach <- function(libname, pkgname) {
   packageStartupMessage(
-    "To use dplyr, set 'options(dat.use.dplyr = TRUE)'"
+    "To use dplyr as backend set 'options(dat.use.dplyr = TRUE)'."
   )
 }
