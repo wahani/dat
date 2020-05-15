@@ -11,13 +11,13 @@ Description: An implementation of common higher order functions with syntactic
     standard evaluation by default.
 License: MIT + file LICENSE
 Depends:
-    methods,
-    aoos
+    methods
 Imports:
     data.table,
     Formula,
     magrittr,
     progress,
+    aoos
 Suggests:
     dplyr,
     lintr,
