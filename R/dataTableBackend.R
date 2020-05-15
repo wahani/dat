@@ -1,4 +1,3 @@
-
 dataTableMutate <- function(x, args) {
   byReference <- getOption("dat.use.reference.semantics", FALSE)
   mutateDataTable(

@@ -38,6 +38,20 @@
 #'     .n ~ mean(.n) | c("Wind", "Temp"),
 #'     by = "Month"
 #'   )
+#'
+#' # Enable data.tables reference semantics with:
+#' withReference({
+#'   x <- data.table::data.table(x = 1)
+#'   mutar(x, y ~ 2)
+#' })
+#'
+#' \dontrun{
+#' # Use dplyr as back-end:
+#' options(dat.use.dplyr = TRUE)
+#' x <- data.frame(x = 1)
+#' mutar(x, y ~ dplyr::n())
+#' }
+#'
 mutar <- `[.DataFrame`
 
 #' @rdname mutar

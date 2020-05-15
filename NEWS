@@ -1,7 +1,7 @@
 * Version 0.5.0
 - Keeping up with latest dplyr version
-- 
-
+- dplyr is now optional, the new default is data.table
+- optionally enable dplyr with options(dat.use.dplyr=TRUE)
 
 * Version 0.4.0
 - CRAN release
