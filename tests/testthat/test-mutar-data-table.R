@@ -74,6 +74,14 @@ test_that("mutar without [s]by", {
       res,
       DataFrame(x = 1:2, a = 2, b = 3.5)
     )
+
+    ## mutar preserves the order of columns
+    dat <- DataFrame(x = 1, y = 1, z = 1)
+    res <- dat::mutar(dat, y ~ x + 1, x ~ x + 1)
+    expectIdentical(
+      res,
+      within(dat, {y <- x + 1; x <- x + 1})
+    )
   })
 })
 
@@ -107,7 +115,7 @@ test_that("mutar with by", {
     dat <- mutar(dat, x ~ x + 1, by = "group")
     expectIdentical(
       dat,
-      DataFrame(group = c("a", "b"), x = as.numeric(2:3))
+      DataFrame(x = as.numeric(2:3), group = c("a", "b"))
     )
 
     withReference({
@@ -115,7 +123,7 @@ test_that("mutar with by", {
       mutar(dat, x ~ as.integer(x + 1), by = "group")
       expectIdentical(
         dat,
-        DataFrame(group = c("a", "b"), x = 2:3)
+        DataFrame(x = 2:3, group = c("a", "b"))
       )
     })
 

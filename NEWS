@@ -1,3 +1,6 @@
+* Version 0.6.0
+- Preserve order of columns in a data table when existing column is mutated
+
 * Version 0.5.0
 - Keeping up with latest dplyr version
 - dplyr is now optional, the new default is data.table

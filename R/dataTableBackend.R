@@ -20,6 +20,7 @@ dataTableSummariseBy <- function(x, args, by) {
 
 mutateDataTable <- function(x, args, fun, by) {
   ## Prepare column names for processing:
+  colsOrder <- data.table::copy(names(x))
   colsTmp <- paste0(".__", names(args), "__")
   cols <- names(args)
   names(args) <- colsTmp
@@ -30,7 +31,9 @@ mutateDataTable <- function(x, args, fun, by) {
   callDataTable(x, args, fun, by)
   ## Rename and drop old columns
   if (length(colsInX) > 0) x[, (colsInX) := NULL]
-  do.call(rename, c(list(x), listOfNames))
+  x <- do.call(rename, c(list(x), listOfNames))
+  data.table::setcolorder(x, unique(colsOrder, names(x)))
+  x
 }
 
 callDataTable <- function(x, args, fun, by) {
