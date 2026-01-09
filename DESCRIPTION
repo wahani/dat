@@ -24,9 +24,11 @@ Suggests:
     knitr,
     rbenchmark,
     nycflights13,
+    rlang,
     rmarkdown,
     testthat,
-    tibble
+    tibble,
+    tidyselect
 VignetteBuilder: knitr
 Encoding: UTF-8
 ByteCompile: TRUE

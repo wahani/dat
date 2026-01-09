@@ -111,13 +111,20 @@ handleRows(x ~ data.frame, i ~ FormulaList) %m% x
 
 ################################################################################
 
+# Helper function to convert a named list of formulas to quosures for modern dplyr
+formulasToQuosures <- function(args) {
+  lapply(args, function(f) {
+    rlang::new_quosure(f[[2]], env = environment(f))
+  })
+}
+
 data.frame : handleCols(x, i, j, ..., by, sby) %g% standardGeneric("handleCols")
 
 handleCols(x ~ data.frame, i ~ NULL, j ~ NULL, ..., by ~ NULL, sby ~ NULL) %m% x
 
 handleCols(x ~ data.frame, i ~ NULL, j ~ character, ..., by ~ NULL, sby ~ NULL) %m% {
   if (useDplyr()) {
-    dplyr::select_(x, .dots = j)
+    dplyr::select(x, !!!rlang::parse_exprs(j))
   } else {
     .SD <- NULL # to apeace R CMD check
     x[, .SD, .SDcols = j]
@@ -166,7 +173,7 @@ handleCols(x ~ data.frame,
            ..., by ~ NULL, sby ~ NULL) %m% {
              args <- constructArgs(i, j, ..., dat = x)
              if (useDplyr()) {
-               dplyr::mutate_(x, .dots = args)
+               dplyr::mutate(x, !!!formulasToQuosures(args))
              } else {
                dataTableMutate(x, args)
              }
@@ -179,8 +186,8 @@ handleCols(x ~ data.frame,
            ..., by ~ NULL, sby ~ character) %m% {
              args <- constructArgs(i, j, ..., dat = x)
              if (useDplyr()) {
-               x <- dplyr::group_by_(x, .dots = sby)
-               dplyr::summarise_(x, .dots = args)
+               x <- dplyr::group_by(x, dplyr::pick(tidyselect::all_of(sby)))
+               dplyr::summarise(x, !!!formulasToQuosures(args))
              } else {
                dataTableSummariseBy(x, args, sby)
              }
@@ -192,8 +199,8 @@ handleCols(x ~ data.frame,
            ..., by ~ character, sby ~ NULL) %m% {
              args <- constructArgs(i, j, ..., dat = x)
              if (useDplyr()) {
-               dplyr::group_by_(x, .dots = by) %>%
-                 dplyr::mutate_(.dots = args)
+               dplyr::group_by(x, dplyr::pick(tidyselect::all_of(by))) %>%
+                 dplyr::mutate(!!!formulasToQuosures(args))
              } else {
                dataTableMutateBy(x, args, by)
              }
