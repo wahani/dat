@@ -7,3 +7,5 @@ vignettes/*.html
 .build.timestamp
 doc
 Meta
+/doc/
+/Meta/

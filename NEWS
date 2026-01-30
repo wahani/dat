@@ -1,39 +1,55 @@
-* Version 0.6.0
-- Preserve order of columns in a data table when existing column is mutated
+- Version 0.7.0
 
-* Version 0.5.0
-- Keeping up with latest dplyr version
-- dplyr is now optional, the new default is data.table
-- optionally enable dplyr with options(dat.use.dplyr=TRUE)
+* Maintenance release for upcomming dplyr release
+* Drop of dependency for lintr
 
-* Version 0.4.0
-- CRAN release
-- Maintenance release for upcomming R-version
-- More generic version of 'replace' handling atomics and lists
+- Version 0.6.0
 
-* Version 0.3.0
-- CRAN release
-- Maintenance release: fix for conditionally using packages in suggesgts
+* Preserve order of columns in a data table when existing column is mutated
 
-* Version 0.2.0
-- CRAN release
+- Version 0.5.0
 
-* Version 0.1.3
-- Fix for change in dplyr: mutate changes class of input (mutar does not)
-- Fix for change in dplyr: bind_rows cannot handle S4 dfs. switched to rbindlist
+* Keeping up with latest dplyr version
+* dplyr is now optional, the new default is data.table
+* optionally enable dplyr with options(dat.use.dplyr=TRUE)
 
-* Version 0.1.2
-- Fix for S4 when package not attached.
+- Version 0.4.0
 
-* Version 0.1.1
-- Default methods for replace, extract, extract2
+* CRAN release
+* Maintenance release for upcomming R-version
+* More generic version of 'replace' handling atomics and lists
 
-* Version 0.1.0
-- CRAN release
+- Version 0.3.0
 
-* Version 0.0.10
-- Syntactic sugar for fomula lists in mutar
+* CRAN release
+* Maintenance release: fix for conditionally using packages in suggesgts
 
-* Version 0.0.8
-- new functions verboseApply and vmap
-- minor fixes
+- Version 0.2.0
+
+* CRAN release
+
+- Version 0.1.3
+
+* Fix for change in dplyr: mutate changes class of input (mutar does not)
+* Fix for change in dplyr: bind_rows cannot handle S4 dfs. switched to rbindlist
+
+- Version 0.1.2
+
+* Fix for S4 when package not attached.
+
+- Version 0.1.1
+
+* Default methods for replace, extract, extract2
+
+- Version 0.1.0
+
+* CRAN release
+
+- Version 0.0.10
+
+* Syntactic sugar for fomula lists in mutar
+
+- Version 0.0.8
+
+* new functions verboseApply and vmap
+* minor fixes

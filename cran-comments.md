@@ -1,7 +1,6 @@
 ## Test environments
-* local ubuntu 20.04 install, R 4.0.0
-* ubuntu 16.04 (on travis-ci), R 4.0.0
-* win-builder
+
+- local ubuntu
 
 ## R CMD check results
 
@@ -9,4 +8,4 @@
 
 ## Reverse dependencies
 
-* To the best of my knowledge there are no problems.
+- To the best of my knowledge there are no problems.

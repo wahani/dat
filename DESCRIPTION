@@ -1,7 +1,7 @@
 Package: dat
 Type: Package
 Title: Tools for Data Manipulation
-Version: 0.5.1
+Version: 0.7.0
 Authors@R: person("Sebastian", "Warnholz", role = c("aut", "cre"),
                   email = "wahani@gmail.com")
 BugReports: https://github.com/wahani/dat/issues
@@ -20,7 +20,6 @@ Imports:
     aoos
 Suggests:
     dplyr,
-    lintr,
     knitr,
     rbenchmark,
     nycflights13,
@@ -33,7 +32,7 @@ VignetteBuilder: knitr
 Encoding: UTF-8
 ByteCompile: TRUE
 RoxygenNote: 7.1.0
-Collate: 
+Collate:
     'NAMESPACE.R'
     'FormulaList.R'
     'helper.R'

@@ -1,4 +1,9 @@
+devtools::install()
+devtools::test()
 devtools::build_vignettes()
+devtools::check()
+
+
 knitr::knit("vignettes/Introduction.Rmd", "README.md")
 
 batches <- c(
@@ -19,8 +24,8 @@ writeLines(readme, "README.md")
 ## - extract with a matches not
 library(dat)
 library(dplyr)
-options(dat.use.dplyr=TRUE)
-dat::mutar(data.frame(x=1:10), id ~ n())
+options(dat.use.dplyr = TRUE)
+dat::mutar(data.frame(x = 1:10), id ~ n())
 
 
 dat::vmap(1:10, ~ Sys.sleep(.))
@@ -37,4 +42,4 @@ data.frame(x = 1:10, y = 2) %>%
   mutar(n ~ mean(n) | ll, sby = "y")
 
 extract(table(letters[1:2]), "a")
-replace(table(letters[1:2]), .~.==1, 2)
+replace(table(letters[1:2]), . ~ . == 1, 2)
